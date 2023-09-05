@@ -1,0 +1,22 @@
+version: "3.6"
+
+services:
+  web:
+    image: node:18
+    volumes:
+      - ./web:/opt/web
+    working_dir: /opt/web
+    ports:
+      - 3000:3000
+    depends_on:
+      - api
+    command: npm run dev
+
+  api:
+    image: golang:1.20.4
+    volumes:
+      - ./api:/go/src/api
+    working_dir: /go/src/api
+    ports:
+      - 8000:8000
+    command: go run server.go
