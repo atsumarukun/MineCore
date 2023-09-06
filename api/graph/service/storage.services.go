@@ -9,7 +9,7 @@ import (
 func (_ StorageService) GetFiles(path string) ([]*model.File, error) {
 	var fs []*model.File
 
-	files, err := ioutil.ReadDir(fmt.Sprintf("/go/src/api/storage/%s", path))
+	files, err := ioutil.ReadDir(fmt.Sprintf("/go/src/api/storage%s", path))
 	if err != nil {
 		return nil, err
 	}
