@@ -16,6 +16,7 @@ export const Modal = defineStyleConfig({
     },
     dialog: {
       rounded: 0,
+      mx: 4,
     },
   },
 });
