@@ -8,6 +8,7 @@ import (
 
 func (_ StorageService) GetFiles(path string) ([]*model.File, error) {
 	var fs []*model.File
+	var ds []*model.File
 
 	files, err := ioutil.ReadDir(fmt.Sprintf("/go/src/api/storage%s", path))
 	if err != nil {
@@ -15,10 +16,14 @@ func (_ StorageService) GetFiles(path string) ([]*model.File, error) {
 	}
 
 	for _, file := range files {
-		fs = append(fs, &model.File{file.Name(), fmt.Sprintf("%s/%s", path, file.Name()), file.IsDir()})
+		if file.IsDir() {
+			ds = append(ds, &model.File{file.Name(), fmt.Sprintf("%s/%s", path, file.Name()), file.IsDir()})
+		} else {
+			fs = append(fs, &model.File{file.Name(), fmt.Sprintf("%s/%s", path, file.Name()), file.IsDir()})
+		}
 	}
 
-	return fs, nil
+	return append(ds, fs...), nil
 }
 
 type StorageService struct{}
