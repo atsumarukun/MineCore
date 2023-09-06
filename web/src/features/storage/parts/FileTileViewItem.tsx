@@ -1,34 +1,30 @@
 import { ConditionalLink } from "@/components/parts/ConditionalLink";
+import { EllipsisText } from "@/components/parts/EllipsisText";
 import { GetFilesQuery } from "@/gql/graphql";
-import { Center, GridItem, Icon, Text } from "@chakra-ui/react";
-import { IconType } from "react-icons";
+import { Center, Flex, GridItem, Icon } from "@chakra-ui/react";
+import { FaFolder, FaFileAlt } from "react-icons/fa";
 
 type Props = {
   file: GetFilesQuery["files"][number];
-  icon: IconType;
 };
 
-export function FileTileViewItem({ file, icon }: Props) {
+export function FileTileViewItem({ file }: Props) {
   return (
-    <ConditionalLink href={file.name} isLink={file.isDir}>
+    <ConditionalLink href={`/storage${file.key}`} isLink={file.isDir}>
       <GridItem bgColor="gray.100" aspectRatio={1 / 1} position="relative">
         <Center h="100%">
-          <Icon as={icon} boxSize={"25%"} />
+          <Icon as={file.isDir ? FaFolder : FaFileAlt} boxSize={"25%"} />
         </Center>
-        <Text
-          position="absolute"
-          color="white"
-          bgColor="blackAlpha.500"
-          bottom="0"
+        <Flex
           w="100%"
-          textAlign="center"
-          whiteSpace="nowrap"
-          textOverflow="ellipsis"
-          overflow="hidden"
-          px="2"
+          justifyContent="center"
+          bgColor="blackAlpha.500"
+          position="absolute"
+          px={2}
+          bottom="0"
         >
-          {file.name}
-        </Text>
+          <EllipsisText color="white">{file.name}</EllipsisText>
+        </Flex>
       </GridItem>
     </ConditionalLink>
   );

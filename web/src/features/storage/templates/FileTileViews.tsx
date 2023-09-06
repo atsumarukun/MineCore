@@ -1,13 +1,13 @@
 import { GetFilesQuery } from "@/gql/graphql";
 import { Grid } from "@chakra-ui/react";
-import { FaFolder, FaFileAlt } from "react-icons/fa";
 import { FileTileViewItem } from "../parts/FileTileViewItem";
 
 type Props = {
+  path: string;
   files: GetFilesQuery["files"];
 };
 
-export function FileTileViews({ files }: Props) {
+export function FileTileViews({ path, files }: Props) {
   return (
     <Grid
       gap={8}
@@ -17,11 +17,17 @@ export function FileTileViews({ files }: Props) {
         lg: "repeat(6, 1fr)",
       }}
     >
-      {files.map((file) => (
+      {path && (
         <FileTileViewItem
-          file={file}
-          icon={file.isDir ? FaFolder : FaFileAlt}
+          file={{
+            name: "../",
+            key: path.substring(0, path.lastIndexOf("/")),
+            isDir: true,
+          }}
         />
+      )}
+      {files.map((file) => (
+        <FileTileViewItem file={file} key={file.key} />
       ))}
     </Grid>
   );

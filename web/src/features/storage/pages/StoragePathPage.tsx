@@ -16,7 +16,7 @@ export function StoragePathPage({ path }: StoragePathPageProps) {
 
   return (
     <>
-      <FileTileViews files={data?.files} />
+      <FileTileViews path={path} files={data?.files} />
     </>
   );
 }
