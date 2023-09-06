@@ -1,0 +1,9 @@
+type File {
+  name: String!
+  key: String!
+  isDir: Boolean!
+}
+
+extend type Query {
+  files(path: String!): [File!]!
+}
