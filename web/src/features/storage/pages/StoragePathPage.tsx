@@ -1,20 +1,45 @@
 import { useGetFilesQuery, useUploadFilesMutation } from "@/gql/graphql";
 import { StoragePathPageProps } from "@/pages/storage/[[...path]]";
-import { Box, Spinner } from "@chakra-ui/react";
+import { Box, Spinner, useToast } from "@chakra-ui/react";
 import Error from "next/error";
 import { FileTileViews } from "../templates/FileTileViews";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
+import { ApolloError } from "@apollo/client";
 
 export function StoragePathPage({ path }: StoragePathPageProps) {
-  const { loading, error, data } = useGetFilesQuery({
+  const { loading, error, data, refetch } = useGetFilesQuery({
     variables: { path: path },
   });
-  const [upload] = useUploadFilesMutation();
+  const [upload] = useUploadFilesMutation({
+    onCompleted() {
+      refetch();
+    },
+  });
+  const toast = useToast();
 
-  const onDrop = useCallback(async (files: File[]) => {
-    await upload({ variables: { input: files } });
-  }, []);
+  const onDrop = useCallback(
+    async (files: File[]) => {
+      try {
+        await upload({ variables: { path: path, files: files } });
+        toast({
+          title: "ファイルをアップロードしました.",
+          status: "success",
+          duration: 5000,
+        });
+      } catch (e) {
+        if (e instanceof ApolloError) {
+          toast({
+            title: "エラーが発生しました.",
+            description: e.message,
+            status: "error",
+            duration: 5000,
+          });
+        }
+      }
+    },
+    [path]
+  );
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,

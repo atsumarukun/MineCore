@@ -32,7 +32,8 @@ export type Mutation = {
 
 
 export type MutationUploadFilesArgs = {
-  input: Array<Scalars['Upload']['input']>;
+  files: Array<Scalars['Upload']['input']>;
+  path: Scalars['String']['input'];
 };
 
 export type Query = {
@@ -53,7 +54,8 @@ export type GetFilesQueryVariables = Exact<{
 export type GetFilesQuery = { __typename?: 'Query', files: Array<{ __typename?: 'File', name: string, key: string, isDir: boolean }> };
 
 export type UploadFilesMutationVariables = Exact<{
-  input: Array<Scalars['Upload']['input']> | Scalars['Upload']['input'];
+  path: Scalars['String']['input'];
+  files: Array<Scalars['Upload']['input']> | Scalars['Upload']['input'];
 }>;
 
 
@@ -98,8 +100,8 @@ export type GetFilesQueryHookResult = ReturnType<typeof useGetFilesQuery>;
 export type GetFilesLazyQueryHookResult = ReturnType<typeof useGetFilesLazyQuery>;
 export type GetFilesQueryResult = Apollo.QueryResult<GetFilesQuery, GetFilesQueryVariables>;
 export const UploadFilesDocument = gql`
-    mutation UploadFiles($input: [Upload!]!) {
-  uploadFiles(input: $input) {
+    mutation UploadFiles($path: String!, $files: [Upload!]!) {
+  uploadFiles(path: $path, files: $files) {
     name
   }
 }
@@ -119,7 +121,8 @@ export type UploadFilesMutationFn = Apollo.MutationFunction<UploadFilesMutation,
  * @example
  * const [uploadFilesMutation, { data, loading, error }] = useUploadFilesMutation({
  *   variables: {
- *      input: // value for 'input'
+ *      path: // value for 'path'
+ *      files: // value for 'files'
  *   },
  * });
  */

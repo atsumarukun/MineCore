@@ -4,6 +4,9 @@ import (
 	"api/graph/model"
 	"io/ioutil"
 	"fmt"
+	"os"
+
+	"github.com/99designs/gqlgen/graphql"
 )
 
 func (_ StorageService) GetFiles(path string) ([]*model.File, error) {
@@ -24,6 +27,23 @@ func (_ StorageService) GetFiles(path string) ([]*model.File, error) {
 	}
 
 	return append(ds, fs...), nil
+}
+
+func (_ StorageService) UploadFiles(path string, files []*graphql.Upload) ([]*model.File, error) {
+	var fs []*model.File
+
+	for _, file := range files {
+		buf, err := ioutil.ReadAll(file.File)
+		if err != nil {
+			return nil, err
+		}
+
+		if err := ioutil.WriteFile(fmt.Sprintf("/go/src/api/storage%s/%s", path, file.Filename), buf, os.ModePerm); err != nil {
+			return nil, err
+		}
+		fs = append(fs, &model.File{file.Filename, fmt.Sprintf("%s/%s", path, file.Filename), false})
+	}
+	return fs, nil
 }
 
 type StorageService struct{}

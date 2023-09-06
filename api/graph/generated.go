@@ -52,7 +52,7 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		UploadFiles func(childComplexity int, input []*graphql.Upload) int
+		UploadFiles func(childComplexity int, path string, files []*graphql.Upload) int
 	}
 
 	Query struct {
@@ -61,7 +61,7 @@ type ComplexityRoot struct {
 }
 
 type MutationResolver interface {
-	UploadFiles(ctx context.Context, input []*graphql.Upload) ([]*model.File, error)
+	UploadFiles(ctx context.Context, path string, files []*graphql.Upload) ([]*model.File, error)
 }
 type QueryResolver interface {
 	Files(ctx context.Context, path string) ([]*model.File, error)
@@ -113,7 +113,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UploadFiles(childComplexity, args["input"].([]*graphql.Upload)), true
+		return e.complexity.Mutation.UploadFiles(childComplexity, args["path"].(string), args["files"].([]*graphql.Upload)), true
 
 	case "Query.files":
 		if e.complexity.Query.Files == nil {
@@ -253,15 +253,24 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 func (ec *executionContext) field_Mutation_uploadFiles_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 []*graphql.Upload
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpload2ᚕᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUploadᚄ(ctx, tmp)
+	var arg0 string
+	if tmp, ok := rawArgs["path"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("path"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["input"] = arg0
+	args["path"] = arg0
+	var arg1 []*graphql.Upload
+	if tmp, ok := rawArgs["files"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("files"))
+		arg1, err = ec.unmarshalNUpload2ᚕᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUploadᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["files"] = arg1
 	return args, nil
 }
 
@@ -479,7 +488,7 @@ func (ec *executionContext) _Mutation_uploadFiles(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UploadFiles(rctx, fc.Args["input"].([]*graphql.Upload))
+		return ec.resolvers.Mutation().UploadFiles(rctx, fc.Args["path"].(string), fc.Args["files"].([]*graphql.Upload))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
