@@ -46,4 +46,13 @@ func (_ StorageService) UploadFiles(path string, files []*graphql.Upload) ([]*mo
 	return fs, nil
 }
 
+func (_ StorageService) RemoveFiles(keys []string) ([]string, error) {
+	for _, key := range keys {
+		if err := os.RemoveAll(fmt.Sprintf("/go/src/api/storage%s", key)); err != nil {
+			return nil, err
+		}
+	}
+	return keys, nil
+}
+
 type StorageService struct{}

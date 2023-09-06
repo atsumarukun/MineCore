@@ -17,3 +17,9 @@ export const UPLOAD_FILES = gql`
     }
   }
 `;
+
+export const REMOVE_FILES = gql`
+  mutation RemoveFiles($keys: [String!]!) {
+    removeFiles(keys: $keys)
+  }
+`;

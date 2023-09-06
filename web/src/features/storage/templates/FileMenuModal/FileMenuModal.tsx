@@ -20,9 +20,10 @@ import { RemoveModalBody } from "./RemoveModalBody";
 
 type Props = {
   file: GetFilesQuery["files"][number];
+  refetch: () => void;
 } & ButtonProps;
 
-export function FileMenuModal({ file, ...props }: Props) {
+export function FileMenuModal({ file, refetch, ...props }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [status, setStatus] = useState(ModalStatus.default);
 
@@ -32,7 +33,7 @@ export function FileMenuModal({ file, ...props }: Props) {
 
   return (
     <>
-      <Button {...props} onClick={onOpen} zIndex={1}>
+      <Button {...props} onClick={onOpen}>
         <Icon as={BsThreeDotsVertical} boxSize={4} />
       </Button>
       <Modal isCentered isOpen={isOpen} onClose={onClose}>
@@ -47,7 +48,11 @@ export function FileMenuModal({ file, ...props }: Props) {
               <DefaultModalBody setStatus={setStatus} />
             )}
             {status === ModalStatus.remove && (
-              <RemoveModalBody onClose={onClose} />
+              <RemoveModalBody
+                filekey={file.key}
+                refetch={refetch}
+                onClose={onClose}
+              />
             )}
           </ModalBody>
         </ModalContent>

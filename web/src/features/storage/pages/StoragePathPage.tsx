@@ -23,7 +23,7 @@ export function StoragePathPage({ path }: StoragePathPageProps) {
       try {
         await upload({ variables: { path: path, files: files } });
         toast({
-          title: "ファイルをアップロードしました.",
+          title: "アップロードしました.",
           status: "success",
           duration: 5000,
         });
@@ -54,7 +54,7 @@ export function StoragePathPage({ path }: StoragePathPageProps) {
   return (
     <Box h="100%" {...getRootProps()}>
       <input {...getInputProps()} />
-      <FileTileViews path={path} files={data?.files} />
+      <FileTileViews path={path} refetch={refetch} files={data?.files} />
     </Box>
   );
 }

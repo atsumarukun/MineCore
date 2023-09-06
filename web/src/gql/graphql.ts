@@ -27,7 +27,13 @@ export type File = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  removeFiles: Array<Scalars['String']['output']>;
   uploadFiles: Array<File>;
+};
+
+
+export type MutationRemoveFilesArgs = {
+  keys: Array<Scalars['String']['input']>;
 };
 
 
@@ -60,6 +66,13 @@ export type UploadFilesMutationVariables = Exact<{
 
 
 export type UploadFilesMutation = { __typename?: 'Mutation', uploadFiles: Array<{ __typename?: 'File', name: string }> };
+
+export type RemoveFilesMutationVariables = Exact<{
+  keys: Array<Scalars['String']['input']> | Scalars['String']['input'];
+}>;
+
+
+export type RemoveFilesMutation = { __typename?: 'Mutation', removeFiles: Array<string> };
 
 
 export const GetFilesDocument = gql`
@@ -133,3 +146,34 @@ export function useUploadFilesMutation(baseOptions?: Apollo.MutationHookOptions<
 export type UploadFilesMutationHookResult = ReturnType<typeof useUploadFilesMutation>;
 export type UploadFilesMutationResult = Apollo.MutationResult<UploadFilesMutation>;
 export type UploadFilesMutationOptions = Apollo.BaseMutationOptions<UploadFilesMutation, UploadFilesMutationVariables>;
+export const RemoveFilesDocument = gql`
+    mutation RemoveFiles($keys: [String!]!) {
+  removeFiles(keys: $keys)
+}
+    `;
+export type RemoveFilesMutationFn = Apollo.MutationFunction<RemoveFilesMutation, RemoveFilesMutationVariables>;
+
+/**
+ * __useRemoveFilesMutation__
+ *
+ * To run a mutation, you first call `useRemoveFilesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveFilesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeFilesMutation, { data, loading, error }] = useRemoveFilesMutation({
+ *   variables: {
+ *      keys: // value for 'keys'
+ *   },
+ * });
+ */
+export function useRemoveFilesMutation(baseOptions?: Apollo.MutationHookOptions<RemoveFilesMutation, RemoveFilesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveFilesMutation, RemoveFilesMutationVariables>(RemoveFilesDocument, options);
+      }
+export type RemoveFilesMutationHookResult = ReturnType<typeof useRemoveFilesMutation>;
+export type RemoveFilesMutationResult = Apollo.MutationResult<RemoveFilesMutation>;
+export type RemoveFilesMutationOptions = Apollo.BaseMutationOptions<RemoveFilesMutation, RemoveFilesMutationVariables>;

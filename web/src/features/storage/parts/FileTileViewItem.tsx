@@ -7,12 +7,19 @@ import { FileMenuModal } from "../templates/FileMenuModal";
 
 type Props = {
   file: GetFilesQuery["files"][number];
+  refetch: () => void;
 };
 
-export function FileTileViewItem({ file }: Props) {
+export function FileTileViewItem({ file, refetch }: Props) {
   return (
     <GridItem bgColor="blackAlpha.500" aspectRatio={1 / 1} position="relative">
-      <FileMenuModal file={file} position="absolute" right={0} />
+      <FileMenuModal
+        file={file}
+        refetch={refetch}
+        position="absolute"
+        right={0}
+        display={file.name === "../" ? "none" : "block"}
+      />
       <ConditionalLink href={`/storage${file.key}`} isLink={file.isDir}>
         <Center h="100%">
           <Icon as={file.isDir ? FaFolder : FaFileAlt} boxSize={"25%"} />

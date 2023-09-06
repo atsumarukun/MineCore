@@ -5,9 +5,10 @@ import { FileTileViewItem } from "../parts/FileTileViewItem";
 type Props = {
   path: string;
   files: GetFilesQuery["files"];
+  refetch: () => void;
 };
 
-export function FileTileViews({ path, files }: Props) {
+export function FileTileViews({ path, files, refetch }: Props) {
   return (
     <Grid
       gap={8}
@@ -24,10 +25,11 @@ export function FileTileViews({ path, files }: Props) {
             key: path.substring(0, path.lastIndexOf("/")),
             isDir: true,
           }}
+          refetch={refetch}
         />
       )}
       {files.map((file) => (
-        <FileTileViewItem file={file} key={file.key} />
+        <FileTileViewItem file={file} refetch={refetch} key={file.key} />
       ))}
     </Grid>
   );
