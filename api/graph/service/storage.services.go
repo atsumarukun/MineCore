@@ -15,7 +15,7 @@ func (_ StorageService) GetFiles(path string) ([]*model.File, error) {
 	}
 
 	for _, file := range files {
-		fs = append(fs, &model.File{file.Name(), fmt.Sprintf("/go/src/api/storage%s/%s", path, file.Name()), file.IsDir()})
+		fs = append(fs, &model.File{file.Name(), fmt.Sprintf("%s/%s", path, file.Name()), file.IsDir()})
 	}
 
 	return fs, nil
