@@ -9,3 +9,11 @@ export const GET_FILES = gql`
     }
   }
 `;
+
+export const UPLOAD_FILES = gql`
+  mutation UploadFiles($input: [Upload!]!) {
+    uploadFiles(input: $input) {
+      name
+    }
+  }
+`;

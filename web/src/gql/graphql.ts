@@ -15,6 +15,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  Upload: { input: any; output: any; }
 };
 
 export type File = {
@@ -22,6 +23,16 @@ export type File = {
   isDir: Scalars['Boolean']['output'];
   key: Scalars['String']['output'];
   name: Scalars['String']['output'];
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  uploadFiles: Array<File>;
+};
+
+
+export type MutationUploadFilesArgs = {
+  input: Array<Scalars['Upload']['input']>;
 };
 
 export type Query = {
@@ -40,6 +51,13 @@ export type GetFilesQueryVariables = Exact<{
 
 
 export type GetFilesQuery = { __typename?: 'Query', files: Array<{ __typename?: 'File', name: string, key: string, isDir: boolean }> };
+
+export type UploadFilesMutationVariables = Exact<{
+  input: Array<Scalars['Upload']['input']> | Scalars['Upload']['input'];
+}>;
+
+
+export type UploadFilesMutation = { __typename?: 'Mutation', uploadFiles: Array<{ __typename?: 'File', name: string }> };
 
 
 export const GetFilesDocument = gql`
@@ -79,3 +97,36 @@ export function useGetFilesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetFilesQueryHookResult = ReturnType<typeof useGetFilesQuery>;
 export type GetFilesLazyQueryHookResult = ReturnType<typeof useGetFilesLazyQuery>;
 export type GetFilesQueryResult = Apollo.QueryResult<GetFilesQuery, GetFilesQueryVariables>;
+export const UploadFilesDocument = gql`
+    mutation UploadFiles($input: [Upload!]!) {
+  uploadFiles(input: $input) {
+    name
+  }
+}
+    `;
+export type UploadFilesMutationFn = Apollo.MutationFunction<UploadFilesMutation, UploadFilesMutationVariables>;
+
+/**
+ * __useUploadFilesMutation__
+ *
+ * To run a mutation, you first call `useUploadFilesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUploadFilesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [uploadFilesMutation, { data, loading, error }] = useUploadFilesMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUploadFilesMutation(baseOptions?: Apollo.MutationHookOptions<UploadFilesMutation, UploadFilesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UploadFilesMutation, UploadFilesMutationVariables>(UploadFilesDocument, options);
+      }
+export type UploadFilesMutationHookResult = ReturnType<typeof useUploadFilesMutation>;
+export type UploadFilesMutationResult = Apollo.MutationResult<UploadFilesMutation>;
+export type UploadFilesMutationOptions = Apollo.BaseMutationOptions<UploadFilesMutation, UploadFilesMutationVariables>;

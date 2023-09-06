@@ -4,6 +4,12 @@ type File {
   isDir: Boolean!
 }
 
+scalar Upload
+
 extend type Query {
   files(path: String!): [File!]!
+}
+
+extend type Mutation {
+  uploadFiles(input: [Upload!]!): [File!]!
 }

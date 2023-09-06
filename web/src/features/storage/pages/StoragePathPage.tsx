@@ -1,4 +1,4 @@
-import { useGetFilesQuery } from "@/gql/graphql";
+import { useGetFilesQuery, useUploadFilesMutation } from "@/gql/graphql";
 import { StoragePathPageProps } from "@/pages/storage/[[...path]]";
 import { Box, Spinner } from "@chakra-ui/react";
 import Error from "next/error";
@@ -10,13 +10,15 @@ export function StoragePathPage({ path }: StoragePathPageProps) {
   const { loading, error, data } = useGetFilesQuery({
     variables: { path: path },
   });
+  const [upload] = useUploadFilesMutation();
 
   const onDrop = useCallback(async (files: File[]) => {
-    console.log(files);
+    await upload({ variables: { input: files } });
   }, []);
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
+    multiple: true,
     noClick: true,
   });
 
