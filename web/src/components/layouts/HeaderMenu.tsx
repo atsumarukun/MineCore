@@ -20,7 +20,7 @@ export function HeaderMenu() {
 
   return (
     <>
-      <Button variant="ghost" onClick={onOpen}>
+      <Button onClick={onOpen}>
         <Icon as={FiMenu} boxSize={6} />
       </Button>
       <Drawer isOpen={isOpen} placement="left" onClose={onClose}>

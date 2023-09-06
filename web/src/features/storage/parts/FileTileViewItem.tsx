@@ -3,6 +3,7 @@ import { EllipsisText } from "@/components/parts/EllipsisText";
 import { GetFilesQuery } from "@/gql/graphql";
 import { Center, Flex, GridItem, Icon } from "@chakra-ui/react";
 import { FaFolder, FaFileAlt } from "react-icons/fa";
+import { FileMenuModal } from "../templates/FileMenuModal";
 
 type Props = {
   file: GetFilesQuery["files"][number];
@@ -10,12 +11,9 @@ type Props = {
 
 export function FileTileViewItem({ file }: Props) {
   return (
-    <ConditionalLink href={`/storage${file.key}`} isLink={file.isDir}>
-      <GridItem
-        bgColor="blackAlpha.500"
-        aspectRatio={1 / 1}
-        position="relative"
-      >
+    <GridItem bgColor="blackAlpha.500" aspectRatio={1 / 1} position="relative">
+      <FileMenuModal file={file} position="absolute" right={0} />
+      <ConditionalLink href={`/storage${file.key}`} isLink={file.isDir}>
         <Center h="100%">
           <Icon as={file.isDir ? FaFolder : FaFileAlt} boxSize={"25%"} />
         </Center>
@@ -25,11 +23,11 @@ export function FileTileViewItem({ file }: Props) {
           bgColor="whiteAlpha.500"
           position="absolute"
           px={2}
-          bottom="0"
+          bottom={0}
         >
           <EllipsisText>{file.name}</EllipsisText>
         </Flex>
-      </GridItem>
-    </ConditionalLink>
+      </ConditionalLink>
+    </GridItem>
   );
 }
