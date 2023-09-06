@@ -1,0 +1,23 @@
+import { Button, FlexboxProps, LayoutProps } from "@chakra-ui/react";
+import Link from "next/link";
+import { ReactNode } from "react";
+
+type Props = {
+  href: string;
+  children: ReactNode;
+} & LayoutProps &
+  FlexboxProps;
+
+export function ButtonLink({ href, children, ...props }: Props) {
+  return (
+    <Button
+      as={Link}
+      href={href}
+      variant="ghost"
+      fontWeight="normal"
+      {...props}
+    >
+      {children}
+    </Button>
+  );
+}

@@ -5,11 +5,10 @@ services:
     image: node:18
     volumes:
       - ./web:/opt/web
+      - ./api/graph/schema:/opt/web/schema
     working_dir: /opt/web
     ports:
       - 3000:3000
-    depends_on:
-      - api
     command: npm run dev
 
   api:
