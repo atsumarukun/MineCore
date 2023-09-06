@@ -3,3 +3,6 @@ node_modules
 
 # next services
 .next
+
+# env file
+.env

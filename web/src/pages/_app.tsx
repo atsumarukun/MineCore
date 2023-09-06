@@ -6,7 +6,9 @@ import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
 
 export default function App({ Component, pageProps }: AppProps) {
-  const httpLink = createUploadLink({ uri: "http://localhost:8000/query" });
+  const httpLink = createUploadLink({
+    uri: process.env.NEXT_PUBLIC_GRAPHQL_URL,
+  });
   const client = new ApolloClient({
     link: httpLink,
     cache: new InMemoryCache(),
