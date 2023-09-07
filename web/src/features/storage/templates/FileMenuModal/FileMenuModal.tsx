@@ -17,13 +17,15 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { ModalStatus } from ".";
 import { DefaultModalBody } from "./DefaultModalBody";
 import { RemoveModalBody } from "./RemoveModalBody";
+import { RenameModalBody } from "./RenameModalBody";
 
 type Props = {
   file: GetFilesQuery["files"][number];
+  path: string;
   refetch: () => void;
 } & ButtonProps;
 
-export function FileMenuModal({ file, refetch, ...props }: Props) {
+export function FileMenuModal({ file, path, refetch, ...props }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [status, setStatus] = useState(ModalStatus.default);
 
@@ -46,6 +48,14 @@ export function FileMenuModal({ file, refetch, ...props }: Props) {
           <ModalBody>
             {status === ModalStatus.default && (
               <DefaultModalBody setStatus={setStatus} />
+            )}
+            {status === ModalStatus.rename && (
+              <RenameModalBody
+                name={file.name}
+                path={path}
+                refetch={refetch}
+                onClose={onClose}
+              />
             )}
             {status === ModalStatus.remove && (
               <RemoveModalBody

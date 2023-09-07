@@ -25,11 +25,17 @@ export function FileTileViews({ path, files, refetch }: Props) {
             key: path.substring(0, path.lastIndexOf("/")),
             isDir: true,
           }}
+          path={path}
           refetch={refetch}
         />
       )}
       {files.map((file) => (
-        <FileTileViewItem file={file} refetch={refetch} key={file.key} />
+        <FileTileViewItem
+          file={file}
+          path={path}
+          refetch={refetch}
+          key={file.key}
+        />
       ))}
     </Grid>
   );

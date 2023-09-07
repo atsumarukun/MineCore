@@ -2,5 +2,6 @@ export * from "./FileMenuModal";
 
 export const ModalStatus = {
   default: 0,
-  remove: 1,
+  rename: 1,
+  remove: 2,
 };

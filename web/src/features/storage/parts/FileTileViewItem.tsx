@@ -7,14 +7,16 @@ import { FileMenuModal } from "../templates/FileMenuModal";
 
 type Props = {
   file: GetFilesQuery["files"][number];
+  path: string;
   refetch: () => void;
 };
 
-export function FileTileViewItem({ file, refetch }: Props) {
+export function FileTileViewItem({ file, path, refetch }: Props) {
   return (
     <GridItem bgColor="blackAlpha.500" aspectRatio={1 / 1} position="relative">
       <FileMenuModal
         file={file}
+        path={path}
         refetch={refetch}
         position="absolute"
         right={0}

@@ -12,5 +12,6 @@ extend type Query {
 
 extend type Mutation {
   uploadFiles(path: String!, files: [Upload!]!): [File!]!
+  moveFile(key: String!, destination: String!): String!
   removeFiles(keys: [String!]!): [String!]!
 }
