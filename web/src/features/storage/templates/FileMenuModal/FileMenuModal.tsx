@@ -18,6 +18,7 @@ import { ModalStatus } from ".";
 import { DefaultModalBody } from "./DefaultModalBody";
 import { RemoveModalBody } from "./RemoveModalBody";
 import { RenameModalBody } from "./RenameModalBody";
+import Link from "next/link";
 
 type Props = {
   file: GetFilesQuery["files"][number];
@@ -42,7 +43,12 @@ export function FileMenuModal({ file, path, refetch, ...props }: Props) {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
-            <EllipsisText>{file.name}</EllipsisText>
+            <EllipsisText
+              as={Link}
+              href={`${process.env.NEXT_PUBLIC_STORAGE_URL}${file.key}`}
+            >
+              {file.name}
+            </EllipsisText>
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>

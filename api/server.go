@@ -26,6 +26,7 @@ func main() {
 
 	mux.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	mux.Handle("/query", srv)
+	mux.Handle("/storage/", http.StripPrefix("/storage", http.FileServer(http.Dir("./storage/"))))
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
 	log.Fatal(http.ListenAndServe(":"+port, handler))
