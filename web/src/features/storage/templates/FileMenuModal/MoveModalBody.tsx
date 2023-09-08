@@ -20,7 +20,7 @@ export function MoveModalBody({ path, name, refetch, onClose }: Props) {
   });
   const toast = useToast();
 
-  const onClick = async () => {
+  const onMove = async () => {
     try {
       await move({
         variables: {
@@ -50,7 +50,7 @@ export function MoveModalBody({ path, name, refetch, onClose }: Props) {
     <>
       <DirList dirkey={key} setKey={setKey} onClose={onClose} />
       <HStack w="100%" justifyContent="right" mt={8}>
-        <Button onClick={onClick}>ここに移動</Button>
+        <Button onClick={onMove}>ここに移動</Button>
       </HStack>
     </>
   );

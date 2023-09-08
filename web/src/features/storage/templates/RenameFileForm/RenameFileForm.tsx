@@ -35,7 +35,7 @@ export function RenameFileForm({ name, path, refetch, onClose }: Props) {
   });
   const toast = useToast();
 
-  const onSubmit: SubmitHandler<RenameFileFormSchema> = async (data) => {
+  const onRename: SubmitHandler<RenameFileFormSchema> = async (data) => {
     try {
       await rename({
         variables: {
@@ -64,7 +64,7 @@ export function RenameFileForm({ name, path, refetch, onClose }: Props) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onRename)}>
       <FormControl>
         <FormLabel>ファイル名</FormLabel>
         {errors.name && <Text color="red.500">{errors.name.message}</Text>}

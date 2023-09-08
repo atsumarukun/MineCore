@@ -20,7 +20,7 @@ export function CopyModalBody({ path, name, refetch, onClose }: Props) {
   });
   const toast = useToast();
 
-  const onClick = async () => {
+  const onCopy = async () => {
     try {
       await copy({
         variables: {
@@ -50,7 +50,7 @@ export function CopyModalBody({ path, name, refetch, onClose }: Props) {
     <>
       <DirList dirkey={key} setKey={setKey} onClose={onClose} />
       <HStack w="100%" justifyContent="right" mt={8}>
-        <Button onClick={onClick}>ここにコピー</Button>
+        <Button onClick={onCopy}>ここにコピー</Button>
       </HStack>
     </>
   );
