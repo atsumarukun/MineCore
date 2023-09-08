@@ -14,11 +14,12 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import Link from "next/link";
 import { ModalStatus } from ".";
 import { DefaultModalBody } from "./DefaultModalBody";
 import { RemoveModalBody } from "./RemoveModalBody";
 import { RenameModalBody } from "./RenameModalBody";
-import Link from "next/link";
+import { MoveModalBody } from "./MoveModalBody";
 
 type Props = {
   file: GetFilesQuery["files"][number];
@@ -59,6 +60,14 @@ export function FileMenuModal({ file, path, refetch, ...props }: Props) {
               <RenameModalBody
                 name={file.name}
                 path={path}
+                refetch={refetch}
+                onClose={onClose}
+              />
+            )}
+            {status === ModalStatus.move && (
+              <MoveModalBody
+                path={path}
+                name={file.name}
                 refetch={refetch}
                 onClose={onClose}
               />
