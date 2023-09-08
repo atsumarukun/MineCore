@@ -19,6 +19,11 @@ func (r *mutationResolver) MoveFile(ctx context.Context, key string, destination
 	return serv.MoveFile(key, destination)
 }
 
+func (r *mutationResolver) CopyFile(ctx context.Context, key string, destination string) (string, error) {
+	serv := service.StorageService{}
+	return serv.CopyFile(key, destination)
+}
+
 func (r *mutationResolver) RemoveFiles(ctx context.Context, keys []string) ([]string, error) {
 	serv := service.StorageService{}
 	return serv.RemoveFiles(keys)

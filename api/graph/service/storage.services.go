@@ -3,7 +3,10 @@ package service
 import (
 	"api/graph/model"
 	"io/ioutil"
+	"strings"
+	"regexp"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/99designs/gqlgen/graphql"
@@ -50,6 +53,29 @@ func (_ StorageService) MoveFile(key string, destination string) (string, error)
 	if err := os.Rename(fmt.Sprintf("/go/src/api/storage%s", key), fmt.Sprintf("/go/src/api/storage%s", destination)); err != nil {
 		return "", err
 	}
+	return destination, nil
+}
+
+func (_ StorageService) CopyFile(key string, destination string) (string, error) {
+	file, err := os.Open(fmt.Sprintf("/go/src/api/storage%s", key))
+	if err != nil {
+		return "", err
+	}
+
+	var copy io.Writer
+	if key == destination {
+		copy, err = os.Create(fmt.Sprintf("/go/src/api/storage%s", strings.Replace(destination, ".", " copy.", 1)))
+		if err != nil {
+			return "", err
+		}
+	} else {
+		copy, err = os.Create(fmt.Sprintf("/go/src/api/storage%s", destination))
+		if err != nil {
+			return "", err
+		}
+	}
+
+	io.Copy(copy, file)
 	return destination, nil
 }
 

@@ -27,9 +27,16 @@ export type File = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  copyFile: Scalars['String']['output'];
   moveFile: Scalars['String']['output'];
   removeFiles: Array<Scalars['String']['output']>;
   uploadFiles: Array<File>;
+};
+
+
+export type MutationCopyFileArgs = {
+  destination: Scalars['String']['input'];
+  key: Scalars['String']['input'];
 };
 
 
@@ -89,6 +96,14 @@ export type MoveFileMutationVariables = Exact<{
 
 
 export type MoveFileMutation = { __typename?: 'Mutation', moveFile: string };
+
+export type CopyFileMutationVariables = Exact<{
+  key: Scalars['String']['input'];
+  destination: Scalars['String']['input'];
+}>;
+
+
+export type CopyFileMutation = { __typename?: 'Mutation', copyFile: string };
 
 export type RemoveFilesMutationVariables = Exact<{
   keys: Array<Scalars['String']['input']> | Scalars['String']['input'];
@@ -237,6 +252,38 @@ export function useMoveFileMutation(baseOptions?: Apollo.MutationHookOptions<Mov
 export type MoveFileMutationHookResult = ReturnType<typeof useMoveFileMutation>;
 export type MoveFileMutationResult = Apollo.MutationResult<MoveFileMutation>;
 export type MoveFileMutationOptions = Apollo.BaseMutationOptions<MoveFileMutation, MoveFileMutationVariables>;
+export const CopyFileDocument = gql`
+    mutation CopyFile($key: String!, $destination: String!) {
+  copyFile(key: $key, destination: $destination)
+}
+    `;
+export type CopyFileMutationFn = Apollo.MutationFunction<CopyFileMutation, CopyFileMutationVariables>;
+
+/**
+ * __useCopyFileMutation__
+ *
+ * To run a mutation, you first call `useCopyFileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCopyFileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [copyFileMutation, { data, loading, error }] = useCopyFileMutation({
+ *   variables: {
+ *      key: // value for 'key'
+ *      destination: // value for 'destination'
+ *   },
+ * });
+ */
+export function useCopyFileMutation(baseOptions?: Apollo.MutationHookOptions<CopyFileMutation, CopyFileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CopyFileMutation, CopyFileMutationVariables>(CopyFileDocument, options);
+      }
+export type CopyFileMutationHookResult = ReturnType<typeof useCopyFileMutation>;
+export type CopyFileMutationResult = Apollo.MutationResult<CopyFileMutation>;
+export type CopyFileMutationOptions = Apollo.BaseMutationOptions<CopyFileMutation, CopyFileMutationVariables>;
 export const RemoveFilesDocument = gql`
     mutation RemoveFiles($keys: [String!]!) {
   removeFiles(keys: $keys)

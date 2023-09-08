@@ -4,6 +4,7 @@ import { ModalStatus } from ".";
 import { FiTrash } from "react-icons/fi";
 import { BsPencil } from "react-icons/bs";
 import { LuFileOutput } from "react-icons/lu";
+import { IoMdCopy } from "react-icons/io";
 
 type Props = {
   setStatus: Dispatch<number>;
@@ -27,6 +28,14 @@ export function DefaultModalBody({ setStatus }: Props) {
       >
         <Icon as={LuFileOutput} boxSize={6} mr={6} />
         移動
+      </Button>
+      <Button
+        w="100%"
+        justifyContent="left"
+        onClick={() => setStatus(ModalStatus.copy)}
+      >
+        <Icon as={IoMdCopy} boxSize={6} mr={6} />
+        コピー
       </Button>
       <Button
         w="100%"

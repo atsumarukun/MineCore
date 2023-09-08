@@ -33,6 +33,12 @@ export const MOVE_FILE = gql`
   }
 `;
 
+export const COPY_FILE = gql`
+  mutation CopyFile($key: String!, $destination: String!) {
+    copyFile(key: $key, destination: $destination)
+  }
+`;
+
 export const REMOVE_FILES = gql`
   mutation RemoveFiles($keys: [String!]!) {
     removeFiles(keys: $keys)

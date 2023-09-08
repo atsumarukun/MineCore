@@ -20,6 +20,7 @@ import { DefaultModalBody } from "./DefaultModalBody";
 import { RemoveModalBody } from "./RemoveModalBody";
 import { RenameModalBody } from "./RenameModalBody";
 import { MoveModalBody } from "./MoveModalBody";
+import { CopyModalBody } from "./CopyModalBody";
 
 type Props = {
   file: GetFilesQuery["files"][number];
@@ -66,6 +67,14 @@ export function FileMenuModal({ file, path, refetch, ...props }: Props) {
             )}
             {status === ModalStatus.move && (
               <MoveModalBody
+                path={path}
+                name={file.name}
+                refetch={refetch}
+                onClose={onClose}
+              />
+            )}
+            {status === ModalStatus.copy && (
+              <CopyModalBody
                 path={path}
                 name={file.name}
                 refetch={refetch}

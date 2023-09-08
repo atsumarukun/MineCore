@@ -1,8 +1,8 @@
-import { useMoveFileMutation } from "@/gql/graphql";
 import { ApolloError } from "@apollo/client";
 import { Button, HStack, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import { DirList } from "../DirList";
+import { useCopyFileMutation } from "@/gql/graphql";
 
 type Props = {
   path: string;
@@ -11,9 +11,9 @@ type Props = {
   onClose: () => void;
 };
 
-export function MoveModalBody({ path, name, refetch, onClose }: Props) {
+export function CopyModalBody({ path, name, refetch, onClose }: Props) {
   const [key, setKey] = useState(path);
-  const [move] = useMoveFileMutation({
+  const [copy] = useCopyFileMutation({
     onCompleted() {
       refetch();
     },
@@ -22,14 +22,14 @@ export function MoveModalBody({ path, name, refetch, onClose }: Props) {
 
   const onClick = async () => {
     try {
-      await move({
+      await copy({
         variables: {
           key: `${path}/${name}`,
           destination: `${key}/${name}`,
         },
       });
       toast({
-        title: "移動しました.",
+        title: "コピーしました.",
         status: "success",
         duration: 5000,
       });
@@ -50,7 +50,7 @@ export function MoveModalBody({ path, name, refetch, onClose }: Props) {
     <>
       <DirList dirkey={key} setKey={setKey} onClose={onClose} />
       <HStack w="100%" justifyContent="right" mt={8}>
-        <Button onClick={onClick}>ここに移動</Button>
+        <Button onClick={onClick}>ここにコピー</Button>
       </HStack>
     </>
   );
