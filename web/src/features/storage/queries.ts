@@ -10,6 +10,15 @@ export const GET_FILES = gql`
   }
 `;
 
+export const GET_DIRS = gql`
+  query GetDirs($path: String!) {
+    files(path: $path, isDir: true) {
+      name
+      key
+    }
+  }
+`;
+
 export const UPLOAD_FILES = gql`
   mutation UploadFiles($path: String!, $files: [Upload!]!) {
     uploadFiles(path: $path, files: $files) {

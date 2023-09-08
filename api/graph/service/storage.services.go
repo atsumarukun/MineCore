@@ -9,7 +9,7 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 )
 
-func (_ StorageService) GetFiles(path string) ([]*model.File, error) {
+func (_ StorageService) GetFiles(path string, isDir *bool) ([]*model.File, error) {
 	var fs []*model.File
 	var ds []*model.File
 
@@ -19,9 +19,9 @@ func (_ StorageService) GetFiles(path string) ([]*model.File, error) {
 	}
 
 	for _, file := range files {
-		if file.IsDir() {
+		if file.IsDir() && (isDir == nil || *isDir) {
 			ds = append(ds, &model.File{file.Name(), fmt.Sprintf("%s/%s", path, file.Name()), file.IsDir()})
-		} else {
+		} else if !file.IsDir() && (isDir == nil || !*isDir) {
 			fs = append(fs, &model.File{file.Name(), fmt.Sprintf("%s/%s", path, file.Name()), file.IsDir()})
 		}
 	}

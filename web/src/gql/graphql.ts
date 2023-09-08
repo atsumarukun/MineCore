@@ -56,6 +56,7 @@ export type Query = {
 
 
 export type QueryFilesArgs = {
+  isDir?: InputMaybe<Scalars['Boolean']['input']>;
   path: Scalars['String']['input'];
 };
 
@@ -65,6 +66,13 @@ export type GetFilesQueryVariables = Exact<{
 
 
 export type GetFilesQuery = { __typename?: 'Query', files: Array<{ __typename?: 'File', name: string, key: string, isDir: boolean }> };
+
+export type GetDirsQueryVariables = Exact<{
+  path: Scalars['String']['input'];
+}>;
+
+
+export type GetDirsQuery = { __typename?: 'Query', files: Array<{ __typename?: 'File', name: string, key: string }> };
 
 export type UploadFilesMutationVariables = Exact<{
   path: Scalars['String']['input'];
@@ -127,6 +135,42 @@ export function useGetFilesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetFilesQueryHookResult = ReturnType<typeof useGetFilesQuery>;
 export type GetFilesLazyQueryHookResult = ReturnType<typeof useGetFilesLazyQuery>;
 export type GetFilesQueryResult = Apollo.QueryResult<GetFilesQuery, GetFilesQueryVariables>;
+export const GetDirsDocument = gql`
+    query GetDirs($path: String!) {
+  files(path: $path, isDir: true) {
+    name
+    key
+  }
+}
+    `;
+
+/**
+ * __useGetDirsQuery__
+ *
+ * To run a query within a React component, call `useGetDirsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDirsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDirsQuery({
+ *   variables: {
+ *      path: // value for 'path'
+ *   },
+ * });
+ */
+export function useGetDirsQuery(baseOptions: Apollo.QueryHookOptions<GetDirsQuery, GetDirsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetDirsQuery, GetDirsQueryVariables>(GetDirsDocument, options);
+      }
+export function useGetDirsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetDirsQuery, GetDirsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetDirsQuery, GetDirsQueryVariables>(GetDirsDocument, options);
+        }
+export type GetDirsQueryHookResult = ReturnType<typeof useGetDirsQuery>;
+export type GetDirsLazyQueryHookResult = ReturnType<typeof useGetDirsLazyQuery>;
+export type GetDirsQueryResult = Apollo.QueryResult<GetDirsQuery, GetDirsQueryVariables>;
 export const UploadFilesDocument = gql`
     mutation UploadFiles($path: String!, $files: [Upload!]!) {
   uploadFiles(path: $path, files: $files) {
