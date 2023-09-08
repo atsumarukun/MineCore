@@ -55,7 +55,11 @@ export function FileMenuModal({ file, path, refetch, ...props }: Props) {
           <ModalCloseButton />
           <ModalBody>
             {status === ModalStatus.default && (
-              <DefaultModalBody setStatus={setStatus} />
+              <DefaultModalBody
+                name={file.name}
+                filekey={file.key}
+                setStatus={setStatus}
+              />
             )}
             {status === ModalStatus.rename && (
               <RenameModalBody
