@@ -46,7 +46,6 @@ export function FileTileViewItem({ file, path, onClick, refetch }: Props) {
 
   return (
     <GridItem
-      bgColor="blackAlpha.500"
       aspectRatio={1 / 1}
       position="relative"
       bgImage={
@@ -82,7 +81,7 @@ export function FileTileViewItem({ file, path, onClick, refetch }: Props) {
               />
             </Center>
           ) : (
-            <Center h="100%">
+            <Center h="100%" bgColor="blackAlpha.500">
               <Icon as={icon} boxSize={"25%"} />
             </Center>
           )}
