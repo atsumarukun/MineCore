@@ -1,11 +1,12 @@
 import { useGetFilesQuery, useUploadFilesMutation } from "@/gql/graphql";
 import { StoragePathPageProps } from "@/pages/storage/[[...path]]";
-import { Box, Spinner, useToast } from "@chakra-ui/react";
+import { Box, useToast } from "@chakra-ui/react";
 import Error from "next/error";
 import { FileTileViews } from "../templates/FileTileViews";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { ApolloError } from "@apollo/client";
+import { Loading } from "@/components/parts/Loading";
 
 export function StoragePathPage({ path }: StoragePathPageProps) {
   const { loading, error, data, refetch } = useGetFilesQuery({
@@ -47,7 +48,7 @@ export function StoragePathPage({ path }: StoragePathPageProps) {
     noClick: true,
   });
 
-  if (loading) return <Spinner />;
+  if (loading) return <Loading />;
   if (!data || error) return <Error statusCode={500} />;
   if (!data.files) return <Error statusCode={404} />;
 

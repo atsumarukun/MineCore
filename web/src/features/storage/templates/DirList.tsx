@@ -30,6 +30,7 @@ export function DirList({ dirkey, setKey, onClose }: Props) {
       duration: 5000,
     });
     onClose();
+    return <></>;
   }
 
   return (
@@ -44,7 +45,7 @@ export function DirList({ dirkey, setKey, onClose }: Props) {
           ../
         </Button>
       )}
-      {data?.files.map((dir) => (
+      {data.files.map((dir) => (
         <Button
           w="100%"
           justifyContent="left"

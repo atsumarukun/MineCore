@@ -1,6 +1,6 @@
 import { GetFilesQuery } from "@/gql/graphql";
 import { Grid, useDisclosure } from "@chakra-ui/react";
-import { FileTileViewItem } from "../parts/FileTileViewItem";
+import { FileTileViewItem } from "./FileTileViewItem";
 import { useState } from "react";
 import { PreviewFileModal } from "./PreviewFileModal";
 

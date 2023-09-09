@@ -12,7 +12,7 @@ export const Modal = defineStyleConfig({
       backgroundColor: "blackAlpha.800",
     },
     overlay: {
-      backgroundColor: "whiteAlpha.300",
+      backgroundColor: "whiteAlpha.400",
     },
     dialog: {
       rounded: 0,

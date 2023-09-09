@@ -10,7 +10,7 @@ import {
   FaFile,
   FaFileAudio,
 } from "react-icons/fa";
-import { FileMenuModal } from "../templates/FileMenuModal";
+import { FileMenuModal } from "./FileMenuModal";
 import { ConditionalButton } from "@/components/parts/ConditionalButton";
 import { IconType } from "react-icons";
 

@@ -8,6 +8,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  useToast,
 } from "@chakra-ui/react";
 import Link from "next/link";
 
@@ -18,6 +19,19 @@ type Props = {
 };
 
 export function PreviewFileModal({ file, isOpen, onClose }: Props) {
+  const toast = useToast();
+  if (!file) {
+    if (isOpen) {
+      toast({
+        title: "ファイルの取得に失敗しました.",
+        status: "error",
+        duration: 5000,
+      });
+      onClose();
+    }
+    return <></>;
+  }
+
   return (
     <Modal isCentered isOpen={isOpen} onClose={onClose} size="auto">
       <ModalOverlay />
@@ -32,34 +46,39 @@ export function PreviewFileModal({ file, isOpen, onClose }: Props) {
         >
           <EllipsisText
             as={Link}
-            href={`${process.env.NEXT_PUBLIC_STORAGE_URL}${file?.key}`}
+            href={`${process.env.NEXT_PUBLIC_STORAGE_URL}${file.key}`}
             fontWeight="light"
           >
-            {file?.name}
+            {file.name}
           </EllipsisText>
         </ModalHeader>
         <ModalCloseButton zIndex={1} />
         <ModalBody maxW="75vw" p={0}>
-          {file?.type === "image" && (
+          {file.type === "image" && (
             <Image
               src={`${process.env.NEXT_PUBLIC_STORAGE_URL}${file.key}`}
               maxH="75vh"
               objectFit="contain"
             />
           )}
-          {(file?.type === "video" || file?.type === "audio") && (
-            <video controls autoPlay loop style={{ width: "75vh" }}>
+          {(file.type === "video" || file.type === "audio") && (
+            <video
+              controls
+              autoPlay
+              loop
+              style={{ maxWidth: "75vw", maxHeight: "75vh" }}
+            >
               <source
                 src={`${process.env.NEXT_PUBLIC_STORAGE_URL}${file.key}`}
               />
             </video>
           )}
-          {file?.type === "text" && (
+          {file.type === "text" && (
             <iframe
-              id="iframe"
-              src={`${process.env.NEXT_PUBLIC_STORAGE_URL}${file?.key}`}
+              src={`${process.env.NEXT_PUBLIC_STORAGE_URL}${file.key}`}
               style={{
                 width: "75vw",
+                height: "75vh",
                 marginTop: "50px",
                 backgroundColor: "white",
               }}
