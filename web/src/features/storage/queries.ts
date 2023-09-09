@@ -5,6 +5,7 @@ export const GET_FILES = gql`
     files(path: $path) {
       name
       key
+      type
       isDir
     }
   }

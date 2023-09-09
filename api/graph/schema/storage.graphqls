@@ -1,6 +1,7 @@
 type File {
   name: String!
   key: String!
+  type: String!
   isDir: Boolean!
 }
 

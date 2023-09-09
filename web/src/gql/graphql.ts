@@ -23,6 +23,7 @@ export type File = {
   isDir: Scalars['Boolean']['output'];
   key: Scalars['String']['output'];
   name: Scalars['String']['output'];
+  type: Scalars['String']['output'];
 };
 
 export type Mutation = {
@@ -72,7 +73,7 @@ export type GetFilesQueryVariables = Exact<{
 }>;
 
 
-export type GetFilesQuery = { __typename?: 'Query', files: Array<{ __typename?: 'File', name: string, key: string, isDir: boolean }> };
+export type GetFilesQuery = { __typename?: 'Query', files: Array<{ __typename?: 'File', name: string, key: string, type: string, isDir: boolean }> };
 
 export type GetDirsQueryVariables = Exact<{
   path: Scalars['String']['input'];
@@ -118,6 +119,7 @@ export const GetFilesDocument = gql`
   files(path: $path) {
     name
     key
+    type
     isDir
   }
 }

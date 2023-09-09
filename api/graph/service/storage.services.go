@@ -4,13 +4,37 @@ import (
 	"api/graph/model"
 	"io/ioutil"
 	"strings"
-	"regexp"
 	"fmt"
 	"io"
 	"os"
 
 	"github.com/99designs/gqlgen/graphql"
 )
+
+func GetFileType(name string) string {
+	var filetype string
+
+	if (strings.LastIndex(name, ".") == -1) {
+		return "application"
+	}
+	extension := name[strings.LastIndex(name, ".") + 1:]
+
+	// https://developer.mozilla.org/ja/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+	switch extension {
+	case "jpeg", "jpg", "png", "svg", "gif", "bmp", "ico", "tif", "tiff", "webp":
+		filetype = "image"
+	case "mp4", "avi", "mpeg", "ogv", "ts", "webm":
+		filetype = "video"
+	case "mp3", "aac", "mid", "midi", "oga", "opus", "wav", "weba":
+		filetype = "audio"
+	case "txt", "csv", "css", "htm", "html", "ics", "js", "mjs":
+		filetype = "text"
+	default:
+		filetype = "application"
+	}
+
+	return filetype
+}
 
 func (_ StorageService) GetFiles(path string, isDir *bool) ([]*model.File, error) {
 	var fs []*model.File
@@ -23,9 +47,9 @@ func (_ StorageService) GetFiles(path string, isDir *bool) ([]*model.File, error
 
 	for _, file := range files {
 		if file.IsDir() && (isDir == nil || *isDir) {
-			ds = append(ds, &model.File{file.Name(), fmt.Sprintf("%s/%s", path, file.Name()), file.IsDir()})
+			ds = append(ds, &model.File{file.Name(), fmt.Sprintf("%s/%s", path, file.Name()), "dir", file.IsDir()})
 		} else if !file.IsDir() && (isDir == nil || !*isDir) {
-			fs = append(fs, &model.File{file.Name(), fmt.Sprintf("%s/%s", path, file.Name()), file.IsDir()})
+			fs = append(fs, &model.File{file.Name(), fmt.Sprintf("%s/%s", path, file.Name()), GetFileType(file.Name()), file.IsDir()})
 		}
 	}
 
@@ -44,7 +68,7 @@ func (_ StorageService) UploadFiles(path string, files []*graphql.Upload) ([]*mo
 		if err := ioutil.WriteFile(fmt.Sprintf("/go/src/api/storage%s/%s", path, file.Filename), buf, os.ModePerm); err != nil {
 			return nil, err
 		}
-		fs = append(fs, &model.File{file.Filename, fmt.Sprintf("%s/%s", path, file.Filename), false})
+		fs = append(fs, &model.File{file.Filename, fmt.Sprintf("%s/%s", path, file.Filename), file.ContentType[0:strings.Index(file.ContentType, "/")], false})
 	}
 	return fs, nil
 }
