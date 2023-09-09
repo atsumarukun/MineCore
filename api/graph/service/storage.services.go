@@ -3,6 +3,7 @@ package service
 import (
 	"api/graph/model"
 	"io/ioutil"
+	"net/url"
 	"strings"
 	"fmt"
 	"io"
@@ -39,6 +40,11 @@ func GetFileType(name string) string {
 func (_ StorageService) GetFiles(path string, isDir *bool) ([]*model.File, error) {
 	var fs []*model.File
 	var ds []*model.File
+
+	path, err  := url.QueryUnescape(path)
+	if err != nil {
+		return nil, err
+	}
 
 	files, err := ioutil.ReadDir(fmt.Sprintf("/go/src/api/storage%s", path))
 	if err != nil {
