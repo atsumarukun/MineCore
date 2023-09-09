@@ -1,7 +1,7 @@
 import { ConditionalLink } from "@/components/parts/ConditionalLink";
 import { EllipsisText } from "@/components/parts/EllipsisText";
 import { GetFilesQuery } from "@/gql/graphql";
-import { Center, Flex, GridItem, Icon, Image } from "@chakra-ui/react";
+import { Center, GridItem, Icon, Image } from "@chakra-ui/react";
 import {
   FaFolder,
   FaFileAlt,
@@ -86,18 +86,17 @@ export function FileTileViewItem({ file, path, onClick, refetch }: Props) {
               <Icon as={icon} boxSize={"25%"} />
             </Center>
           )}
-          <Flex
+          <Center
             w="100%"
-            justifyContent="center"
-            bgColor={
-              file.type === "image" ? "blackAlpha.500" : "whiteAlpha.500"
-            }
+            h="auto"
+            bgColor="blackAlpha.500"
             position="absolute"
-            px={2}
             bottom={0}
           >
-            <EllipsisText>{file.name}</EllipsisText>
-          </Flex>
+            <Center w="100%" bgColor="whiteAlpha.600" px={2}>
+              <EllipsisText>{file.name}</EllipsisText>
+            </Center>
+          </Center>
         </ConditionalButton>
       </ConditionalLink>
     </GridItem>
