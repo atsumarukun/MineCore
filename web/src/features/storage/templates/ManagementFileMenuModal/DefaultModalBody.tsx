@@ -16,7 +16,7 @@ export function DefaultModalBody({ setStatus, onClose }: Props) {
   const token = parseCookies().token;
 
   const onDestroyToken = () => {
-    destroyCookie(null, "token");
+    destroyCookie({}, "token");
     onClose();
     router.reload();
   };

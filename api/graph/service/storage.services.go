@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"strings"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -47,6 +48,10 @@ func (_ StorageService) GetFiles(ctx context.Context, path string, name *string,
 		return nil, err
 	}
 
+	if strings.Contains(path, ".") && ctx.Value("verified") == nil {
+		return fs, nil
+	}
+
 	files, err := ioutil.ReadDir(fmt.Sprintf("/go/src/api/storage%s", path))
 	if err != nil {
 		return nil, err
@@ -71,8 +76,12 @@ func (_ StorageService) GetFiles(ctx context.Context, path string, name *string,
 	return append(ds, fs...), nil
 }
 
-func (_ StorageService) UploadFiles(path string, files []*graphql.Upload) ([]*model.File, error) {
+func (_ StorageService) UploadFiles(ctx context.Context, path string, files []*graphql.Upload) ([]*model.File, error) {
 	var fs []*model.File
+
+	if strings.Contains(path, ".") && ctx.Value("verified") == nil {
+		return nil, errors.New("Token does not exist.")
+	}
 
 	for _, file := range files {
 		buf, err := ioutil.ReadAll(file.File)
@@ -88,14 +97,22 @@ func (_ StorageService) UploadFiles(path string, files []*graphql.Upload) ([]*mo
 	return fs, nil
 }
 
-func (_ StorageService) MoveFile(key string, destination string) (string, error) {
+func (_ StorageService) MoveFile(ctx context.Context, key string, destination string) (string, error) {
+	if (strings.Contains(key, ".") || strings.Contains(destination, ".")) && ctx.Value("verified") == nil {
+		return "", errors.New("Token does not exist.")
+	}
+
 	if err := os.Rename(fmt.Sprintf("/go/src/api/storage%s", key), fmt.Sprintf("/go/src/api/storage%s", destination)); err != nil {
 		return "", err
 	}
 	return destination, nil
 }
 
-func (_ StorageService) CopyFile(key string, destination string) (string, error) {
+func (_ StorageService) CopyFile(ctx context.Context, key string, destination string) (string, error) {
+	if (strings.Contains(key, ".") || strings.Contains(destination, ".")) && ctx.Value("verified") == nil {
+		return "", errors.New("Token does not exist.")
+	}
+
 	file, err := os.Open(fmt.Sprintf("/go/src/api/storage%s", key))
 	if err != nil {
 		return "", err
@@ -118,15 +135,23 @@ func (_ StorageService) CopyFile(key string, destination string) (string, error)
 	return destination, nil
 }
 
-func (_ StorageService) MakeDir(key string) (string, error) {
+func (_ StorageService) MakeDir(ctx context.Context, key string) (string, error) {
+	if strings.Contains(key[0:strings.LastIndex(key, "/")], ".") && ctx.Value("verified") == nil {
+		return "", errors.New("Token does not exist.")
+	}
+
 	if err := os.Mkdir(fmt.Sprintf("/go/src/api/storage%s", key), 0777); err != nil {
 		return "", err
 	}
 	return key, nil
 }
 
-func (_ StorageService) RemoveFiles(keys []string) ([]string, error) {
+func (_ StorageService) RemoveFiles(ctx context.Context, keys []string) ([]string, error) {
 	for _, key := range keys {
+		if strings.Contains(key[0:strings.LastIndex(key, "/")], ".") && ctx.Value("verified") == nil {
+			return nil, errors.New("Token does not exist.")
+		}
+
 		if err := os.RemoveAll(fmt.Sprintf("/go/src/api/storage%s", key)); err != nil {
 			return nil, err
 		}

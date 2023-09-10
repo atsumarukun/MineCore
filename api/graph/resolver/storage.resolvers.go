@@ -16,31 +16,31 @@ import (
 // UploadFiles is the resolver for the uploadFiles field.
 func (r *mutationResolver) UploadFiles(ctx context.Context, path string, files []*graphql.Upload) ([]*model.File, error) {
 	serv := service.StorageService{}
-	return serv.UploadFiles(path, files)
+	return serv.UploadFiles(ctx, path, files)
 }
 
 // MoveFile is the resolver for the moveFile field.
 func (r *mutationResolver) MoveFile(ctx context.Context, key string, destination string) (string, error) {
 	serv := service.StorageService{}
-	return serv.MoveFile(key, destination)
+	return serv.MoveFile(ctx, key, destination)
 }
 
 // CopyFile is the resolver for the copyFile field.
 func (r *mutationResolver) CopyFile(ctx context.Context, key string, destination string) (string, error) {
 	serv := service.StorageService{}
-	return serv.CopyFile(key, destination)
+	return serv.CopyFile(ctx, key, destination)
 }
 
 // MakeDir is the resolver for the makeDir field.
 func (r *mutationResolver) MakeDir(ctx context.Context, key string) (string, error) {
 	serv := service.StorageService{}
-	return serv.MakeDir(key)
+	return serv.MakeDir(ctx, key)
 }
 
 // RemoveFiles is the resolver for the removeFiles field.
 func (r *mutationResolver) RemoveFiles(ctx context.Context, keys []string) ([]string, error) {
 	serv := service.StorageService{}
-	return serv.RemoveFiles(keys)
+	return serv.RemoveFiles(ctx, keys)
 }
 
 // Files is the resolver for the files field.
