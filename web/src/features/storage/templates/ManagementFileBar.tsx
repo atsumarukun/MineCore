@@ -9,7 +9,7 @@ type Props = {
 
 export function ManagementFileBar({ path, refetch }: Props) {
   return (
-    <HStack w="100%" mb={8}>
+    <HStack w="100%">
       <SearchFileForm />
       <ManagementFileMenuModal path={path} refetch={refetch} />
     </HStack>

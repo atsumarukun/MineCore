@@ -35,6 +35,7 @@ export function FileTileViews({ path, files, refetch }: Props) {
     <>
       <Grid
         gap={8}
+        my={8}
         templateColumns={{
           base: "repeat(2, 1fr)",
           md: "repeat(4, 1fr)",
