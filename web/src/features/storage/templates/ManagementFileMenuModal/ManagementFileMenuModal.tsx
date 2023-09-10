@@ -14,6 +14,7 @@ import { CgMenuGridO } from "react-icons/cg";
 import { ModalStatus } from ".";
 import { DefaultModalBody } from "./DefaultModalBody";
 import { MakeModalBody } from "./MakeModalBody";
+import { PrevieModalBody } from "./PreviewModalBody";
 
 type Props = {
   path: string;
@@ -40,10 +41,13 @@ export function ManagementFileMenuModal({ path, refetch }: Props) {
           <ModalCloseButton />
           <ModalBody>
             {status === ModalStatus.default && (
-              <DefaultModalBody setStatus={setStatus} />
+              <DefaultModalBody setStatus={setStatus} onClose={onClose} />
             )}
             {status === ModalStatus.make && (
               <MakeModalBody path={path} refetch={refetch} onClose={onClose} />
+            )}
+            {status === ModalStatus.preview && (
+              <PrevieModalBody onClose={onClose} />
             )}
           </ModalBody>
         </ModalContent>

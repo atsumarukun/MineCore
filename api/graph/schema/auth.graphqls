@@ -1,0 +1,3 @@
+extend type Mutation {
+  auth(password: String!): String!
+}

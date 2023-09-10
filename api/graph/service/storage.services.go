@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/url"
 	"strings"
+	"context"
 	"fmt"
 	"io"
 	"os"
@@ -37,7 +38,7 @@ func GetFileType(name string) string {
 	return filetype
 }
 
-func (_ StorageService) GetFiles(path string, name *string, isDir *bool) ([]*model.File, error) {
+func (_ StorageService) GetFiles(ctx context.Context, path string, name *string, isDir *bool) ([]*model.File, error) {
 	var fs []*model.File
 	var ds []*model.File
 
@@ -52,6 +53,10 @@ func (_ StorageService) GetFiles(path string, name *string, isDir *bool) ([]*mod
 	}
 
 	for _, file := range files {
+		if file.Name()[0:1] == "." && ctx.Value("verified") == nil {
+			continue
+		}
+
 		if name != nil && strings.Index(strings.ToLower(file.Name()), strings.ToLower(*name)) == -1 {
 			continue
 		}

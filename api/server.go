@@ -1,6 +1,8 @@
 package main
 
 import (
+	_"api/conf"
+	"api/middleware"
 	"api/graph"
 	"api/graph/resolver"
 	"log"
@@ -22,10 +24,12 @@ func main() {
 
 	mux := http.NewServeMux()
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &resolver.Resolver{}}))
-	handler := cors.Default().Handler(mux)
+	handler := cors.New(cors.Options{
+		AllowedHeaders: []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
+	}).Handler(mux)
 
 	mux.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	mux.Handle("/query", srv)
+	mux.Handle("/query", middleware.AuthMiddleware(srv))
 	mux.Handle("/storage/", http.StripPrefix("/storage", http.FileServer(http.Dir("./storage/"))))
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)

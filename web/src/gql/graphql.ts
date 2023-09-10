@@ -28,11 +28,17 @@ export type File = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  auth: Scalars['String']['output'];
   copyFile: Scalars['String']['output'];
   makeDir: Scalars['String']['output'];
   moveFile: Scalars['String']['output'];
   removeFiles: Array<Scalars['String']['output']>;
   uploadFiles: Array<File>;
+};
+
+
+export type MutationAuthArgs = {
+  password: Scalars['String']['input'];
 };
 
 
@@ -74,6 +80,13 @@ export type QueryFilesArgs = {
   name?: InputMaybe<Scalars['String']['input']>;
   path: Scalars['String']['input'];
 };
+
+export type AuthMutationVariables = Exact<{
+  password: Scalars['String']['input'];
+}>;
+
+
+export type AuthMutation = { __typename?: 'Mutation', auth: string };
 
 export type GetFilesQueryVariables = Exact<{
   path: Scalars['String']['input'];
@@ -129,6 +142,37 @@ export type RemoveFilesMutationVariables = Exact<{
 export type RemoveFilesMutation = { __typename?: 'Mutation', removeFiles: Array<string> };
 
 
+export const AuthDocument = gql`
+    mutation Auth($password: String!) {
+  auth(password: $password)
+}
+    `;
+export type AuthMutationFn = Apollo.MutationFunction<AuthMutation, AuthMutationVariables>;
+
+/**
+ * __useAuthMutation__
+ *
+ * To run a mutation, you first call `useAuthMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAuthMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [authMutation, { data, loading, error }] = useAuthMutation({
+ *   variables: {
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useAuthMutation(baseOptions?: Apollo.MutationHookOptions<AuthMutation, AuthMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AuthMutation, AuthMutationVariables>(AuthDocument, options);
+      }
+export type AuthMutationHookResult = ReturnType<typeof useAuthMutation>;
+export type AuthMutationResult = Apollo.MutationResult<AuthMutation>;
+export type AuthMutationOptions = Apollo.BaseMutationOptions<AuthMutation, AuthMutationVariables>;
 export const GetFilesDocument = gql`
     query GetFiles($path: String!, $name: String) {
   files(path: $path, name: $name) {
