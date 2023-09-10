@@ -37,7 +37,7 @@ func GetFileType(name string) string {
 	return filetype
 }
 
-func (_ StorageService) GetFiles(path string, isDir *bool) ([]*model.File, error) {
+func (_ StorageService) GetFiles(path string, name *string, isDir *bool) ([]*model.File, error) {
 	var fs []*model.File
 	var ds []*model.File
 
@@ -52,6 +52,10 @@ func (_ StorageService) GetFiles(path string, isDir *bool) ([]*model.File, error
 	}
 
 	for _, file := range files {
+		if name != nil && strings.Index(strings.ToLower(file.Name()), strings.ToLower(*name)) == -1 {
+			continue
+		}
+
 		if file.IsDir() && (isDir == nil || *isDir) {
 			ds = append(ds, &model.File{file.Name(), fmt.Sprintf("%s/%s", path, file.Name()), "dir", file.IsDir()})
 		} else if !file.IsDir() && (isDir == nil || !*isDir) {

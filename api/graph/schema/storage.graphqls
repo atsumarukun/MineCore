@@ -8,7 +8,7 @@ type File {
 scalar Upload
 
 extend type Query {
-  files(path: String!, isDir: Boolean): [File!]!
+  files(path: String!, name: String, isDir: Boolean): [File!]!
 }
 
 extend type Mutation {

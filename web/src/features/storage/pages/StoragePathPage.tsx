@@ -9,9 +9,9 @@ import { ApolloError } from "@apollo/client";
 import { Loading } from "@/components/parts/Loading";
 import { ManagementFileBar } from "../templates/ManagementFileBar";
 
-export function StoragePathPage({ path }: StoragePathPageProps) {
+export function StoragePathPage({ path, name }: StoragePathPageProps) {
   const { loading, error, data, refetch } = useGetFilesQuery({
-    variables: { path: path },
+    variables: { path: path, name: name },
   });
   const [upload] = useUploadFilesMutation({
     onCompleted() {

@@ -71,11 +71,13 @@ export type Query = {
 
 export type QueryFilesArgs = {
   isDir?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   path: Scalars['String']['input'];
 };
 
 export type GetFilesQueryVariables = Exact<{
   path: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -128,8 +130,8 @@ export type RemoveFilesMutation = { __typename?: 'Mutation', removeFiles: Array<
 
 
 export const GetFilesDocument = gql`
-    query GetFiles($path: String!) {
-  files(path: $path) {
+    query GetFiles($path: String!, $name: String) {
+  files(path: $path, name: $name) {
     name
     key
     type
@@ -151,6 +153,7 @@ export const GetFilesDocument = gql`
  * const { data, loading, error } = useGetFilesQuery({
  *   variables: {
  *      path: // value for 'path'
+ *      name: // value for 'name'
  *   },
  * });
  */

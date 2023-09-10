@@ -61,7 +61,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Files func(childComplexity int, path string, isDir *bool) int
+		Files func(childComplexity int, path string, name *string, isDir *bool) int
 	}
 }
 
@@ -73,7 +73,7 @@ type MutationResolver interface {
 	RemoveFiles(ctx context.Context, keys []string) ([]string, error)
 }
 type QueryResolver interface {
-	Files(ctx context.Context, path string, isDir *bool) ([]*model.File, error)
+	Files(ctx context.Context, path string, name *string, isDir *bool) ([]*model.File, error)
 }
 
 type executableSchema struct {
@@ -189,7 +189,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Files(childComplexity, args["path"].(string), args["isDir"].(*bool)), true
+		return e.complexity.Query.Files(childComplexity, args["path"].(string), args["name"].(*string), args["isDir"].(*bool)), true
 
 	}
 	return 0, false
@@ -443,15 +443,24 @@ func (ec *executionContext) field_Query_files_args(ctx context.Context, rawArgs 
 		}
 	}
 	args["path"] = arg0
-	var arg1 *bool
-	if tmp, ok := rawArgs["isDir"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isDir"))
-		arg1, err = ec.unmarshalOBoolean2ᚖbool(ctx, tmp)
+	var arg1 *string
+	if tmp, ok := rawArgs["name"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["isDir"] = arg1
+	args["name"] = arg1
+	var arg2 *bool
+	if tmp, ok := rawArgs["isDir"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isDir"))
+		arg2, err = ec.unmarshalOBoolean2ᚖbool(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["isDir"] = arg2
 	return args, nil
 }
 
@@ -968,7 +977,7 @@ func (ec *executionContext) _Query_files(ctx context.Context, field graphql.Coll
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Files(rctx, fc.Args["path"].(string), fc.Args["isDir"].(*bool))
+		return ec.resolvers.Query().Files(rctx, fc.Args["path"].(string), fc.Args["name"].(*string), fc.Args["isDir"].(*bool))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

@@ -34,9 +34,9 @@ func (r *mutationResolver) RemoveFiles(ctx context.Context, keys []string) ([]st
 	return serv.RemoveFiles(keys)
 }
 
-func (r *queryResolver) Files(ctx context.Context, path string, isDir *bool) ([]*model.File, error) {
+func (r *queryResolver) Files(ctx context.Context, path string, name *string, isDir *bool) ([]*model.File, error) {
 	serv := service.StorageService{}
-	return serv.GetFiles(path, isDir)
+	return serv.GetFiles(path, name, isDir)
 }
 
 func (r *Resolver) Mutation() graph.MutationResolver { return &mutationResolver{r} }

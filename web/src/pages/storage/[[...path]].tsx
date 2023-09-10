@@ -1,19 +1,31 @@
-import { STORAGE_BASE_URL } from "@/features/storage/const";
 import { StoragePathPage } from "@/features/storage/pages/StoragePathPage";
-import { GetServerSideProps, NextPage } from "next";
+import { GetServerSideProps } from "next";
 
 export type StoragePathPageProps = {
   path: string;
+  name: string | null;
 };
 
-export default function StoragePath({ path }: StoragePathPageProps) {
-  return <StoragePathPage path={path} />;
+export default function StoragePath({ path, name }: StoragePathPageProps) {
+  return <StoragePathPage path={path} name={name} />;
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const path = !context.query.path
+    ? ""
+    : typeof context.query.path === "string"
+    ? undefined
+    : `/${context.query.path.join("/")}`;
+  const name = !context.query.name
+    ? null
+    : typeof context.query.name === "string"
+    ? context.query.name
+    : context.query.name[context.query.name.length - 1];
+
   return {
     props: {
-      path: context.resolvedUrl.substring(STORAGE_BASE_URL.length),
+      path: path,
+      name: name,
     },
   };
 };
