@@ -33,7 +33,7 @@ jobs:
       - name: generate password
         run: |
           touch ./api/Password
-          echo "PASSWORD=${{ secrets.PASSWORD }}" >> ./api/Password
+          echo "${{ secrets.PASSWORD }}" >> ./api/Password
 
       - name: Build and push
         uses: docker/build-push-action@v2
