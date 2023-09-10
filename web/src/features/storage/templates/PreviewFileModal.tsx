@@ -13,6 +13,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 type Props = {
@@ -28,7 +29,13 @@ export function PreviewFileModal({
   isOpen,
   onClose,
 }: Props) {
+  const videoRef = useRef<HTMLVideoElement>(null);
   const toast = useToast();
+
+  useEffect(() => {
+    videoRef.current?.load();
+  }, [file]);
+
   if (!file) {
     if (isOpen) {
       toast({
@@ -75,6 +82,7 @@ export function PreviewFileModal({
               controls
               autoPlay
               loop
+              ref={videoRef}
               style={{ maxWidth: "75vw", maxHeight: "75vh" }}
             >
               <source
