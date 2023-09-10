@@ -30,11 +30,6 @@ jobs:
           touch ./api/.env
           echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> ./api/.env
 
-      - name: generate password
-        run: |
-          touch ./api/Password
-          echo "${{ secrets.PASSWORD }}" >> ./api/Password
-
       - name: Build and push
         uses: docker/build-push-action@v2
         with:

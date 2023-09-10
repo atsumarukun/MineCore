@@ -4,6 +4,5 @@ WORKDIR /go/src/api
 RUN go build
 
 FROM golang:1.20-alpine as exec
-COPY Password /go/src/api/Password
 COPY --from=build /go/src/api/api /go/src/api/api
 WORKDIR /go/src/api
