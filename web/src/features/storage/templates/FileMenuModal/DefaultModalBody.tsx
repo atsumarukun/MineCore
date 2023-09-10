@@ -1,4 +1,4 @@
-import { Button, Icon, VStack } from "@chakra-ui/react";
+import { Button, Icon, VStack, useToast } from "@chakra-ui/react";
 import { Dispatch } from "react";
 import { ModalStatus } from ".";
 import { FiDownload, FiTrash } from "react-icons/fi";
@@ -6,18 +6,38 @@ import { BsPencil } from "react-icons/bs";
 import { LuFileOutput } from "react-icons/lu";
 import { IoMdCopy } from "react-icons/io";
 import { useDownload } from "../../hooks";
+import { ApolloError } from "@apollo/client";
 
 type Props = {
   name: string;
   filekey: string;
   setStatus: Dispatch<number>;
+  onClose: () => void;
 };
 
-export function DefaultModalBody({ name, filekey, setStatus }: Props) {
+export function DefaultModalBody({ name, filekey, setStatus, onClose }: Props) {
   const download = useDownload({ name: name, filekey: filekey });
+  const toast = useToast();
 
   const onDownload = async () => {
-    await download();
+    try {
+      await download();
+      toast({
+        title: "ダウンロードしました.",
+        status: "success",
+        duration: 5000,
+      });
+      onClose();
+    } catch (e) {
+      if (e instanceof ApolloError) {
+        toast({
+          title: "エラーが発生しました.",
+          description: e.message,
+          status: "error",
+          duration: 5000,
+        });
+      }
+    }
   };
 
   return (

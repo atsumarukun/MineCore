@@ -59,6 +59,7 @@ export function FileMenuModal({ file, path, refetch, ...props }: Props) {
                 name={file.name}
                 filekey={file.key}
                 setStatus={setStatus}
+                onClose={onClose}
               />
             )}
             {status === ModalStatus.rename && (
