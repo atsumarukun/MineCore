@@ -19,6 +19,18 @@ export function FileTileViews({ path, files, refetch }: Props) {
     onOpen();
   };
 
+  const onChangeFile = (dIndex: number) => {
+    const previewAbleFiles = files.filter((file) => file.type != "dir");
+    const previewFile =
+      previewAbleFiles[
+        (previewAbleFiles.indexOf(file ?? previewAbleFiles[0]) +
+          dIndex +
+          previewAbleFiles.length) %
+          previewAbleFiles.length
+      ];
+    setFile(previewFile);
+  };
+
   return (
     <>
       <Grid
@@ -52,7 +64,12 @@ export function FileTileViews({ path, files, refetch }: Props) {
           />
         ))}
       </Grid>
-      <PreviewFileModal file={file} isOpen={isOpen} onClose={onClose} />
+      <PreviewFileModal
+        file={file}
+        onChangeFile={onChangeFile}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
     </>
   );
 }

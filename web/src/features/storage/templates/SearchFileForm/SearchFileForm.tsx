@@ -18,6 +18,7 @@ export function SearchFileForm() {
       router.push({ query: {} });
     }
   };
+
   return (
     <form onSubmit={handleSubmit(onSearch)} style={{ width: "100%" }}>
       <HStack w="100%" spacing={0}>

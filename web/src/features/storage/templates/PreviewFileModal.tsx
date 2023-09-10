@@ -1,6 +1,8 @@
 import { EllipsisText } from "@/components/parts/EllipsisText";
 import { GetFilesQuery } from "@/gql/graphql";
 import {
+  Button,
+  Icon,
   Image,
   Modal,
   ModalBody,
@@ -11,14 +13,21 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import Link from "next/link";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 type Props = {
   file?: GetFilesQuery["files"][number];
+  onChangeFile: (dIndex: number) => void;
   isOpen: boolean;
   onClose: () => void;
 };
 
-export function PreviewFileModal({ file, isOpen, onClose }: Props) {
+export function PreviewFileModal({
+  file,
+  onChangeFile,
+  isOpen,
+  onClose,
+}: Props) {
   const toast = useToast();
   if (!file) {
     if (isOpen) {
@@ -84,6 +93,32 @@ export function PreviewFileModal({ file, isOpen, onClose }: Props) {
               }}
             />
           )}
+          <Button
+            h="100%"
+            position="absolute"
+            bgColor="blackAlpha.700"
+            rounded={0}
+            opacity={0}
+            left={0}
+            top={0}
+            _hover={{ opacity: 1 }}
+            onClick={() => onChangeFile(-1)}
+          >
+            <Icon as={IoIosArrowBack} boxSize={6} />
+          </Button>
+          <Button
+            h="100%"
+            position="absolute"
+            bgColor="blackAlpha.700"
+            rounded={0}
+            opacity={0}
+            right={0}
+            top={0}
+            _hover={{ opacity: 1 }}
+            onClick={() => onChangeFile(1)}
+          >
+            <Icon as={IoIosArrowForward} boxSize={6} />
+          </Button>
         </ModalBody>
       </ModalContent>
     </Modal>
