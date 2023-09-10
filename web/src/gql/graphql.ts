@@ -29,6 +29,7 @@ export type File = {
 export type Mutation = {
   __typename?: 'Mutation';
   copyFile: Scalars['String']['output'];
+  makeDir: Scalars['String']['output'];
   moveFile: Scalars['String']['output'];
   removeFiles: Array<Scalars['String']['output']>;
   uploadFiles: Array<File>;
@@ -37,6 +38,11 @@ export type Mutation = {
 
 export type MutationCopyFileArgs = {
   destination: Scalars['String']['input'];
+  key: Scalars['String']['input'];
+};
+
+
+export type MutationMakeDirArgs = {
   key: Scalars['String']['input'];
 };
 
@@ -105,6 +111,13 @@ export type CopyFileMutationVariables = Exact<{
 
 
 export type CopyFileMutation = { __typename?: 'Mutation', copyFile: string };
+
+export type MakeDirMutationVariables = Exact<{
+  key: Scalars['String']['input'];
+}>;
+
+
+export type MakeDirMutation = { __typename?: 'Mutation', makeDir: string };
 
 export type RemoveFilesMutationVariables = Exact<{
   keys: Array<Scalars['String']['input']> | Scalars['String']['input'];
@@ -286,6 +299,37 @@ export function useCopyFileMutation(baseOptions?: Apollo.MutationHookOptions<Cop
 export type CopyFileMutationHookResult = ReturnType<typeof useCopyFileMutation>;
 export type CopyFileMutationResult = Apollo.MutationResult<CopyFileMutation>;
 export type CopyFileMutationOptions = Apollo.BaseMutationOptions<CopyFileMutation, CopyFileMutationVariables>;
+export const MakeDirDocument = gql`
+    mutation MakeDir($key: String!) {
+  makeDir(key: $key)
+}
+    `;
+export type MakeDirMutationFn = Apollo.MutationFunction<MakeDirMutation, MakeDirMutationVariables>;
+
+/**
+ * __useMakeDirMutation__
+ *
+ * To run a mutation, you first call `useMakeDirMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMakeDirMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [makeDirMutation, { data, loading, error }] = useMakeDirMutation({
+ *   variables: {
+ *      key: // value for 'key'
+ *   },
+ * });
+ */
+export function useMakeDirMutation(baseOptions?: Apollo.MutationHookOptions<MakeDirMutation, MakeDirMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MakeDirMutation, MakeDirMutationVariables>(MakeDirDocument, options);
+      }
+export type MakeDirMutationHookResult = ReturnType<typeof useMakeDirMutation>;
+export type MakeDirMutationResult = Apollo.MutationResult<MakeDirMutation>;
+export type MakeDirMutationOptions = Apollo.BaseMutationOptions<MakeDirMutation, MakeDirMutationVariables>;
 export const RemoveFilesDocument = gql`
     mutation RemoveFiles($keys: [String!]!) {
   removeFiles(keys: $keys)

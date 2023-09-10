@@ -7,6 +7,7 @@ import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { ApolloError } from "@apollo/client";
 import { Loading } from "@/components/parts/Loading";
+import { ManagementFileBar } from "../templates/ManagementFileBar";
 
 export function StoragePathPage({ path }: StoragePathPageProps) {
   const { loading, error, data, refetch } = useGetFilesQuery({
@@ -55,6 +56,7 @@ export function StoragePathPage({ path }: StoragePathPageProps) {
   return (
     <Box h="100%" {...getRootProps()}>
       <input {...getInputProps()} />
+      <ManagementFileBar path={path} refetch={refetch} />
       <FileTileViews path={path} refetch={refetch} files={data?.files} />
     </Box>
   );

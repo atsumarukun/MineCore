@@ -11,9 +11,6 @@ export const Modal = defineStyleConfig({
     footer: {
       backgroundColor: "blackAlpha.800",
     },
-    overlay: {
-      backgroundColor: "whiteAlpha.400",
-    },
     dialog: {
       rounded: 0,
       mx: 4,

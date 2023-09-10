@@ -15,5 +15,6 @@ extend type Mutation {
   uploadFiles(path: String!, files: [Upload!]!): [File!]!
   moveFile(key: String!, destination: String!): String!
   copyFile(key: String!, destination: String!): String!
+  makeDir(key: String!): String!
   removeFiles(keys: [String!]!): [String!]!
 }

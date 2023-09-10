@@ -109,6 +109,13 @@ func (_ StorageService) CopyFile(key string, destination string) (string, error)
 	return destination, nil
 }
 
+func (_ StorageService) MakeDir(key string) (string, error) {
+	if err := os.Mkdir(fmt.Sprintf("/go/src/api/storage%s", key), 0777); err != nil {
+		return "", err
+	}
+	return key, nil
+}
+
 func (_ StorageService) RemoveFiles(keys []string) ([]string, error) {
 	for _, key := range keys {
 		if err := os.RemoveAll(fmt.Sprintf("/go/src/api/storage%s", key)); err != nil {

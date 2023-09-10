@@ -2,6 +2,7 @@ import { extendTheme } from "@chakra-ui/react";
 import { Button } from "./components/Button";
 import { Drawer } from "./components/Drawer";
 import { Modal } from "./components/Modal";
+import { Input } from "./components/Input";
 
 export const theme = extendTheme({
   styles: {
@@ -19,5 +20,6 @@ export const theme = extendTheme({
     Button,
     Drawer,
     Modal,
+    Input,
   },
 });

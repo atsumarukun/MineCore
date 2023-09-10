@@ -40,6 +40,12 @@ export const COPY_FILE = gql`
   }
 `;
 
+export const MAKE_DIR = gql`
+  mutation MakeDir($key: String!) {
+    makeDir(key: $key)
+  }
+`;
+
 export const REMOVE_FILES = gql`
   mutation RemoveFiles($keys: [String!]!) {
     removeFiles(keys: $keys)
