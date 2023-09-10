@@ -1,2 +1,8 @@
 # file storage
 storage
+
+# env file
+.env
+
+# password file
+Password
