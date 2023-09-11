@@ -1,4 +1,11 @@
-import { Button, HStack, Icon, Input } from "@chakra-ui/react";
+import {
+  Button,
+  HStack,
+  Icon,
+  Input,
+  InputGroup,
+  InputLeftElement,
+} from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { BiSearch } from "react-icons/bi";
 import { SearchFileFormSchema, searchFileFormSchema } from "./schema";
@@ -12,23 +19,18 @@ export function SearchFileForm() {
   return (
     <form style={{ width: "100%" }}>
       <HStack w="100%" spacing={0}>
-        <Input
-          placeholder="検索"
-          rounded={0}
-          roundedLeft={20}
-          bgColor="blackAlpha.500"
-          border="unset"
-          {...register("name")}
-        />
-        <Button
-          bgColor="whiteAlpha.300"
-          rounded={0}
-          roundedRight={20}
-          px={6}
-          type="submit"
-        >
-          <Icon as={BiSearch} boxSize={5} />
-        </Button>
+        <InputGroup>
+          <InputLeftElement pl={4} color="whiteAlpha.300">
+            <Icon as={BiSearch} boxSize={5} />
+          </InputLeftElement>
+          <Input
+            rounded={20}
+            pl={12}
+            bgColor="blackAlpha.500"
+            border="unset"
+            {...register("name")}
+          />
+        </InputGroup>
       </HStack>
     </form>
   );
