@@ -2,6 +2,7 @@ import { Button, Icon, VStack } from "@chakra-ui/react";
 import { Dispatch } from "react";
 import { LuFolderPlus } from "react-icons/lu";
 import { MdOutlineImage, MdOutlineHideImage } from "react-icons/md";
+import { PiUploadSimple } from "react-icons/pi";
 import { destroyCookie, parseCookies } from "nookies";
 import { useRouter } from "next/router";
 import { ModalStatus } from ".";
@@ -46,6 +47,14 @@ export function DefaultModalBody({ setStatus, onClose }: Props) {
           隠しファイル表示
         </Button>
       )}
+      <Button
+        w="100%"
+        justifyContent="left"
+        onClick={() => setStatus(ModalStatus.upload)}
+      >
+        <Icon as={PiUploadSimple} boxSize={6} mr={6} />
+        アップロード
+      </Button>
     </VStack>
   );
 }

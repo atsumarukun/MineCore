@@ -15,6 +15,7 @@ import { ModalStatus } from ".";
 import { DefaultModalBody } from "./DefaultModalBody";
 import { MakeModalBody } from "./MakeModalBody";
 import { PrevieModalBody } from "./PreviewModalBody";
+import { UploadModalBody } from "./UploadModalBody";
 
 type Props = {
   refetch: () => void;
@@ -47,6 +48,9 @@ export function DirMenuModal({ refetch }: Props) {
             )}
             {status === ModalStatus.preview && (
               <PrevieModalBody onClose={onClose} />
+            )}
+            {status === ModalStatus.upload && (
+              <UploadModalBody refetch={refetch} onClose={onClose} />
             )}
           </ModalBody>
         </ModalContent>
