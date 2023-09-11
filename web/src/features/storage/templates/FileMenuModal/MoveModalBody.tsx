@@ -3,15 +3,17 @@ import { ApolloError } from "@apollo/client";
 import { Button, HStack, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import { DirList } from "../DirList";
+import { useGetPath } from "../../hooks";
 
 type Props = {
-  path: string;
   name: string;
   refetch: () => void;
   onClose: () => void;
 };
 
-export function MoveModalBody({ path, name, refetch, onClose }: Props) {
+export function MoveModalBody({ name, refetch, onClose }: Props) {
+  const path = useGetPath();
+
   const [key, setKey] = useState(path);
   const [move] = useMoveFileMutation({
     onCompleted() {

@@ -2,7 +2,6 @@ import { RenameFileForm } from "../RenameFileForm";
 
 type Props = {
   name: string;
-  path: string;
   refetch: () => void;
   onClose: () => void;
 };

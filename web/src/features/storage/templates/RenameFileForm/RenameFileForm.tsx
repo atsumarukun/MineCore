@@ -12,15 +12,17 @@ import { RenameFileFormSchema, renameFileFormSchema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMoveFileMutation } from "@/gql/graphql";
 import { ApolloError } from "@apollo/client";
+import { useGetPath } from "../../hooks";
 
 type Props = {
   name: string;
-  path: string;
   refetch: () => void;
   onClose: () => void;
 };
 
-export function RenameFileForm({ name, path, refetch, onClose }: Props) {
+export function RenameFileForm({ name, refetch, onClose }: Props) {
+  const path = useGetPath();
+
   const [rename] = useMoveFileMutation({
     onCompleted() {
       refetch();

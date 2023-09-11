@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 type Props = {
   name: string;
@@ -14,4 +14,16 @@ export function useDownload({ name, filekey }: Props) {
     link.click();
     link.remove();
   };
+}
+
+export function useGetPath() {
+  const router = useRouter();
+  const path = router.query.path;
+  return typeof path === "object" ? `/${path.join("/")}` : path ?? "";
+}
+
+export function useGetQueryParam(key: string) {
+  const router = useRouter();
+  const value = router.query[key];
+  return typeof value === "object" ? value.join(",") : value ?? "";
 }

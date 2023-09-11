@@ -3,14 +3,16 @@ import { Grid, useDisclosure } from "@chakra-ui/react";
 import { FileTileViewItem } from "./FileTileViewItem";
 import { useState } from "react";
 import { PreviewFileModal } from "./PreviewFileModal";
+import { useGetPath } from "../hooks";
 
 type Props = {
-  path: string;
   files: GetFilesQuery["files"];
   refetch: () => void;
 };
 
-export function FileTileViews({ path, files, refetch }: Props) {
+export function FileTileViews({ files, refetch }: Props) {
+  const path = useGetPath();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [file, setFile] = useState<GetFilesQuery["files"][number]>();
 
@@ -50,7 +52,6 @@ export function FileTileViews({ path, files, refetch }: Props) {
               type: "dir",
               isDir: true,
             }}
-            path={path}
             onClick={() => onPreview(undefined)}
             refetch={refetch}
           />
@@ -58,7 +59,6 @@ export function FileTileViews({ path, files, refetch }: Props) {
         {files.map((file) => (
           <FileTileViewItem
             file={file}
-            path={path}
             onClick={() => onPreview(file.isDir ? undefined : file)}
             refetch={refetch}
             key={file.key}

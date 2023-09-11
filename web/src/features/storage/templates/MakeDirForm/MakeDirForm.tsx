@@ -12,14 +12,15 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMakeDirMutation } from "@/gql/graphql";
 import { ApolloError } from "@apollo/client";
-
+import { useGetPath } from "../../hooks";
 type Props = {
-  path: string;
   refetch: () => void;
   onClose: () => void;
 };
 
-export function MakeDirForm({ path, refetch, onClose }: Props) {
+export function MakeDirForm({ refetch, onClose }: Props) {
+  const path = useGetPath();
+  const toast = useToast();
   const [make] = useMakeDirMutation({
     onCompleted() {
       refetch();
@@ -32,7 +33,6 @@ export function MakeDirForm({ path, refetch, onClose }: Props) {
   } = useForm<MakeDirFormSchema>({
     resolver: zodResolver(makeDirFormSchema),
   });
-  const toast = useToast();
 
   const onMake: SubmitHandler<MakeDirFormSchema> = async (data) => {
     try {

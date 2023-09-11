@@ -1,5 +1,4 @@
 import { useGetFilesQuery, useUploadFilesMutation } from "@/gql/graphql";
-import { StoragePathPageProps } from "@/pages/storage/[[...path]]";
 import { Box, useToast } from "@chakra-ui/react";
 import Error from "next/error";
 import { FileTileViews } from "../templates/FileTileViews";
@@ -8,22 +7,35 @@ import { useDropzone } from "react-dropzone";
 import { ApolloError } from "@apollo/client";
 import { Loading } from "@/components/parts/Loading";
 import { ManagementFileBar } from "../templates/ManagementFileBar";
+import { useGetPath, useGetQueryParam } from "../hooks";
 
-export function StoragePathPage({ path, name }: StoragePathPageProps) {
+export function StoragePathPage() {
+  const path = useGetPath();
+  console.log(path);
+  const name = useGetQueryParam("name");
+  const toast = useToast();
+
   const { loading, error, data, refetch } = useGetFilesQuery({
-    variables: { path: path, name: name },
+    variables: {
+      path: path,
+      name: name,
+    },
   });
   const [upload] = useUploadFilesMutation({
     onCompleted() {
       refetch();
     },
   });
-  const toast = useToast();
 
   const onDrop = useCallback(
     async (files: File[]) => {
       try {
-        await upload({ variables: { path: path, files: files } });
+        await upload({
+          variables: {
+            path: path,
+            files: files,
+          },
+        });
         toast({
           title: "アップロードしました.",
           status: "success",
@@ -56,8 +68,8 @@ export function StoragePathPage({ path, name }: StoragePathPageProps) {
   return (
     <Box h="100%" {...getRootProps()}>
       <input {...getInputProps()} />
-      <ManagementFileBar path={path} refetch={refetch} />
-      <FileTileViews path={path} refetch={refetch} files={data?.files} />
+      <ManagementFileBar refetch={refetch} />
+      <FileTileViews refetch={refetch} files={data?.files} />
     </Box>
   );
 }

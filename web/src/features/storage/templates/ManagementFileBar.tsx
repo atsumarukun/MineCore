@@ -3,15 +3,14 @@ import { ManagementFileMenuModal } from "./ManagementFileMenuModal";
 import { SearchFileForm } from "./SearchFileForm";
 
 type Props = {
-  path: string;
   refetch: () => void;
 };
 
-export function ManagementFileBar({ path, refetch }: Props) {
+export function ManagementFileBar({ refetch }: Props) {
   return (
     <HStack w="100%">
       <SearchFileForm />
-      <ManagementFileMenuModal path={path} refetch={refetch} />
+      <ManagementFileMenuModal refetch={refetch} />
     </HStack>
   );
 }

@@ -16,12 +16,11 @@ import { IconType } from "react-icons";
 
 type Props = {
   file: GetFilesQuery["files"][number];
-  path: string;
   onClick: () => void;
   refetch: () => void;
 };
 
-export function FileTileViewItem({ file, path, onClick, refetch }: Props) {
+export function FileTileViewItem({ file, onClick, refetch }: Props) {
   let icon: IconType;
   switch (file.type) {
     case "dir":
@@ -57,7 +56,6 @@ export function FileTileViewItem({ file, path, onClick, refetch }: Props) {
     >
       <FileMenuModal
         file={file}
-        path={path}
         refetch={refetch}
         position="absolute"
         right={0}

@@ -17,11 +17,10 @@ import { MakeModalBody } from "./MakeModalBody";
 import { PrevieModalBody } from "./PreviewModalBody";
 
 type Props = {
-  path: string;
   refetch: () => void;
 };
 
-export function ManagementFileMenuModal({ path, refetch }: Props) {
+export function ManagementFileMenuModal({ refetch }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [status, setStatus] = useState(ModalStatus.default);
 
@@ -44,7 +43,7 @@ export function ManagementFileMenuModal({ path, refetch }: Props) {
               <DefaultModalBody setStatus={setStatus} onClose={onClose} />
             )}
             {status === ModalStatus.make && (
-              <MakeModalBody path={path} refetch={refetch} onClose={onClose} />
+              <MakeModalBody refetch={refetch} onClose={onClose} />
             )}
             {status === ModalStatus.preview && (
               <PrevieModalBody onClose={onClose} />
