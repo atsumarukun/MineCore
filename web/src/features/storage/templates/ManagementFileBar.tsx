@@ -1,5 +1,5 @@
 import { HStack } from "@chakra-ui/react";
-import { ManagementFileMenuModal } from "./ManagementFileMenuModal";
+import { DirMenuModal } from "./DirMenuModal";
 import { SearchFileForm } from "./SearchFileForm";
 
 type Props = {
@@ -10,7 +10,7 @@ export function ManagementFileBar({ refetch }: Props) {
   return (
     <HStack w="100%">
       <SearchFileForm />
-      <ManagementFileMenuModal refetch={refetch} />
+      <DirMenuModal refetch={refetch} />
     </HStack>
   );
 }

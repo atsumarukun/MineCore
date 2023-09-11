@@ -20,7 +20,7 @@ type Props = {
   refetch: () => void;
 };
 
-export function ManagementFileMenuModal({ refetch }: Props) {
+export function DirMenuModal({ refetch }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [status, setStatus] = useState(ModalStatus.default);
 

@@ -1,4 +1,4 @@
-export * from "./ManagementFileMenuModal";
+export * from "./DirMenuModal";
 
 export const ModalStatus = {
   default: 0,
