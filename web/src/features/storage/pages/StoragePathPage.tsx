@@ -11,7 +11,6 @@ import { useGetPath, useGetQueryParam } from "../hooks";
 
 export function StoragePathPage() {
   const path = useGetPath();
-  console.log(path);
   const name = useGetQueryParam("name");
   const toast = useToast();
 

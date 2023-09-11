@@ -98,7 +98,7 @@ func (_ StorageService) UploadFiles(ctx context.Context, path string, files []*g
 }
 
 func (_ StorageService) MoveFile(ctx context.Context, key string, destination string) (string, error) {
-	if (strings.Contains(key, ".") || strings.Contains(destination, ".")) && ctx.Value("verified") == nil {
+	if (strings.Contains(key[0:strings.LastIndex(key, "/")], ".") || strings.Contains(destination[0:strings.LastIndex(destination, "/")], ".")) && ctx.Value("verified") == nil {
 		return "", errors.New("Token does not exist.")
 	}
 
@@ -109,7 +109,7 @@ func (_ StorageService) MoveFile(ctx context.Context, key string, destination st
 }
 
 func (_ StorageService) CopyFile(ctx context.Context, key string, destination string) (string, error) {
-	if (strings.Contains(key, ".") || strings.Contains(destination, ".")) && ctx.Value("verified") == nil {
+	if (strings.Contains(key[0:strings.LastIndex(key, "/")], ".") || strings.Contains(destination[0:strings.LastIndex(destination, "/")], ".")) && ctx.Value("verified") == nil {
 		return "", errors.New("Token does not exist.")
 	}
 

@@ -1,11 +1,11 @@
 import { useRouter } from "next/router";
 
-type Props = {
+type DownloadProps = {
   name: string;
   filekey: string;
 };
 
-export function useDownload({ name, filekey }: Props) {
+export function useDownload({ name, filekey }: DownloadProps) {
   return async () => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_STORAGE_URL}${filekey}`);
     const link = document.createElement("a");
