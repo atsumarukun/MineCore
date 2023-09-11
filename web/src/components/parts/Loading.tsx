@@ -5,7 +5,7 @@ export function Loading() {
     <Center
       h="100%"
       w="100%"
-      bgColor="whiteAlpha.400"
+      bgColor="blackAlpha.600"
       position="absolute"
       top={0}
       left={0}
