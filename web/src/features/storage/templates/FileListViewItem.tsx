@@ -43,7 +43,9 @@ export function FileListViewItem({ file, onClick }: Props) {
   }
 
   const getSizeText = (size: number) => {
-    if (size < 1024) {
+    if (size === 0) {
+      return " - - - - - ";
+    } else if (size < 1024) {
       return `${size} bytes`;
     } else if (size < 1024 ** 2) {
       return `${(size / 1024).toFixed(1)} KB`;
