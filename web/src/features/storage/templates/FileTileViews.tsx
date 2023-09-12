@@ -7,10 +7,9 @@ import { useGetPath } from "../hooks";
 
 type Props = {
   files: GetFilesQuery["files"];
-  refetch: () => void;
 };
 
-export function FileTileViews({ files, refetch }: Props) {
+export function FileTileViews({ files }: Props) {
   const path = useGetPath();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -53,14 +52,12 @@ export function FileTileViews({ files, refetch }: Props) {
               isDir: true,
             }}
             onClick={() => onPreview(undefined)}
-            refetch={refetch}
           />
         )}
         {files.map((file) => (
           <FileTileViewItem
             file={file}
             onClick={() => onPreview(file.isDir ? undefined : file)}
-            refetch={refetch}
             key={file.key}
           />
         ))}

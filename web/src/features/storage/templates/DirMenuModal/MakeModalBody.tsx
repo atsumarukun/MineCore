@@ -1,7 +1,6 @@
 import { MakeDirForm } from "../MakeDirForm";
 
 type Props = {
-  refetch: () => void;
   onClose: () => void;
 };
 

@@ -1,23 +1,24 @@
 import { useUploadFilesMutation } from "@/gql/graphql";
 import { Button, Circle, Icon, Text, VStack, useToast } from "@chakra-ui/react";
-import { useCallback } from "react";
+import { useCallback, useContext } from "react";
 import { MdFileUpload } from "react-icons/md";
 import { useGetPath } from "../../hooks";
 import { ApolloError } from "@apollo/client";
 import { useDropzone } from "react-dropzone";
+import { RefetchContext } from "@/providers/RefetchProvider";
 
 type Props = {
-  refetch: () => void;
   onClose: () => void;
 };
 
-export function UploadModalBody({ refetch, onClose }: Props) {
+export function UploadModalBody({ onClose }: Props) {
   const path = useGetPath();
   const toast = useToast();
+  const refetchContext = useContext(RefetchContext);
 
   const [upload] = useUploadFilesMutation({
     onCompleted() {
-      refetch();
+      refetchContext.fn?.refetch();
     },
   });
 

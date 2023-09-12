@@ -3,17 +3,13 @@ import { DirMenuModal } from "./DirMenuModal";
 import { SearchFileForm } from "./SearchFileForm";
 import { HandleViewButton } from "./HandleViewButton";
 
-type Props = {
-  refetch: () => void;
-};
-
-export function ManagementFileBar({ refetch }: Props) {
+export function ManagementFileBar() {
   return (
     <HStack w="100%">
       <SearchFileForm />
       <HStack spacing={0}>
         <HandleViewButton />
-        <DirMenuModal refetch={refetch} />
+        <DirMenuModal />
       </HStack>
     </HStack>
   );

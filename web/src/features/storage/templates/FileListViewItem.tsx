@@ -17,10 +17,9 @@ import { EllipsisText } from "@/components/parts/EllipsisText";
 type Props = {
   file: GetFilesQuery["files"][number];
   onClick: () => void;
-  refetch: () => void;
 };
 
-export function FileListViewItem({ file, onClick, refetch }: Props) {
+export function FileListViewItem({ file, onClick }: Props) {
   let icon: IconType;
   switch (file.type) {
     case "dir":
@@ -100,7 +99,7 @@ export function FileListViewItem({ file, onClick, refetch }: Props) {
           </HStack>
         </ConditionalButton>
       </ConditionalLink>
-      <FileMenuModal file={file} refetch={refetch} ml="auto" />
+      <FileMenuModal file={file} ml="auto" />
     </HStack>
   );
 }

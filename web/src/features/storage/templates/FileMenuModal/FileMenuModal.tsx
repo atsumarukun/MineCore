@@ -24,10 +24,9 @@ import { CopyModalBody } from "./CopyModalBody";
 
 type Props = {
   file: GetFilesQuery["files"][number];
-  refetch: () => void;
 } & ButtonProps;
 
-export function FileMenuModal({ file, refetch, ...props }: Props) {
+export function FileMenuModal({ file, ...props }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [status, setStatus] = useState(ModalStatus.default);
 
@@ -62,32 +61,16 @@ export function FileMenuModal({ file, refetch, ...props }: Props) {
               />
             )}
             {status === ModalStatus.rename && (
-              <RenameModalBody
-                name={file.name}
-                refetch={refetch}
-                onClose={onClose}
-              />
+              <RenameModalBody name={file.name} onClose={onClose} />
             )}
             {status === ModalStatus.move && (
-              <MoveModalBody
-                name={file.name}
-                refetch={refetch}
-                onClose={onClose}
-              />
+              <MoveModalBody name={file.name} onClose={onClose} />
             )}
             {status === ModalStatus.copy && (
-              <CopyModalBody
-                name={file.name}
-                refetch={refetch}
-                onClose={onClose}
-              />
+              <CopyModalBody name={file.name} onClose={onClose} />
             )}
             {status === ModalStatus.remove && (
-              <RemoveModalBody
-                filekey={file.key}
-                refetch={refetch}
-                onClose={onClose}
-              />
+              <RemoveModalBody filekey={file.key} onClose={onClose} />
             )}
           </ModalBody>
         </ModalContent>

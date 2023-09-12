@@ -17,11 +17,7 @@ import { MakeModalBody } from "./MakeModalBody";
 import { PrevieModalBody } from "./PreviewModalBody";
 import { UploadModalBody } from "./UploadModalBody";
 
-type Props = {
-  refetch: () => void;
-};
-
-export function DirMenuModal({ refetch }: Props) {
+export function DirMenuModal() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [status, setStatus] = useState(ModalStatus.default);
 
@@ -43,14 +39,12 @@ export function DirMenuModal({ refetch }: Props) {
             {status === ModalStatus.default && (
               <DefaultModalBody setStatus={setStatus} onClose={onClose} />
             )}
-            {status === ModalStatus.make && (
-              <MakeModalBody refetch={refetch} onClose={onClose} />
-            )}
+            {status === ModalStatus.make && <MakeModalBody onClose={onClose} />}
             {status === ModalStatus.preview && (
               <PrevieModalBody onClose={onClose} />
             )}
             {status === ModalStatus.upload && (
-              <UploadModalBody refetch={refetch} onClose={onClose} />
+              <UploadModalBody onClose={onClose} />
             )}
           </ModalBody>
         </ModalContent>

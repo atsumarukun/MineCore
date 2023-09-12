@@ -7,10 +7,9 @@ import { useGetPath } from "../hooks";
 
 type Props = {
   files: GetFilesQuery["files"];
-  refetch: () => void;
 };
 
-export function FileListViews({ files, refetch }: Props) {
+export function FileListViews({ files }: Props) {
   const path = useGetPath();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -70,14 +69,12 @@ export function FileListViews({ files, refetch }: Props) {
               isDir: true,
             }}
             onClick={() => onPreview(undefined)}
-            refetch={refetch}
           />
         )}
         {files.map((file) => (
           <FileListViewItem
             file={file}
             onClick={() => onPreview(file.isDir ? undefined : file)}
-            refetch={refetch}
           />
         ))}
       </VStack>

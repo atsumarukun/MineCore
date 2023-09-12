@@ -13,17 +13,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMakeDirMutation } from "@/gql/graphql";
 import { ApolloError } from "@apollo/client";
 import { useGetPath } from "../../hooks";
+import { useContext } from "react";
+import { RefetchContext } from "@/providers/RefetchProvider";
 type Props = {
-  refetch: () => void;
   onClose: () => void;
 };
 
-export function MakeDirForm({ refetch, onClose }: Props) {
+export function MakeDirForm({ onClose }: Props) {
   const path = useGetPath();
   const toast = useToast();
+  const refetchContext = useContext(RefetchContext);
+
   const [make] = useMakeDirMutation({
     onCompleted() {
-      refetch();
+      refetchContext.fn?.refetch();
     },
   });
   const {
