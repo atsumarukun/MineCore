@@ -66,10 +66,13 @@ func (_ StorageService) GetFiles(ctx context.Context, path string, name *string,
 			continue
 		}
 
+		size := int(file.Size())
+		updated_at := file.ModTime()
+
 		if file.IsDir() && (isDir == nil || *isDir) {
-			ds = append(ds, &model.File{file.Name(), fmt.Sprintf("%s/%s", path, file.Name()), "dir", file.IsDir()})
+			ds = append(ds, &model.File{file.Name(), fmt.Sprintf("%s/%s", path, file.Name()), "dir", file.IsDir(), &size, &updated_at})
 		} else if !file.IsDir() && (isDir == nil || !*isDir) {
-			fs = append(fs, &model.File{file.Name(), fmt.Sprintf("%s/%s", path, file.Name()), GetFileType(file.Name()), file.IsDir()})
+			fs = append(fs, &model.File{file.Name(), fmt.Sprintf("%s/%s", path, file.Name()), GetFileType(file.Name()), file.IsDir(), &size, &updated_at})
 		}
 	}
 
@@ -92,7 +95,7 @@ func (_ StorageService) UploadFiles(ctx context.Context, path string, files []*g
 		if err := ioutil.WriteFile(fmt.Sprintf("/go/src/api/storage%s/%s", path, file.Filename), buf, os.ModePerm); err != nil {
 			return nil, err
 		}
-		fs = append(fs, &model.File{file.Filename, fmt.Sprintf("%s/%s", path, file.Filename), file.ContentType[0:strings.Index(file.ContentType, "/")], false})
+		fs = append(fs, &model.File{file.Filename, fmt.Sprintf("%s/%s", path, file.Filename), file.ContentType[0:strings.Index(file.ContentType, "/")], false, nil, nil})
 	}
 	return fs, nil
 }

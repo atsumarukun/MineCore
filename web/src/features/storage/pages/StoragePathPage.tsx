@@ -2,16 +2,19 @@ import { useGetFilesQuery, useUploadFilesMutation } from "@/gql/graphql";
 import { Box, useToast } from "@chakra-ui/react";
 import Error from "next/error";
 import { FileTileViews } from "../templates/FileTileViews";
-import { useCallback } from "react";
+import { useCallback, useContext } from "react";
 import { useDropzone } from "react-dropzone";
 import { ApolloError } from "@apollo/client";
 import { Loading } from "@/components/parts/Loading";
 import { ManagementFileBar } from "../templates/ManagementFileBar";
 import { useGetPath, useGetQueryParam } from "../hooks";
+import { ViewMode, ViewModeContext } from "../provides/ViewModeProvider";
+import { FileListViews } from "../templates/FileListViews";
 
 export function StoragePathPage() {
   const path = useGetPath();
   const name = useGetQueryParam("name");
+  const context = useContext(ViewModeContext);
   const toast = useToast();
 
   const { loading, error, data, refetch } = useGetFilesQuery({
@@ -68,7 +71,11 @@ export function StoragePathPage() {
     <Box h="100%" {...getRootProps()}>
       <input {...getInputProps()} />
       <ManagementFileBar refetch={refetch} />
-      <FileTileViews refetch={refetch} files={data?.files} />
+      {context.viewMode === ViewMode.tile ? (
+        <FileTileViews refetch={refetch} files={data?.files} />
+      ) : (
+        <FileListViews refetch={refetch} files={data?.files} />
+      )}
     </Box>
   );
 }

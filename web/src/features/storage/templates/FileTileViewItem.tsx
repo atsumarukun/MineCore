@@ -63,7 +63,12 @@ export function FileTileViewItem({ file, onClick, refetch }: Props) {
         display={file.name === "../" ? "none" : "block"}
       />
       <ConditionalLink href={`/storage${file.key}`} isLink={file.isDir}>
-        <ConditionalButton onClick={onClick} isButton={!file.isDir}>
+        <ConditionalButton
+          w="100%"
+          h="100%"
+          onClick={onClick}
+          isButton={!file.isDir}
+        >
           {file.type === "image" ? (
             <Center
               bgColor="blackAlpha.700"

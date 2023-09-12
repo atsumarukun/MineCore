@@ -9,7 +9,6 @@ export function EllipsisText({
       whiteSpace="nowrap"
       textOverflow="ellipsis"
       overflow="hidden"
-      display="block"
       {...props}
     >
       {children}

@@ -7,6 +7,8 @@ export const GET_FILES = gql`
       key
       type
       isDir
+      size
+      updated_at
     }
   }
 `;

@@ -1,11 +1,14 @@
+scalar Time
+scalar Upload
+
 type File {
   name: String!
   key: String!
   type: String!
   isDir: Boolean!
+  size: Int
+  updated_at: Time
 }
-
-scalar Upload
 
 extend type Query {
   files(path: String!, name: String, isDir: Boolean): [File!]!

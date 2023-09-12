@@ -15,6 +15,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  Time: { input: any; output: any; }
   Upload: { input: any; output: any; }
 };
 
@@ -23,7 +24,9 @@ export type File = {
   isDir: Scalars['Boolean']['output'];
   key: Scalars['String']['output'];
   name: Scalars['String']['output'];
+  size?: Maybe<Scalars['Int']['output']>;
   type: Scalars['String']['output'];
+  updated_at?: Maybe<Scalars['Time']['output']>;
 };
 
 export type Mutation = {
@@ -94,7 +97,7 @@ export type GetFilesQueryVariables = Exact<{
 }>;
 
 
-export type GetFilesQuery = { __typename?: 'Query', files: Array<{ __typename?: 'File', name: string, key: string, type: string, isDir: boolean }> };
+export type GetFilesQuery = { __typename?: 'Query', files: Array<{ __typename?: 'File', name: string, key: string, type: string, isDir: boolean, size?: number | null, updated_at?: any | null }> };
 
 export type GetDirsQueryVariables = Exact<{
   path: Scalars['String']['input'];
@@ -180,6 +183,8 @@ export const GetFilesDocument = gql`
     key
     type
     isDir
+    size
+    updated_at
   }
 }
     `;

@@ -10,7 +10,7 @@ export function ConditionalButton({ isButton, children, ...props }: Props) {
   return (
     <>
       {isButton ? (
-        <Box w="100%" h="100%" as="button" {...props}>
+        <Box as="button" {...props}>
           {children}
         </Box>
       ) : (
