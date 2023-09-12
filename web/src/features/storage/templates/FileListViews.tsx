@@ -53,7 +53,7 @@ export function FileListViews({ files, refetch }: Props) {
                 ml={12}
                 w={20}
                 textAlign="left"
-                display={{ base: "none", lg: "block" }}
+                display={{ base: "none", xl: "block" }}
               >
                 更新日
               </Text>

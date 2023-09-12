@@ -94,7 +94,7 @@ export function FileListViewItem({ file, onClick, refetch }: Props) {
               <Text
                 textAlign="left"
                 ml={12}
-                display={{ base: "none", lg: "block" }}
+                display={{ base: "none", xl: "block" }}
               >{`${new Date(file.updated_at).toLocaleDateString()}`}</Text>
             </HStack>
           </HStack>
