@@ -3,13 +3,13 @@ import { defineStyleConfig } from "@chakra-ui/react";
 export const Modal = defineStyleConfig({
   baseStyle: {
     header: {
-      backgroundColor: "blackAlpha.800",
+      bgColor: "#333333",
     },
     body: {
-      backgroundColor: "blackAlpha.800",
+      bgColor: "#333333",
     },
     footer: {
-      backgroundColor: "blackAlpha.800",
+      bgColor: "#333333",
     },
     dialog: {
       rounded: 0,

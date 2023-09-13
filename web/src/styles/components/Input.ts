@@ -4,7 +4,7 @@ export const Input = defineStyleConfig({
   baseStyle: {
     field: {
       _placeholder: {
-        color: "whiteAlpha.500",
+        color: "whiteAlpha.300",
       },
     },
   },
