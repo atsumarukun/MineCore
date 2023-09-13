@@ -59,7 +59,7 @@ type ComplexityRoot struct {
 		Auth        func(childComplexity int, password string) int
 		CopyFile    func(childComplexity int, key string, destination string) int
 		MakeDir     func(childComplexity int, key string) int
-		MoveFile    func(childComplexity int, key string, destination string) int
+		MoveFile    func(childComplexity int, input []*model.UpdateFileInput) int
 		RemoveFiles func(childComplexity int, keys []string) int
 		UploadFiles func(childComplexity int, path string, files []*graphql.Upload) int
 	}
@@ -72,7 +72,7 @@ type ComplexityRoot struct {
 type MutationResolver interface {
 	Auth(ctx context.Context, password string) (string, error)
 	UploadFiles(ctx context.Context, path string, files []*graphql.Upload) ([]*model.File, error)
-	MoveFile(ctx context.Context, key string, destination string) (string, error)
+	MoveFile(ctx context.Context, input []*model.UpdateFileInput) ([]string, error)
 	CopyFile(ctx context.Context, key string, destination string) (string, error)
 	MakeDir(ctx context.Context, key string) (string, error)
 	RemoveFiles(ctx context.Context, keys []string) ([]string, error)
@@ -184,7 +184,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.MoveFile(childComplexity, args["key"].(string), args["destination"].(string)), true
+		return e.complexity.Mutation.MoveFile(childComplexity, args["input"].([]*model.UpdateFileInput)), true
 
 	case "Mutation.removeFiles":
 		if e.complexity.Mutation.RemoveFiles == nil {
@@ -229,7 +229,9 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	rc := graphql.GetOperationContext(ctx)
 	ec := executionContext{rc, e, 0, 0, make(chan graphql.DeferredResult)}
-	inputUnmarshalMap := graphql.BuildUnmarshalerMap()
+	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
+		ec.unmarshalInputUpdateFileInput,
+	)
 	first := true
 
 	switch rc.Operation.Operation {
@@ -403,24 +405,15 @@ func (ec *executionContext) field_Mutation_makeDir_args(ctx context.Context, raw
 func (ec *executionContext) field_Mutation_moveFile_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["key"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("key"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+	var arg0 []*model.UpdateFileInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateFileInput2ᚕᚖapiᚋgraphᚋmodelᚐUpdateFileInputᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["key"] = arg0
-	var arg1 string
-	if tmp, ok := rawArgs["destination"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("destination"))
-		arg1, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["destination"] = arg1
+	args["input"] = arg0
 	return args, nil
 }
 
@@ -945,7 +938,7 @@ func (ec *executionContext) _Mutation_moveFile(ctx context.Context, field graphq
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().MoveFile(rctx, fc.Args["key"].(string), fc.Args["destination"].(string))
+		return ec.resolvers.Mutation().MoveFile(rctx, fc.Args["input"].([]*model.UpdateFileInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -957,9 +950,9 @@ func (ec *executionContext) _Mutation_moveFile(ctx context.Context, field graphq
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.([]string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_moveFile(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3122,6 +3115,44 @@ func (ec *executionContext) fieldContext___Type_specifiedByURL(ctx context.Conte
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputUpdateFileInput(ctx context.Context, obj interface{}) (model.UpdateFileInput, error) {
+	var it model.UpdateFileInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"key", "destination"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "key":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("key"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Key = data
+		case "destination":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("destination"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Destination = data
+		}
+	}
+
+	return it, nil
+}
+
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -3784,6 +3815,28 @@ func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel
 	}
 
 	return ret
+}
+
+func (ec *executionContext) unmarshalNUpdateFileInput2ᚕᚖapiᚋgraphᚋmodelᚐUpdateFileInputᚄ(ctx context.Context, v interface{}) ([]*model.UpdateFileInput, error) {
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]*model.UpdateFileInput, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNUpdateFileInput2ᚖapiᚋgraphᚋmodelᚐUpdateFileInput(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) unmarshalNUpdateFileInput2ᚖapiᚋgraphᚋmodelᚐUpdateFileInput(ctx context.Context, v interface{}) (*model.UpdateFileInput, error) {
+	res, err := ec.unmarshalInputUpdateFileInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNUpload2ᚕᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUploadᚄ(ctx context.Context, v interface{}) ([]*graphql.Upload, error) {

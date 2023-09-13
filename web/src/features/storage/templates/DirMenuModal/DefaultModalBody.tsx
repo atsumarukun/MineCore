@@ -1,6 +1,6 @@
 import { Button, HStack, Icon, VStack } from "@chakra-ui/react";
 import { Dispatch, useContext } from "react";
-import { LuFolderPlus } from "react-icons/lu";
+import { LuFileOutput, LuFolderPlus } from "react-icons/lu";
 import { MdOutlineImage, MdOutlineHideImage } from "react-icons/md";
 import { PiUploadSimple } from "react-icons/pi";
 import { destroyCookie, parseCookies } from "nookies";
@@ -42,6 +42,14 @@ export function DefaultModalBody({ setStatus, onClose }: Props) {
     <>
       {selectModeContext.selectMode ? (
         <VStack w="100%">
+          <Button
+            w="100%"
+            justifyContent="left"
+            onClick={() => setStatus(ModalStatus.move)}
+          >
+            <Icon as={LuFileOutput} boxSize={6} mr={6} />
+            移動
+          </Button>
           <Button
             w="100%"
             justifyContent="left"

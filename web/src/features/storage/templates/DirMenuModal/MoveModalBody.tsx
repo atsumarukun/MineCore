@@ -5,15 +5,18 @@ import { useContext, useState } from "react";
 import { DirList } from "../DirList";
 import { useGetPath } from "../../hooks";
 import { RefetchContext } from "@/providers/RefetchProvider";
+import { SelectedFileKeysContext } from "../../provides/SelectedFileKeysProvider";
+import { SelectModeContext } from "@/providers/SelectModeProvider";
 
 type Props = {
-  name: string;
   onClose: () => void;
 };
 
-export function MoveModalBody({ name, onClose }: Props) {
+export function MoveModalBody({ onClose }: Props) {
   const path = useGetPath();
   const refetchContext = useContext(RefetchContext);
+  const selectModeContext = useContext(SelectModeContext);
+  const selectedFileKeysContext = useContext(SelectedFileKeysContext);
 
   const [key, setKey] = useState(path);
   const [move] = useMoveFileMutation({
@@ -27,12 +30,12 @@ export function MoveModalBody({ name, onClose }: Props) {
     try {
       await move({
         variables: {
-          input: [
-            {
-              key: `${path}/${name}`,
-              destination: `${key}/${name}`,
-            },
-          ],
+          input: selectedFileKeysContext.selectedFileKeys.map((v) => {
+            return {
+              key: v,
+              destination: `${key}/${v.substring(v.lastIndexOf("/") + 1)}`,
+            };
+          }),
         },
       });
       toast({
@@ -40,6 +43,8 @@ export function MoveModalBody({ name, onClose }: Props) {
         status: "success",
         duration: 5000,
       });
+      selectModeContext.setSelectMode(false);
+      selectedFileKeysContext.setSelectedFileKeys([]);
       onClose();
     } catch (e) {
       if (e instanceof ApolloError) {

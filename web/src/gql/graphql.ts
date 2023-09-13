@@ -34,7 +34,7 @@ export type Mutation = {
   auth: Scalars['String']['output'];
   copyFile: Scalars['String']['output'];
   makeDir: Scalars['String']['output'];
-  moveFile: Scalars['String']['output'];
+  moveFile: Array<Scalars['String']['output']>;
   removeFiles: Array<Scalars['String']['output']>;
   uploadFiles: Array<File>;
 };
@@ -57,8 +57,7 @@ export type MutationMakeDirArgs = {
 
 
 export type MutationMoveFileArgs = {
-  destination: Scalars['String']['input'];
-  key: Scalars['String']['input'];
+  input: Array<UpdateFileInput>;
 };
 
 
@@ -82,6 +81,11 @@ export type QueryFilesArgs = {
   isDir?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   path: Scalars['String']['input'];
+};
+
+export type UpdateFileInput = {
+  destination: Scalars['String']['input'];
+  key: Scalars['String']['input'];
 };
 
 export type AuthMutationVariables = Exact<{
@@ -115,12 +119,11 @@ export type UploadFilesMutationVariables = Exact<{
 export type UploadFilesMutation = { __typename?: 'Mutation', uploadFiles: Array<{ __typename?: 'File', name: string }> };
 
 export type MoveFileMutationVariables = Exact<{
-  key: Scalars['String']['input'];
-  destination: Scalars['String']['input'];
+  input: Array<UpdateFileInput> | UpdateFileInput;
 }>;
 
 
-export type MoveFileMutation = { __typename?: 'Mutation', moveFile: string };
+export type MoveFileMutation = { __typename?: 'Mutation', moveFile: Array<string> };
 
 export type CopyFileMutationVariables = Exact<{
   key: Scalars['String']['input'];
@@ -288,8 +291,8 @@ export type UploadFilesMutationHookResult = ReturnType<typeof useUploadFilesMuta
 export type UploadFilesMutationResult = Apollo.MutationResult<UploadFilesMutation>;
 export type UploadFilesMutationOptions = Apollo.BaseMutationOptions<UploadFilesMutation, UploadFilesMutationVariables>;
 export const MoveFileDocument = gql`
-    mutation MoveFile($key: String!, $destination: String!) {
-  moveFile(key: $key, destination: $destination)
+    mutation MoveFile($input: [UpdateFileInput!]!) {
+  moveFile(input: $input)
 }
     `;
 export type MoveFileMutationFn = Apollo.MutationFunction<MoveFileMutation, MoveFileMutationVariables>;
@@ -307,8 +310,7 @@ export type MoveFileMutationFn = Apollo.MutationFunction<MoveFileMutation, MoveF
  * @example
  * const [moveFileMutation, { data, loading, error }] = useMoveFileMutation({
  *   variables: {
- *      key: // value for 'key'
- *      destination: // value for 'destination'
+ *      input: // value for 'input'
  *   },
  * });
  */

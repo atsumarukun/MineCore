@@ -14,3 +14,8 @@ type File struct {
 	Size      *int       `json:"size,omitempty"`
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 }
+
+type UpdateFileInput struct {
+	Key         string `json:"key"`
+	Destination string `json:"destination"`
+}

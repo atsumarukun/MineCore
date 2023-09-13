@@ -31,8 +31,8 @@ export const UPLOAD_FILES = gql`
 `;
 
 export const MOVE_FILE = gql`
-  mutation MoveFile($key: String!, $destination: String!) {
-    moveFile(key: $key, destination: $destination)
+  mutation MoveFile($input: [UpdateFileInput!]!) {
+    moveFile(input: $input)
   }
 `;
 

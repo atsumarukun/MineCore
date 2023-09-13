@@ -10,13 +10,18 @@ type File {
   updated_at: Time
 }
 
+input UpdateFileInput {
+  key: String!
+  destination: String!
+}
+
 extend type Query {
   files(path: String!, name: String, isDir: Boolean): [File!]!
 }
 
 extend type Mutation {
   uploadFiles(path: String!, files: [Upload!]!): [File!]!
-  moveFile(key: String!, destination: String!): String!
+  moveFile(input: [UpdateFileInput!]!): [String!]!
   copyFile(key: String!, destination: String!): String!
   makeDir(key: String!): String!
   removeFiles(keys: [String!]!): [String!]!

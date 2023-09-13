@@ -20,9 +20,9 @@ func (r *mutationResolver) UploadFiles(ctx context.Context, path string, files [
 }
 
 // MoveFile is the resolver for the moveFile field.
-func (r *mutationResolver) MoveFile(ctx context.Context, key string, destination string) (string, error) {
+func (r *mutationResolver) MoveFile(ctx context.Context, input []*model.UpdateFileInput) ([]string, error) {
 	serv := service.StorageService{}
-	return serv.MoveFile(ctx, key, destination)
+	return serv.MoveFile(ctx, input)
 }
 
 // CopyFile is the resolver for the copyFile field.

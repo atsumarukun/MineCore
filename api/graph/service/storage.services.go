@@ -100,15 +100,19 @@ func (_ StorageService) UploadFiles(ctx context.Context, path string, files []*g
 	return fs, nil
 }
 
-func (_ StorageService) MoveFile(ctx context.Context, key string, destination string) (string, error) {
-	if (strings.Contains(key[0:strings.LastIndex(key, "/")], ".") || strings.Contains(destination[0:strings.LastIndex(destination, "/")], ".")) && ctx.Value("verified") == nil {
-		return "", errors.New("Token does not exist.")
-	}
+func (_ StorageService) MoveFile(ctx context.Context, input []*model.UpdateFileInput) ([]string, error) {
+	var keys []string
 
-	if err := os.Rename(fmt.Sprintf("/go/src/api/storage%s", key), fmt.Sprintf("/go/src/api/storage%s", destination)); err != nil {
-		return "", err
+	for _, info := range input {
+		if (strings.Contains(info.Key[0:strings.LastIndex(info.Key, "/")], ".") || strings.Contains(info.Destination[0:strings.LastIndex(info.Destination, "/")], ".")) && ctx.Value("verified") == nil {
+			return nil, errors.New("Token does not exist.")
+		}
+	
+		if err := os.Rename(fmt.Sprintf("/go/src/api/storage%s", info.Key), fmt.Sprintf("/go/src/api/storage%s", info.Destination)); err != nil {
+			return nil, err
+		}
 	}
-	return destination, nil
+	return keys, nil
 }
 
 func (_ StorageService) CopyFile(ctx context.Context, key string, destination string) (string, error) {

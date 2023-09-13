@@ -43,10 +43,14 @@ export function RenameFileForm({ name, onClose }: Props) {
     try {
       await rename({
         variables: {
-          key: `${path}/${name}`,
-          destination: `${path}/${data.name}${
-            name.includes(".") ? name.substring(name.lastIndexOf(".")) : ""
-          }`,
+          input: [
+            {
+              key: `${path}/${name}`,
+              destination: `${path}/${data.name}${
+                name.includes(".") ? name.substring(name.lastIndexOf(".")) : ""
+              }`,
+            },
+          ],
         },
       });
       toast({
