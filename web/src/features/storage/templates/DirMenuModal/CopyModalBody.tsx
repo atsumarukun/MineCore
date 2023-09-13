@@ -5,15 +5,18 @@ import { DirList } from "../DirList";
 import { useCopyFileMutation } from "@/gql/graphql";
 import { useGetPath } from "../../hooks";
 import { RefetchContext } from "@/providers/RefetchProvider";
+import { SelectModeContext } from "@/providers/SelectModeProvider";
+import { SelectedFileKeysContext } from "../../provides/SelectedFileKeysProvider";
 
 type Props = {
-  name: string;
   onClose: () => void;
 };
 
-export function CopyModalBody({ name, onClose }: Props) {
+export function CopyModalBody({ onClose }: Props) {
   const path = useGetPath();
   const refetchContext = useContext(RefetchContext);
+  const selectModeContext = useContext(SelectModeContext);
+  const selectedFileKeysContext = useContext(SelectedFileKeysContext);
 
   const [key, setKey] = useState(path);
   const [copy] = useCopyFileMutation({
@@ -27,12 +30,12 @@ export function CopyModalBody({ name, onClose }: Props) {
     try {
       await copy({
         variables: {
-          input: [
-            {
-              key: `${path}/${name}`,
-              destination: `${key}/${name}`,
-            },
-          ],
+          input: selectedFileKeysContext.selectedFileKeys.map((v) => {
+            return {
+              key: v,
+              destination: `${key}/${v.substring(v.lastIndexOf("/") + 1)}`,
+            };
+          }),
         },
       });
       toast({
@@ -40,6 +43,8 @@ export function CopyModalBody({ name, onClose }: Props) {
         status: "success",
         duration: 5000,
       });
+      selectModeContext.setSelectMode(false);
+      selectedFileKeysContext.setSelectedFileKeys([]);
       onClose();
     } catch (e) {
       if (e instanceof ApolloError) {

@@ -57,7 +57,7 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		Auth        func(childComplexity int, password string) int
-		CopyFile    func(childComplexity int, key string, destination string) int
+		CopyFile    func(childComplexity int, input []*model.UpdateFileInput) int
 		MakeDir     func(childComplexity int, key string) int
 		MoveFile    func(childComplexity int, input []*model.UpdateFileInput) int
 		RemoveFiles func(childComplexity int, keys []string) int
@@ -73,7 +73,7 @@ type MutationResolver interface {
 	Auth(ctx context.Context, password string) (string, error)
 	UploadFiles(ctx context.Context, path string, files []*graphql.Upload) ([]*model.File, error)
 	MoveFile(ctx context.Context, input []*model.UpdateFileInput) ([]string, error)
-	CopyFile(ctx context.Context, key string, destination string) (string, error)
+	CopyFile(ctx context.Context, input []*model.UpdateFileInput) ([]string, error)
 	MakeDir(ctx context.Context, key string) (string, error)
 	RemoveFiles(ctx context.Context, keys []string) ([]string, error)
 }
@@ -160,7 +160,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CopyFile(childComplexity, args["key"].(string), args["destination"].(string)), true
+		return e.complexity.Mutation.CopyFile(childComplexity, args["input"].([]*model.UpdateFileInput)), true
 
 	case "Mutation.makeDir":
 		if e.complexity.Mutation.MakeDir == nil {
@@ -366,24 +366,15 @@ func (ec *executionContext) field_Mutation_auth_args(ctx context.Context, rawArg
 func (ec *executionContext) field_Mutation_copyFile_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["key"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("key"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+	var arg0 []*model.UpdateFileInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateFileInput2ᚕᚖapiᚋgraphᚋmodelᚐUpdateFileInputᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["key"] = arg0
-	var arg1 string
-	if tmp, ok := rawArgs["destination"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("destination"))
-		arg1, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["destination"] = arg1
+	args["input"] = arg0
 	return args, nil
 }
 
@@ -993,7 +984,7 @@ func (ec *executionContext) _Mutation_copyFile(ctx context.Context, field graphq
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CopyFile(rctx, fc.Args["key"].(string), fc.Args["destination"].(string))
+		return ec.resolvers.Mutation().CopyFile(rctx, fc.Args["input"].([]*model.UpdateFileInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1005,9 +996,9 @@ func (ec *executionContext) _Mutation_copyFile(ctx context.Context, field graphq
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.([]string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_copyFile(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {

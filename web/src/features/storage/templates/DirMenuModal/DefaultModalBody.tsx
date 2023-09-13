@@ -10,6 +10,7 @@ import { BiSelectMultiple } from "react-icons/bi";
 import { SelectModeContext } from "@/providers/SelectModeProvider";
 import { SelectedFileKeysContext } from "../../provides/SelectedFileKeysProvider";
 import { FiTrash } from "react-icons/fi";
+import { IoMdCopy } from "react-icons/io";
 
 type Props = {
   setStatus: Dispatch<number>;
@@ -49,6 +50,14 @@ export function DefaultModalBody({ setStatus, onClose }: Props) {
           >
             <Icon as={LuFileOutput} boxSize={6} mr={6} />
             移動
+          </Button>
+          <Button
+            w="100%"
+            justifyContent="left"
+            onClick={() => setStatus(ModalStatus.copy)}
+          >
+            <Icon as={IoMdCopy} boxSize={6} mr={6} />
+            コピー
           </Button>
           <Button
             w="100%"

@@ -32,7 +32,7 @@ export type File = {
 export type Mutation = {
   __typename?: 'Mutation';
   auth: Scalars['String']['output'];
-  copyFile: Scalars['String']['output'];
+  copyFile: Array<Scalars['String']['output']>;
   makeDir: Scalars['String']['output'];
   moveFile: Array<Scalars['String']['output']>;
   removeFiles: Array<Scalars['String']['output']>;
@@ -46,8 +46,7 @@ export type MutationAuthArgs = {
 
 
 export type MutationCopyFileArgs = {
-  destination: Scalars['String']['input'];
-  key: Scalars['String']['input'];
+  input: Array<UpdateFileInput>;
 };
 
 
@@ -126,12 +125,11 @@ export type MoveFileMutationVariables = Exact<{
 export type MoveFileMutation = { __typename?: 'Mutation', moveFile: Array<string> };
 
 export type CopyFileMutationVariables = Exact<{
-  key: Scalars['String']['input'];
-  destination: Scalars['String']['input'];
+  input: Array<UpdateFileInput> | UpdateFileInput;
 }>;
 
 
-export type CopyFileMutation = { __typename?: 'Mutation', copyFile: string };
+export type CopyFileMutation = { __typename?: 'Mutation', copyFile: Array<string> };
 
 export type MakeDirMutationVariables = Exact<{
   key: Scalars['String']['input'];
@@ -322,8 +320,8 @@ export type MoveFileMutationHookResult = ReturnType<typeof useMoveFileMutation>;
 export type MoveFileMutationResult = Apollo.MutationResult<MoveFileMutation>;
 export type MoveFileMutationOptions = Apollo.BaseMutationOptions<MoveFileMutation, MoveFileMutationVariables>;
 export const CopyFileDocument = gql`
-    mutation CopyFile($key: String!, $destination: String!) {
-  copyFile(key: $key, destination: $destination)
+    mutation CopyFile($input: [UpdateFileInput!]!) {
+  copyFile(input: $input)
 }
     `;
 export type CopyFileMutationFn = Apollo.MutationFunction<CopyFileMutation, CopyFileMutationVariables>;
@@ -341,8 +339,7 @@ export type CopyFileMutationFn = Apollo.MutationFunction<CopyFileMutation, CopyF
  * @example
  * const [copyFileMutation, { data, loading, error }] = useCopyFileMutation({
  *   variables: {
- *      key: // value for 'key'
- *      destination: // value for 'destination'
+ *      input: // value for 'input'
  *   },
  * });
  */

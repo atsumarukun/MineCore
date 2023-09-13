@@ -18,6 +18,7 @@ import { PrevieModalBody } from "./PreviewModalBody";
 import { UploadModalBody } from "./UploadModalBody";
 import { RemoveModalBody } from "./RemoveModalBody";
 import { MoveModalBody } from "./MoveModalBody";
+import { CopyModalBody } from "./CopyModalBody";
 
 export function DirMenuModal() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -49,6 +50,7 @@ export function DirMenuModal() {
               <UploadModalBody onClose={onClose} />
             )}
             {status === ModalStatus.move && <MoveModalBody onClose={onClose} />}
+            {status === ModalStatus.copy && <CopyModalBody onClose={onClose} />}
             {status === ModalStatus.remove && (
               <RemoveModalBody onClose={onClose} />
             )}

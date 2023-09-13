@@ -111,35 +111,42 @@ func (_ StorageService) MoveFile(ctx context.Context, input []*model.UpdateFileI
 		if err := os.Rename(fmt.Sprintf("/go/src/api/storage%s", info.Key), fmt.Sprintf("/go/src/api/storage%s", info.Destination)); err != nil {
 			return nil, err
 		}
+
+		keys = append(keys, info.Destination)
 	}
 	return keys, nil
 }
 
-func (_ StorageService) CopyFile(ctx context.Context, key string, destination string) (string, error) {
-	if (strings.Contains(key[0:strings.LastIndex(key, "/")], ".") || strings.Contains(destination[0:strings.LastIndex(destination, "/")], ".")) && ctx.Value("verified") == nil {
-		return "", errors.New("Token does not exist.")
-	}
+func (_ StorageService) CopyFile(ctx context.Context, input []*model.UpdateFileInput) ([]string, error) {
+	var keys []string
 
-	file, err := os.Open(fmt.Sprintf("/go/src/api/storage%s", key))
-	if err != nil {
-		return "", err
-	}
-
-	var copy io.Writer
-	if key == destination {
-		copy, err = os.Create(fmt.Sprintf("/go/src/api/storage%s", strings.Replace(destination, ".", " copy.", 1)))
-		if err != nil {
-			return "", err
+	for _, info := range input {
+		if (strings.Contains(info.Key[0:strings.LastIndex(info.Key, "/")], ".") || strings.Contains(info.Destination[0:strings.LastIndex(info.Destination, "/")], ".")) && ctx.Value("verified") == nil {
+			return nil, errors.New("Token does not exist.")
 		}
-	} else {
-		copy, err = os.Create(fmt.Sprintf("/go/src/api/storage%s", destination))
+	
+		file, err := os.Open(fmt.Sprintf("/go/src/api/storage%s", info.Key))
 		if err != nil {
-			return "", err
+			return nil, err
 		}
+	
+		var copy io.Writer
+		if info.Key == info.Destination {
+			copy, err = os.Create(fmt.Sprintf("/go/src/api/storage%s", strings.Replace(info.Destination, ".", " copy.", 1)))
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			copy, err = os.Create(fmt.Sprintf("/go/src/api/storage%s", info.Destination))
+			if err != nil {
+				return nil, err
+			}
+		}
+	
+		io.Copy(copy, file)
+		keys = append(keys, info.Destination)
 	}
-
-	io.Copy(copy, file)
-	return destination, nil
+	return keys, nil
 }
 
 func (_ StorageService) MakeDir(ctx context.Context, key string) (string, error) {

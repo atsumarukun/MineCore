@@ -22,7 +22,7 @@ extend type Query {
 extend type Mutation {
   uploadFiles(path: String!, files: [Upload!]!): [File!]!
   moveFile(input: [UpdateFileInput!]!): [String!]!
-  copyFile(key: String!, destination: String!): String!
+  copyFile(input: [UpdateFileInput!]!): [String!]!
   makeDir(key: String!): String!
   removeFiles(keys: [String!]!): [String!]!
 }

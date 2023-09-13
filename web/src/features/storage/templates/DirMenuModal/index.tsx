@@ -6,5 +6,6 @@ export const ModalStatus = {
   preview: 2,
   upload: 3,
   move: 4,
-  remove: 5,
+  copy: 5,
+  remove: 6,
 };
