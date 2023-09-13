@@ -55,9 +55,7 @@ export function FileListViewItem({ file, onClick }: Props) {
   }
 
   const getSizeText = (size: number) => {
-    if (size === 0) {
-      return " - - - - - ";
-    } else if (size < 1024) {
+    if (size < 1024) {
       return `${size} bytes`;
     } else if (size < 1024 ** 2) {
       return `${(size / 1024).toFixed(1)} KB`;
@@ -89,50 +87,52 @@ export function FileListViewItem({ file, onClick }: Props) {
             minW={0}
             flexGrow={1}
           >
-            <HStack p={4}>
-              {selectModeContext.selectMode && (
-                <Icon
-                  as={
-                    file.name === "../"
-                      ? MdOutlineIndeterminateCheckBox
-                      : selectedFileKeysContext.selectedFileKeys.includes(
-                          file.key
-                        )
-                      ? MdCheckBox
-                      : MdCheckBoxOutlineBlank
-                  }
-                  boxSize={6}
-                  mr={2}
-                />
-              )}
-              {file.type === "image" ? (
-                <Image
-                  src={`${process.env.NEXT_PUBLIC_STORAGE_URL}${file.key}`}
-                  boxSize={8}
-                  objectFit="contain"
-                  mr={4}
-                />
-              ) : (
-                <Icon as={icon} boxSize={6} ml={1} mr={5} />
-              )}
-              <EllipsisText textAlign="left" w="75%">
-                {file.name}
-              </EllipsisText>
-              <HStack>
-                <Text
-                  w={20}
-                  textAlign="left"
-                  display={{ base: "none", md: "block" }}
-                >
-                  {getSizeText(file.size ?? 0)}
-                </Text>
-                <Text
-                  textAlign="left"
-                  ml={12}
-                  display={{ base: "none", xl: "block" }}
-                >{`${new Date(file.updated_at).toLocaleDateString()}`}</Text>
+            <Box minW={0} flexGrow={1}>
+              <HStack p={4}>
+                {selectModeContext.selectMode && (
+                  <Icon
+                    as={
+                      file.name === "../"
+                        ? MdOutlineIndeterminateCheckBox
+                        : selectedFileKeysContext.selectedFileKeys.includes(
+                            file.key
+                          )
+                        ? MdCheckBox
+                        : MdCheckBoxOutlineBlank
+                    }
+                    boxSize={6}
+                    mr={2}
+                  />
+                )}
+                {file.type === "image" ? (
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_STORAGE_URL}${file.key}`}
+                    boxSize={8}
+                    objectFit="contain"
+                    mr={4}
+                  />
+                ) : (
+                  <Icon as={icon} boxSize={6} ml={1} mr={5} />
+                )}
+                <EllipsisText textAlign="left" w="75%">
+                  {file.name}
+                </EllipsisText>
+                <HStack>
+                  <Text
+                    w={20}
+                    textAlign="left"
+                    display={{ base: "none", md: "block" }}
+                  >
+                    {getSizeText(file.size ?? 0)}
+                  </Text>
+                  <Text
+                    textAlign="left"
+                    ml={12}
+                    display={{ base: "none", xl: "block" }}
+                  >{`${new Date(file.updated_at).toLocaleDateString()}`}</Text>
+                </HStack>
               </HStack>
-            </HStack>
+            </Box>
           </Select>
         </ConditionalButton>
       </ConditionalLink>

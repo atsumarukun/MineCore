@@ -5,6 +5,7 @@ import { useContext, useState } from "react";
 import { PreviewFileModal } from "./PreviewFileModal";
 import { useGetPath } from "../hooks";
 import { SelectModeContext } from "@/providers/SelectModeProvider";
+import { DIR_SIZE } from "../constant";
 
 type Props = {
   files: GetFilesQuery["files"];
@@ -74,6 +75,7 @@ export function FileListViews({ files }: Props) {
               key: path.substring(0, path.lastIndexOf("/")),
               type: "dir",
               isDir: true,
+              size: DIR_SIZE,
             }}
             onClick={() => onPreview(undefined)}
           />
