@@ -1,5 +1,5 @@
 import { GetFilesQuery } from "@/gql/graphql";
-import { Box, Flex, HStack, Icon, Image, Text } from "@chakra-ui/react";
+import { Box, HStack, Icon, Image, Text } from "@chakra-ui/react";
 import { FileMenuModal } from "./FileMenuModal";
 import { IconType } from "react-icons";
 import {

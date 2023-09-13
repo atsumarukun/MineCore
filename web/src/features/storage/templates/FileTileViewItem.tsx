@@ -1,7 +1,7 @@
 import { ConditionalLink } from "@/components/parts/ConditionalLink";
 import { EllipsisText } from "@/components/parts/EllipsisText";
 import { GetFilesQuery } from "@/gql/graphql";
-import { Box, Center, GridItem, Icon, Image } from "@chakra-ui/react";
+import { Center, GridItem, Icon, Image } from "@chakra-ui/react";
 import {
   FaFolder,
   FaFileAlt,

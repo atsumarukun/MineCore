@@ -1,5 +1,4 @@
-import { Exact, GetFilesQuery, InputMaybe } from "@/gql/graphql";
-import { ApolloQueryResult, ObservableQuery } from "@apollo/client";
+import { ObservableQuery } from "@apollo/client";
 import { Dispatch, ReactNode, createContext, useState } from "react";
 
 type RefetchContextProps = {
