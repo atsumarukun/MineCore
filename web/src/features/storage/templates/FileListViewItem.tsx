@@ -13,6 +13,15 @@ import {
 import { ConditionalButton } from "@/components/parts/ConditionalButton";
 import { ConditionalLink } from "@/components/parts/ConditionalLink";
 import { EllipsisText } from "@/components/parts/EllipsisText";
+import { useContext } from "react";
+import { SelectModeContext } from "@/providers/SelectModeProvider";
+import {
+  MdCheckBox,
+  MdCheckBoxOutlineBlank,
+  MdOutlineIndeterminateCheckBox,
+} from "react-icons/md";
+import { SelectedFileKeysContext } from "../provides/SelectedFileKeysProvider";
+import { Select } from "@/components/parts/Select";
 
 type Props = {
   file: GetFilesQuery["files"][number];
@@ -20,6 +29,9 @@ type Props = {
 };
 
 export function FileListViewItem({ file, onClick }: Props) {
+  const selectModeContext = useContext(SelectModeContext);
+  const selectedFileKeysContext = useContext(SelectedFileKeysContext);
+
   let icon: IconType;
   switch (file.type) {
     case "dir":
@@ -62,46 +74,69 @@ export function FileListViewItem({ file, onClick }: Props) {
         minW={0}
         flexGrow={1}
         href={`/storage${file.key}`}
-        isLink={file.isDir}
+        isLink={file.isDir && !selectModeContext.selectMode}
       >
         <ConditionalButton
           minW={0}
           flexGrow={1}
           onClick={onClick}
-          isButton={!file.isDir}
+          isButton={!file.isDir && !selectModeContext.selectMode}
         >
-          <HStack p={4}>
-            {file.type === "image" ? (
-              <Image
-                src={`${process.env.NEXT_PUBLIC_STORAGE_URL}${file.key}`}
-                boxSize={8}
-                objectFit="contain"
-                mr={4}
-              />
-            ) : (
-              <Icon as={icon} boxSize={6} ml={1} mr={5} />
-            )}
-            <EllipsisText textAlign="left" w="75%">
-              {file.name}
-            </EllipsisText>
-            <HStack>
-              <Text
-                w={20}
-                textAlign="left"
-                display={{ base: "none", md: "block" }}
-              >
-                {getSizeText(file.size ?? 0)}
-              </Text>
-              <Text
-                textAlign="left"
-                ml={12}
-                display={{ base: "none", xl: "block" }}
-              >{`${new Date(file.updated_at).toLocaleDateString()}`}</Text>
+          <Select
+            select={selectedFileKeysContext.setSelectedFileKeys}
+            value={file.key}
+            isSelectMode={selectModeContext.selectMode && file.name !== "../"}
+            minW={0}
+            flexGrow={1}
+          >
+            <HStack p={4}>
+              {selectModeContext.selectMode && (
+                <Icon
+                  as={
+                    file.name === "../"
+                      ? MdOutlineIndeterminateCheckBox
+                      : selectedFileKeysContext.selectedFileKeys.includes(
+                          file.key
+                        )
+                      ? MdCheckBox
+                      : MdCheckBoxOutlineBlank
+                  }
+                  boxSize={6}
+                  mr={2}
+                />
+              )}
+              {file.type === "image" ? (
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_STORAGE_URL}${file.key}`}
+                  boxSize={8}
+                  objectFit="contain"
+                  mr={4}
+                />
+              ) : (
+                <Icon as={icon} boxSize={6} ml={1} mr={5} />
+              )}
+              <EllipsisText textAlign="left" w="75%">
+                {file.name}
+              </EllipsisText>
+              <HStack>
+                <Text
+                  w={20}
+                  textAlign="left"
+                  display={{ base: "none", md: "block" }}
+                >
+                  {getSizeText(file.size ?? 0)}
+                </Text>
+                <Text
+                  textAlign="left"
+                  ml={12}
+                  display={{ base: "none", xl: "block" }}
+                >{`${new Date(file.updated_at).toLocaleDateString()}`}</Text>
+              </HStack>
             </HStack>
-          </HStack>
+          </Select>
         </ConditionalButton>
       </ConditionalLink>
-      <FileMenuModal file={file} ml="auto" />
+      {!selectModeContext.selectMode && <FileMenuModal file={file} ml="auto" />}
     </HStack>
   );
 }

@@ -74,6 +74,7 @@ export function FileListViews({ files }: Props) {
         {files.map((file) => (
           <FileListViewItem
             file={file}
+            key={file.key}
             onClick={() => onPreview(file.isDir ? undefined : file)}
           />
         ))}

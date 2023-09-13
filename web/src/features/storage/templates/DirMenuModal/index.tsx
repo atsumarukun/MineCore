@@ -5,4 +5,5 @@ export const ModalStatus = {
   make: 1,
   preview: 2,
   upload: 3,
+  remove: 4,
 };

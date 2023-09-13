@@ -16,6 +16,7 @@ import { DefaultModalBody } from "./DefaultModalBody";
 import { MakeModalBody } from "./MakeModalBody";
 import { PrevieModalBody } from "./PreviewModalBody";
 import { UploadModalBody } from "./UploadModalBody";
+import { RemoveModalBody } from "./RemoveModalBody";
 
 export function DirMenuModal() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -33,7 +34,7 @@ export function DirMenuModal() {
       <Modal isCentered isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>ファイルメニュー</ModalHeader>
+          <ModalHeader>ディレクトリメニュー</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             {status === ModalStatus.default && (
@@ -45,6 +46,9 @@ export function DirMenuModal() {
             )}
             {status === ModalStatus.upload && (
               <UploadModalBody onClose={onClose} />
+            )}
+            {status === ModalStatus.remove && (
+              <RemoveModalBody onClose={onClose} />
             )}
           </ModalBody>
         </ModalContent>
