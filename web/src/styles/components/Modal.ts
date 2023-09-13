@@ -1,15 +1,16 @@
 import { defineStyleConfig } from "@chakra-ui/react";
+import { BG_COLOR } from "../constants";
 
 export const Modal = defineStyleConfig({
   baseStyle: {
     header: {
-      bgColor: "#333333",
+      bgColor: BG_COLOR,
     },
     body: {
-      bgColor: "#333333",
+      bgColor: BG_COLOR,
     },
     footer: {
-      bgColor: "#333333",
+      bgColor: BG_COLOR,
     },
     dialog: {
       rounded: 0,

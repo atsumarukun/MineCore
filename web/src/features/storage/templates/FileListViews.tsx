@@ -5,7 +5,7 @@ import { useContext, useState } from "react";
 import { PreviewFileModal } from "./PreviewFileModal";
 import { useGetPath } from "../hooks";
 import { SelectModeContext } from "@/providers/SelectModeProvider";
-import { DIR_SIZE } from "../constant";
+import { DIR_SIZE } from "../constants";
 
 type Props = {
   files: GetFilesQuery["files"];
