@@ -1,7 +1,7 @@
 import { ConditionalLink } from "@/components/parts/ConditionalLink";
 import { EllipsisText } from "@/components/parts/EllipsisText";
 import { GetFilesQuery } from "@/gql/graphql";
-import { Center, GridItem, Icon, Image } from "@chakra-ui/react";
+import { Box, Center, GridItem, Icon, Image } from "@chakra-ui/react";
 import {
   FaFolder,
   FaFileAlt,
@@ -78,8 +78,6 @@ export function FileTileViewItem({ file, onClick }: Props) {
             select={selectedFileKeysContext.setSelectedFileKeys}
             value={file.key}
             isSelectMode={selectModeContext.selectMode && file.name !== "../"}
-            minW={0}
-            flexGrow={1}
           >
             {selectModeContext.selectMode && (
               <Icon
@@ -106,6 +104,11 @@ export function FileTileViewItem({ file, onClick }: Props) {
                 h="100%"
                 position="absolute"
                 top={0}
+                filter={
+                  selectedFileKeysContext.selectedFileKeys.includes(file.key)
+                    ? "brightness(0.5)"
+                    : ""
+                }
               >
                 <Image
                   src={`${process.env.NEXT_PUBLIC_STORAGE_URL}${file.key}`}
@@ -114,7 +117,15 @@ export function FileTileViewItem({ file, onClick }: Props) {
                 />
               </Center>
             ) : (
-              <Center h="100%" bgColor="blackAlpha.500">
+              <Center
+                h="100%"
+                bgColor="blackAlpha.500"
+                filter={
+                  selectedFileKeysContext.selectedFileKeys.includes(file.key)
+                    ? "brightness(0.5)"
+                    : ""
+                }
+              >
                 <Icon as={icon} boxSize={"25%"} />
               </Center>
             )}

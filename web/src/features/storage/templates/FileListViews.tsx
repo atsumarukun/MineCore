@@ -1,15 +1,17 @@
 import { GetFilesQuery } from "@/gql/graphql";
 import { Box, HStack, Text, VStack, useDisclosure } from "@chakra-ui/react";
 import { FileListViewItem } from "./FileListViewItem";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { PreviewFileModal } from "./PreviewFileModal";
 import { useGetPath } from "../hooks";
+import { SelectModeContext } from "@/providers/SelectModeProvider";
 
 type Props = {
   files: GetFilesQuery["files"];
 };
 
 export function FileListViews({ files }: Props) {
+  const selectModeContext = useContext(SelectModeContext);
   const path = useGetPath();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -37,7 +39,12 @@ export function FileListViews({ files }: Props) {
       <VStack spacing={0} my={8}>
         <HStack w="100%" borderBottom="1px" borderColor="whiteAlpha.500">
           <HStack w="100%">
-            <Text textAlign="left" w="75%" mr={10}>
+            <Text
+              textAlign="left"
+              w="75%"
+              mr={selectModeContext.selectMode ? 20 : 10}
+              ml={selectModeContext.selectMode ? 10 : 0}
+            >
               ファイル名
             </Text>
             <HStack>
