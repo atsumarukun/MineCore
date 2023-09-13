@@ -4,6 +4,6 @@ type Props = {
   onClose: () => void;
 };
 
-export function PrevieModalBody({ ...props }: Props) {
+export function AuthModalBody({ ...props }: Props) {
   return <AuthForm {...props} />;
 }

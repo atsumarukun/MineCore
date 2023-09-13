@@ -95,7 +95,7 @@ export function DefaultModalBody({ setStatus, onClose }: Props) {
             <Button
               w="100%"
               justifyContent="left"
-              onClick={() => setStatus(ModalStatus.preview)}
+              onClick={() => setStatus(ModalStatus.auth)}
             >
               <Icon as={MdOutlineImage} boxSize={6} mr={6} />
               隠しファイル表示

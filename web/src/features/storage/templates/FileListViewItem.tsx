@@ -87,7 +87,11 @@ export function FileListViewItem({ file, onClick }: Props) {
             minW={0}
             flexGrow={1}
           >
-            <Box minW={0} flexGrow={1}>
+            <Box
+              minW={0}
+              flexGrow={1}
+              mr={file.name === "../" && !selectModeContext.selectMode ? 14 : 0}
+            >
               <HStack p={4}>
                 {selectModeContext.selectMode && (
                   <Icon
@@ -136,7 +140,13 @@ export function FileListViewItem({ file, onClick }: Props) {
           </Select>
         </ConditionalButton>
       </ConditionalLink>
-      {!selectModeContext.selectMode && <FileMenuModal file={file} ml="auto" />}
+      {!selectModeContext.selectMode && (
+        <FileMenuModal
+          file={file}
+          ml="auto"
+          display={file.name === "../" ? "none" : "block"}
+        />
+      )}
     </HStack>
   );
 }

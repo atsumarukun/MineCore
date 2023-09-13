@@ -4,7 +4,6 @@ import { ApolloError } from "@apollo/client";
 import { Button, HStack, Text, useToast } from "@chakra-ui/react";
 import { useContext } from "react";
 import { SelectedFileKeysContext } from "../../provides/SelectedFileKeysProvider";
-import { SelectModeContext } from "@/providers/SelectModeProvider";
 
 type Props = {
   onClose: () => void;
@@ -12,7 +11,6 @@ type Props = {
 
 export function RemoveModalBody({ onClose }: Props) {
   const refetchContext = useContext(RefetchContext);
-  const selectModeContext = useContext(SelectModeContext);
   const selectedFileKeysContext = useContext(SelectedFileKeysContext);
 
   const [remove] = useRemoveFilesMutation({
@@ -34,8 +32,6 @@ export function RemoveModalBody({ onClose }: Props) {
         status: "success",
         duration: 5000,
       });
-      selectModeContext.setSelectMode(false);
-      selectedFileKeysContext.setSelectedFileKeys([]);
       onClose();
     } catch (e) {
       if (e instanceof ApolloError) {

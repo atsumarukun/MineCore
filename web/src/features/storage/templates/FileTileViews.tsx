@@ -16,8 +16,10 @@ export function FileTileViews({ files }: Props) {
   const [file, setFile] = useState<GetFilesQuery["files"][number]>();
 
   const onPreview = (file: GetFilesQuery["files"][number] | undefined) => {
-    setFile(file);
-    onOpen();
+    if (!file?.isDir) {
+      setFile(file);
+      onOpen();
+    }
   };
 
   const onChangeFile = (dIndex: number) => {
@@ -57,7 +59,7 @@ export function FileTileViews({ files }: Props) {
         {files.map((file) => (
           <FileTileViewItem
             file={file}
-            onClick={() => onPreview(file.isDir ? undefined : file)}
+            onClick={() => onPreview(file)}
             key={file.key}
           />
         ))}

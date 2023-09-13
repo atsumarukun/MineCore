@@ -121,7 +121,8 @@ export function FileTileViewItem({ file, onClick }: Props) {
                 h="100%"
                 bgColor="blackAlpha.500"
                 filter={
-                  selectedFileKeysContext.selectedFileKeys.includes(file.key)
+                  selectedFileKeysContext.selectedFileKeys.includes(file.key) ||
+                  (file.name === "../" && selectModeContext.selectMode)
                     ? "brightness(0.5)"
                     : ""
                 }

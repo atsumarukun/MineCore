@@ -5,7 +5,6 @@ import { DirList } from "../DirList";
 import { useCopyFileMutation } from "@/gql/graphql";
 import { useGetPath } from "../../hooks";
 import { RefetchContext } from "@/providers/RefetchProvider";
-import { SelectModeContext } from "@/providers/SelectModeProvider";
 import { SelectedFileKeysContext } from "../../provides/SelectedFileKeysProvider";
 
 type Props = {
@@ -15,7 +14,6 @@ type Props = {
 export function CopyModalBody({ onClose }: Props) {
   const path = useGetPath();
   const refetchContext = useContext(RefetchContext);
-  const selectModeContext = useContext(SelectModeContext);
   const selectedFileKeysContext = useContext(SelectedFileKeysContext);
 
   const [key, setKey] = useState(path);
@@ -43,8 +41,6 @@ export function CopyModalBody({ onClose }: Props) {
         status: "success",
         duration: 5000,
       });
-      selectModeContext.setSelectMode(false);
-      selectedFileKeysContext.setSelectedFileKeys([]);
       onClose();
     } catch (e) {
       if (e instanceof ApolloError) {
