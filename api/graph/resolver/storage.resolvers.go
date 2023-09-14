@@ -28,7 +28,11 @@ func (r *mutationResolver) MoveFile(ctx context.Context, input []*model.UpdateFi
 // CopyFile is the resolver for the copyFile field.
 func (r *mutationResolver) CopyFile(ctx context.Context, input []*model.UpdateFileInput) ([]string, error) {
 	serv := service.StorageService{}
-	return serv.CopyFile(ctx, input)
+	var entries []*service.CopyFileInput
+	for _, entry := range input {
+		entries = append(entries, &service.CopyFileInput{entry.Key, entry.Destination, entry.Destination})
+	}
+	return serv.CopyFile(ctx, entries)
 }
 
 // MakeDir is the resolver for the makeDir field.

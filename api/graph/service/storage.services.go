@@ -117,7 +117,14 @@ func (_ StorageService) MoveFile(ctx context.Context, input []*model.UpdateFileI
 	return keys, nil
 }
 
-func (self StorageService) CopyFile(ctx context.Context, input []*model.UpdateFileInput) ([]string, error) {
+// コピー先がコピー元以下の場合無限ループに陥るため最上位ディレクトリのコピー先を保存.
+type CopyFileInput struct{
+	Key string
+	Destination string
+	RootDestination string
+}
+
+func (self StorageService) CopyFile(ctx context.Context, input []*CopyFileInput) ([]string, error) {
 	var keys []string
 
 	for _, entry := range input {
@@ -126,11 +133,6 @@ func (self StorageService) CopyFile(ctx context.Context, input []*model.UpdateFi
 			return nil, err
 		}
 		if info.IsDir() {
-			// TODO コピー先がコピー元の子供の場合、無限ループに陥る為の回避.
-			if entry.Key != entry.Destination && entry.Key == entry.Destination[:len(entry.Key)] {
-				return nil, errors.New("Failed to copy directory.")
-			}
-
 			files, err := self.GetFiles(ctx, entry.Key, nil, nil); if err != nil {
 				return nil, err
 			}
@@ -146,9 +148,11 @@ func (self StorageService) CopyFile(ctx context.Context, input []*model.UpdateFi
 				}
 			}
 
-			var entries []*model.UpdateFileInput
+			var entries []*CopyFileInput
 			for _, file := range files {
-				entries = append(entries, &model.UpdateFileInput{(*file).Key, fmt.Sprintf("%s/%s", key, (*file).Name)})
+				if (*file).Key != entry.RootDestination {
+					entries = append(entries, &CopyFileInput{(*file).Key, fmt.Sprintf("%s/%s", key, (*file).Name), entry.RootDestination})
+				}
 			}
 			
 			ks, err := self.CopyFile(ctx, entries); if err != nil {
