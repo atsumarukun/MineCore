@@ -80,7 +80,7 @@ export function DefaultModalBody({ setStatus, onClose }: Props) {
             onClick={() => setStatus(ModalStatus.make)}
           >
             <Icon as={LuFolderPlus} boxSize={6} mr={6} />
-            フォルダ作成
+            ディレクトリ作成
           </Button>
           <Button w="100%" justifyContent="left" onClick={onSetSelectMode}>
             <Icon as={BiSelectMultiple} boxSize={6} mr={6} />

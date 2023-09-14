@@ -65,7 +65,7 @@ export function MakeDirForm({ onClose }: Props) {
   return (
     <form onSubmit={handleSubmit(onMake)}>
       <FormControl>
-        <FormLabel>フォルダ名</FormLabel>
+        <FormLabel> ディレクトリ名</FormLabel>
         {errors.name && <Text color="red.500">{errors.name.message}</Text>}
         <Input {...register("name")} />
       </FormControl>
