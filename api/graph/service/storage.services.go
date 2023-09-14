@@ -117,34 +117,70 @@ func (_ StorageService) MoveFile(ctx context.Context, input []*model.UpdateFileI
 	return keys, nil
 }
 
-func (_ StorageService) CopyFile(ctx context.Context, input []*model.UpdateFileInput) ([]string, error) {
+func (self StorageService) CopyFile(ctx context.Context, input []*model.UpdateFileInput) ([]string, error) {
 	var keys []string
 
-	for _, info := range input {
-		if (strings.Contains(info.Key[0:strings.LastIndex(info.Key, "/")], ".") || strings.Contains(info.Destination[0:strings.LastIndex(info.Destination, "/")], ".")) && ctx.Value("verified") == nil {
-			return nil, errors.New("Token does not exist.")
-		}
-	
-		file, err := os.Open(fmt.Sprintf("/go/src/api/storage%s", info.Key))
+	for _, entry := range input {
+		info, err := os.Stat(fmt.Sprintf("/go/src/api/storage%s", entry.Key))
 		if err != nil {
 			return nil, err
 		}
-	
-		var copy io.Writer
-		if info.Key == info.Destination {
-			copy, err = os.Create(fmt.Sprintf("/go/src/api/storage%s", strings.Replace(info.Destination, ".", " copy.", 1)))
-			if err != nil {
+		if info.IsDir() {
+			// TODO コピー先がコピー元の子供の場合、無限ループに陥る為の回避.
+			if entry.Key != entry.Destination && entry.Key == entry.Destination[:len(entry.Key)] {
+				return nil, errors.New("Failed to copy directory.")
+			}
+
+			files, err := self.GetFiles(ctx, entry.Key, nil, nil); if err != nil {
 				return nil, err
 			}
+
+			var key string
+			if entry.Key == entry.Destination {
+				key, err = self.MakeDir(ctx, entry.Destination + " copy"); if err != nil {
+					return nil, err
+				}
+			} else {
+				key, err = self.MakeDir(ctx, entry.Destination); if err != nil {
+					return nil, err
+				}
+			}
+
+			var entries []*model.UpdateFileInput
+			for _, file := range files {
+				entries = append(entries, &model.UpdateFileInput{(*file).Key, fmt.Sprintf("%s/%s", key, (*file).Name)})
+			}
+			
+			ks, err := self.CopyFile(ctx, entries); if err != nil {
+				return nil, err
+			}
+			keys = append(keys, ks...)
 		} else {
-			copy, err = os.Create(fmt.Sprintf("/go/src/api/storage%s", info.Destination))
+			if (strings.Contains(entry.Key[0:strings.LastIndex(entry.Key, "/")], ".") || strings.Contains(entry.Destination[0:strings.LastIndex(entry.Destination, "/")], ".")) && ctx.Value("verified") == nil {
+				return nil, errors.New("Token does not exist.")
+			}
+		
+			file, err := os.Open(fmt.Sprintf("/go/src/api/storage%s", entry.Key))
 			if err != nil {
 				return nil, err
 			}
+		
+			var copy io.Writer
+			if entry.Key == entry.Destination {
+				copy, err = os.Create(fmt.Sprintf("/go/src/api/storage%s", strings.Replace(entry.Destination, ".", " copy.", 1)))
+				if err != nil {
+					return nil, err
+				}
+			} else {
+				copy, err = os.Create(fmt.Sprintf("/go/src/api/storage%s", entry.Destination))
+				if err != nil {
+					return nil, err
+				}
+			}
+		
+			io.Copy(copy, file)
+			keys = append(keys, entry.Destination)
 		}
-	
-		io.Copy(copy, file)
-		keys = append(keys, info.Destination)
 	}
 	return keys, nil
 }
