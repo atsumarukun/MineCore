@@ -21,6 +21,7 @@ export function UploadModalBody({ onClose }: Props) {
     async (files: File[]) => {
       try {
         await upload({
+          key: path,
           files: files,
           onCompleted() {
             refetchContext.fn?.refetch();
