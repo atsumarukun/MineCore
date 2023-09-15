@@ -11,12 +11,22 @@ import { ApolloError } from "@apollo/client";
 type Props = {
   name: string;
   filekey: string;
+  isDir: boolean;
   setStatus: Dispatch<number>;
   onClose: () => void;
 };
 
-export function DefaultModalBody({ name, filekey, setStatus, onClose }: Props) {
-  const download = useDownload({ name: name, keys: [filekey] });
+export function DefaultModalBody({
+  name,
+  filekey,
+  isDir,
+  setStatus,
+  onClose,
+}: Props) {
+  const download = useDownload({
+    name: isDir ? `${name}.zip` : name,
+    keys: [filekey],
+  });
   const toast = useToast();
 
   const onDownload = async () => {

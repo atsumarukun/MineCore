@@ -1,4 +1,4 @@
-import { Button, HStack, Icon, VStack } from "@chakra-ui/react";
+import { Button, HStack, Icon, VStack, useToast } from "@chakra-ui/react";
 import { Dispatch, useContext } from "react";
 import { LuFileOutput, LuFolderPlus } from "react-icons/lu";
 import { MdOutlineImage, MdOutlineHideImage } from "react-icons/md";
@@ -9,8 +9,10 @@ import { ModalStatus } from ".";
 import { BiSelectMultiple } from "react-icons/bi";
 import { SelectModeContext } from "@/providers/SelectModeProvider";
 import { SelectedFileKeysContext } from "../../provides/SelectedFileKeysProvider";
-import { FiTrash } from "react-icons/fi";
+import { FiDownload, FiTrash } from "react-icons/fi";
 import { IoMdCopy } from "react-icons/io";
+import { useDownload } from "../../hooks";
+import { ApolloError } from "@apollo/client";
 
 type Props = {
   setStatus: Dispatch<number>;
@@ -19,9 +21,15 @@ type Props = {
 
 export function DefaultModalBody({ setStatus, onClose }: Props) {
   const router = useRouter();
+  const toast = useToast();
   const token = parseCookies().token;
   const selectModeContext = useContext(SelectModeContext);
   const selectedFileKeysContext = useContext(SelectedFileKeysContext);
+
+  const download = useDownload({
+    name: "downloads.zip",
+    keys: selectedFileKeysContext.selectedFileKeys,
+  });
 
   const onSetSelectMode = () => {
     if (selectModeContext.selectMode) {
@@ -31,6 +39,28 @@ export function DefaultModalBody({ setStatus, onClose }: Props) {
       selectModeContext.setSelectMode(true);
     }
     onClose();
+  };
+
+  const onDownload = async () => {
+    try {
+      await download();
+      toast({
+        title: "ダウンロードしました.",
+        status: "success",
+        duration: 5000,
+      });
+      onSetSelectMode();
+      onClose();
+    } catch (e) {
+      if (e instanceof ApolloError) {
+        toast({
+          title: "エラーが発生しました.",
+          description: e.message,
+          status: "error",
+          duration: 5000,
+        });
+      }
+    }
   };
 
   const onDestroyToken = () => {
@@ -58,6 +88,10 @@ export function DefaultModalBody({ setStatus, onClose }: Props) {
           >
             <Icon as={IoMdCopy} boxSize={6} mr={6} />
             コピー
+          </Button>
+          <Button w="100%" justifyContent="left" onClick={onDownload}>
+            <Icon as={FiDownload} boxSize={6} mr={6} />
+            ダウンロード
           </Button>
           <Button
             w="100%"
