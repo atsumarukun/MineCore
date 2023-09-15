@@ -1,4 +1,5 @@
-import { Dispatch, ReactNode, createContext, useState } from "react";
+import { parseCookies, setCookie } from "nookies";
+import { Dispatch, ReactNode, createContext, useEffect, useState } from "react";
 
 export const ViewMode = {
   tile: 0,
@@ -20,7 +21,13 @@ type Props = {
 };
 
 export function ViewModeProvider({ children }: Props) {
-  const [viewMode, setViewMode] = useState(ViewMode.tile);
+  const [viewMode, setViewMode] = useState(
+    Object.keys(ViewMode).indexOf(parseCookies().viewMode) ?? ViewMode.tile
+  );
+
+  useEffect(() => {
+    setCookie(null, "viewMode", viewMode === ViewMode.tile ? "tile" : "list");
+  }, [viewMode]);
 
   return (
     <ViewModeContext.Provider value={{ viewMode, setViewMode }}>
