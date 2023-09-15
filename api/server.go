@@ -33,6 +33,7 @@ func main() {
 	mux.Handle("/query", middleware.AuthMiddleware(srv))
 	mux.Handle("/storage/", http.StripPrefix("/storage", http.FileServer(http.Dir("./storage/"))))
 
+	// gqlgenのUploadは30M以上のファイルを通信できないためREST APIで実装.
 	ctr := controller.StorageController{}
 	mux.HandleFunc("/upload", ctr.UploadFiles)
 
