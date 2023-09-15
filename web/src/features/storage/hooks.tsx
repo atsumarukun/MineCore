@@ -12,7 +12,7 @@ export function useUpload() {
     files.forEach((file) => {
       formData.append("files", file);
     });
-    await fetch("http://localhost:8000/upload", {
+    await fetch(`${process.env.NEXT_PUBLIC_UPLOAD_URL}`, {
       method: "POST",
       body: formData,
     });
