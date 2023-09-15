@@ -62,7 +62,6 @@ type ComplexityRoot struct {
 		MakeDir       func(childComplexity int, key string) int
 		MoveFile      func(childComplexity int, input []*model.UpdateFileInput) int
 		RemoveFiles   func(childComplexity int, keys []string) int
-		UploadFiles   func(childComplexity int, path string, files []*graphql.Upload) int
 	}
 
 	Query struct {
@@ -72,7 +71,6 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	Auth(ctx context.Context, password string) (string, error)
-	UploadFiles(ctx context.Context, path string, files []*graphql.Upload) ([]*model.File, error)
 	DownloadFiles(ctx context.Context, keys []string) (string, error)
 	MoveFile(ctx context.Context, input []*model.UpdateFileInput) ([]string, error)
 	CopyFile(ctx context.Context, input []*model.UpdateFileInput) ([]string, error)
@@ -211,18 +209,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.RemoveFiles(childComplexity, args["keys"].([]string)), true
-
-	case "Mutation.uploadFiles":
-		if e.complexity.Mutation.UploadFiles == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_uploadFiles_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.UploadFiles(childComplexity, args["path"].(string), args["files"].([]*graphql.Upload)), true
 
 	case "Query.files":
 		if e.complexity.Query.Files == nil {
@@ -449,30 +435,6 @@ func (ec *executionContext) field_Mutation_removeFiles_args(ctx context.Context,
 		}
 	}
 	args["keys"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_uploadFiles_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["path"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("path"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["path"] = arg0
-	var arg1 []*graphql.Upload
-	if tmp, ok := rawArgs["files"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("files"))
-		arg1, err = ec.unmarshalNUpload2ᚕᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUploadᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["files"] = arg1
 	return args, nil
 }
 
@@ -869,75 +831,6 @@ func (ec *executionContext) fieldContext_Mutation_auth(ctx context.Context, fiel
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_auth_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_uploadFiles(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_uploadFiles(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UploadFiles(rctx, fc.Args["path"].(string), fc.Args["files"].([]*graphql.Upload))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*model.File)
-	fc.Result = res
-	return ec.marshalNFile2ᚕᚖapiᚋgraphᚋmodelᚐFileᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_uploadFiles(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "name":
-				return ec.fieldContext_File_name(ctx, field)
-			case "key":
-				return ec.fieldContext_File_key(ctx, field)
-			case "type":
-				return ec.fieldContext_File_type(ctx, field)
-			case "isDir":
-				return ec.fieldContext_File_isDir(ctx, field)
-			case "size":
-				return ec.fieldContext_File_size(ctx, field)
-			case "updated_at":
-				return ec.fieldContext_File_updated_at(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type File", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_uploadFiles_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -3320,13 +3213,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "uploadFiles":
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_uploadFiles(ctx, field)
-			})
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
 		case "downloadFiles":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_downloadFiles(ctx, field)
@@ -3919,59 +3805,6 @@ func (ec *executionContext) unmarshalNUpdateFileInput2ᚕᚖapiᚋgraphᚋmodel�
 func (ec *executionContext) unmarshalNUpdateFileInput2ᚖapiᚋgraphᚋmodelᚐUpdateFileInput(ctx context.Context, v interface{}) (*model.UpdateFileInput, error) {
 	res, err := ec.unmarshalInputUpdateFileInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNUpload2ᚕᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUploadᚄ(ctx context.Context, v interface{}) ([]*graphql.Upload, error) {
-	var vSlice []interface{}
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]*graphql.Upload, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNUpload2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
-}
-
-func (ec *executionContext) marshalNUpload2ᚕᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUploadᚄ(ctx context.Context, sel ast.SelectionSet, v []*graphql.Upload) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	for i := range v {
-		ret[i] = ec.marshalNUpload2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx, sel, v[i])
-	}
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
-func (ec *executionContext) unmarshalNUpload2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx context.Context, v interface{}) (*graphql.Upload, error) {
-	res, err := graphql.UnmarshalUpload(v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNUpload2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx context.Context, sel ast.SelectionSet, v *graphql.Upload) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	res := graphql.MarshalUpload(*v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {

@@ -20,7 +20,6 @@ extend type Query {
 }
 
 extend type Mutation {
-  uploadFiles(path: String!, files: [Upload!]!): [File!]!
   downloadFiles(keys: [String!]!): String!
   moveFile(input: [UpdateFileInput!]!): [String!]!
   copyFile(input: [UpdateFileInput!]!): [String!]!

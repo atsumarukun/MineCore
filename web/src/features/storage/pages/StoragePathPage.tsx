@@ -1,4 +1,4 @@
-import { useGetFilesQuery, useUploadFilesMutation } from "@/gql/graphql";
+import { useGetFilesQuery } from "@/gql/graphql";
 import { Box, useToast } from "@chakra-ui/react";
 import Error from "next/error";
 import { FileTileViews } from "../templates/FileTileViews";
@@ -7,7 +7,7 @@ import { useDropzone } from "react-dropzone";
 import { ApolloError } from "@apollo/client";
 import { Loading } from "@/components/parts/Loading";
 import { ManagementFileBar } from "../templates/ManagementFileBar";
-import { useGetPath, useGetQueryParam } from "../hooks";
+import { useGetPath, useGetQueryParam, useUpload } from "../hooks";
 import { ViewMode, ViewModeContext } from "../provides/ViewModeProvider";
 import { FileListViews } from "../templates/FileListViews";
 import { RefetchContext } from "@/providers/RefetchProvider";
@@ -25,19 +25,15 @@ export function StoragePathPage() {
       name: name,
     },
   });
-  const [upload] = useUploadFilesMutation({
-    onCompleted() {
-      refetch();
-    },
-  });
+  const upload = useUpload();
 
   const onDrop = useCallback(
     async (files: File[]) => {
       try {
         await upload({
-          variables: {
-            path: path,
-            files: files,
+          files: files,
+          onCompleted() {
+            refetch();
           },
         });
         toast({
@@ -56,7 +52,7 @@ export function StoragePathPage() {
         }
       }
     },
-    [path]
+    [path, data]
   );
 
   const { getRootProps, getInputProps } = useDropzone({

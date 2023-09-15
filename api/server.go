@@ -3,6 +3,7 @@ package main
 import (
 	_"api/conf"
 	"api/middleware"
+	"api/controller"
 	"api/graph"
 	"api/graph/resolver"
 	"log"
@@ -31,6 +32,9 @@ func main() {
 	mux.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	mux.Handle("/query", middleware.AuthMiddleware(srv))
 	mux.Handle("/storage/", http.StripPrefix("/storage", http.FileServer(http.Dir("./storage/"))))
+
+	ctr := controller.StorageController{}
+	mux.HandleFunc("/upload", ctr.UploadFiles)
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
 	log.Fatal(http.ListenAndServe(":"+port, handler))

@@ -1,6 +1,25 @@
 import { useDownloadFilesMutation } from "@/gql/graphql";
 import { useRouter } from "next/router";
 
+type UploadProps = {
+  files: File[];
+  onCompleted?: () => void;
+};
+
+export function useUpload() {
+  return async ({ files, onCompleted }: UploadProps) => {
+    const formData = new FormData();
+    files.forEach((file) => {
+      formData.append("files", file);
+    });
+    await fetch("http://localhost:8000/upload", {
+      method: "POST",
+      body: formData,
+    });
+    onCompleted?.();
+  };
+}
+
 type DownloadProps = {
   name: string;
   keys: string[];

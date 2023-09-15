@@ -13,8 +13,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-
-	"github.com/99designs/gqlgen/graphql"
 )
 
 func GetFileType(name string) string {
@@ -80,27 +78,6 @@ func (_ StorageService) GetFiles(ctx context.Context, path string, name *string,
 	}
 
 	return append(ds, fs...), nil
-}
-
-func (_ StorageService) UploadFiles(ctx context.Context, path string, files []*graphql.Upload) ([]*model.File, error) {
-	var fs []*model.File
-
-	if strings.Contains(path, ".") && ctx.Value("verified") == nil {
-		return nil, errors.New("Token does not exist.")
-	}
-
-	for _, file := range files {
-		buf, err := ioutil.ReadAll(file.File)
-		if err != nil {
-			return nil, err
-		}
-
-		if err := ioutil.WriteFile(fmt.Sprintf("/go/src/api/storage%s/%s", path, file.Filename), buf, os.ModePerm); err != nil {
-			return nil, err
-		}
-		fs = append(fs, &model.File{file.Filename, fmt.Sprintf("%s/%s", path, file.Filename), file.ContentType[0:strings.Index(file.ContentType, "/")], false, nil, nil})
-	}
-	return fs, nil
 }
 
 func ZipCompression(key string, dir string, writer *zip.Writer) error {

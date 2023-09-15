@@ -9,15 +9,7 @@ import (
 	"api/graph/model"
 	"api/graph/service"
 	"context"
-
-	"github.com/99designs/gqlgen/graphql"
 )
-
-// UploadFiles is the resolver for the uploadFiles field.
-func (r *mutationResolver) UploadFiles(ctx context.Context, path string, files []*graphql.Upload) ([]*model.File, error) {
-	serv := service.StorageService{}
-	return serv.UploadFiles(ctx, path, files)
-}
 
 // DownloadFiles is the resolver for the downloadFiles field.
 func (r *mutationResolver) DownloadFiles(ctx context.Context, keys []string) (string, error) {
