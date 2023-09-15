@@ -10,11 +10,14 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Text,
+  VStack,
   useToast,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { MdOutlineHideImage } from "react-icons/md";
 
 type Props = {
   file?: GetFilesQuery["files"][number];
@@ -105,6 +108,15 @@ export function PreviewFileModal({
               }}
             />
           )}
+          {file.type !== "image" &&
+            file.type !== "video" &&
+            file.type !== "audio" &&
+            file.type !== "text" && (
+              <VStack m={12} spacing={8}>
+                <Icon as={MdOutlineHideImage} boxSize={32} />
+                <Text>プレビュー非対応のファイルです</Text>
+              </VStack>
+            )}
           <Button
             h={14}
             position="absolute"
