@@ -31,6 +31,7 @@ export function StoragePathPage() {
     async (files: File[]) => {
       try {
         await upload({
+          key: path,
           files: files,
           onCompleted() {
             refetch();

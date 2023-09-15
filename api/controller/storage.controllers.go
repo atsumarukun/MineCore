@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"fmt"
 	"os"
 	"io"
 )
@@ -22,7 +23,7 @@ func (_ StorageController) UploadFiles(w http.ResponseWriter, q *http.Request) {
 			break
 		}
 
-		uploadedFile, err := os.Create("/go/src/api/storage/" + part.FileName())
+		uploadedFile, err := os.Create(fmt.Sprintf("/go/src/api/storage%s/%s", q.URL.Query().Get("key"), part.FileName()))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
