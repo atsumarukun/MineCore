@@ -30,6 +30,12 @@ export const UPLOAD_FILES = gql`
   }
 `;
 
+export const DOWNLOAD_FILES = gql`
+  mutation DownloadFiles($keys: [String!]!) {
+    downloadFiles(keys: $keys)
+  }
+`;
+
 export const MOVE_FILE = gql`
   mutation MoveFile($input: [UpdateFileInput!]!) {
     moveFile(input: $input)

@@ -16,7 +16,7 @@ type Props = {
 };
 
 export function DefaultModalBody({ name, filekey, setStatus, onClose }: Props) {
-  const download = useDownload({ name: name, filekey: filekey });
+  const download = useDownload({ name: name, keys: [filekey] });
   const toast = useToast();
 
   const onDownload = async () => {

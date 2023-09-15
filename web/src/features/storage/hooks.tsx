@@ -1,19 +1,27 @@
+import { useDownloadFilesMutation } from "@/gql/graphql";
 import { useRouter } from "next/router";
 
 type DownloadProps = {
   name: string;
-  filekey: string;
+  keys: string[];
 };
 
-export function useDownload({ name, filekey }: DownloadProps) {
-  return async () => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_STORAGE_URL}${filekey}`);
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(await res.blob());
-    link.download = name;
-    link.click();
-    link.remove();
-  };
+export function useDownload({ name, keys }: DownloadProps) {
+  const [download] = useDownloadFilesMutation({
+    variables: { keys: keys },
+    onCompleted(data) {
+      if (data) {
+        const blob = new Blob([Buffer.from(data.downloadFiles, "base64")]);
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = name;
+        link.click();
+        link.remove();
+      }
+    },
+  });
+
+  return download;
 }
 
 export function useGetPath() {

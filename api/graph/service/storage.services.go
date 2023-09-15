@@ -2,6 +2,7 @@ package service
 
 import (
 	"api/graph/model"
+	"encoding/base64"
 	"io/ioutil"
 	"net/url"
 	"strings"
@@ -98,6 +99,21 @@ func (_ StorageService) UploadFiles(ctx context.Context, path string, files []*g
 		fs = append(fs, &model.File{file.Filename, fmt.Sprintf("%s/%s", path, file.Filename), file.ContentType[0:strings.Index(file.ContentType, "/")], false, nil, nil})
 	}
 	return fs, nil
+}
+
+func (_ StorageService) DownloadFiles(ctx context.Context, keys []string) (string, error) {
+	if len(keys) == 1 {
+		if strings.Contains(keys[0][0:strings.LastIndex(keys[0], "/")], ".") && ctx.Value("verified") == nil {
+			return "", errors.New("Token does not exist.")
+		}
+
+		file, err := os.ReadFile(fmt.Sprintf("/go/src/api/storage%s", keys[0])); if err != nil {
+			return "", err
+		}
+
+		return base64.StdEncoding.EncodeToString(file), nil
+	}
+	return "", nil
 }
 
 func (_ StorageService) MoveFile(ctx context.Context, input []*model.UpdateFileInput) ([]string, error) {

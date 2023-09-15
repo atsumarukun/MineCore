@@ -56,12 +56,13 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		Auth        func(childComplexity int, password string) int
-		CopyFile    func(childComplexity int, input []*model.UpdateFileInput) int
-		MakeDir     func(childComplexity int, key string) int
-		MoveFile    func(childComplexity int, input []*model.UpdateFileInput) int
-		RemoveFiles func(childComplexity int, keys []string) int
-		UploadFiles func(childComplexity int, path string, files []*graphql.Upload) int
+		Auth          func(childComplexity int, password string) int
+		CopyFile      func(childComplexity int, input []*model.UpdateFileInput) int
+		DownloadFiles func(childComplexity int, keys []string) int
+		MakeDir       func(childComplexity int, key string) int
+		MoveFile      func(childComplexity int, input []*model.UpdateFileInput) int
+		RemoveFiles   func(childComplexity int, keys []string) int
+		UploadFiles   func(childComplexity int, path string, files []*graphql.Upload) int
 	}
 
 	Query struct {
@@ -72,6 +73,7 @@ type ComplexityRoot struct {
 type MutationResolver interface {
 	Auth(ctx context.Context, password string) (string, error)
 	UploadFiles(ctx context.Context, path string, files []*graphql.Upload) ([]*model.File, error)
+	DownloadFiles(ctx context.Context, keys []string) (string, error)
 	MoveFile(ctx context.Context, input []*model.UpdateFileInput) ([]string, error)
 	CopyFile(ctx context.Context, input []*model.UpdateFileInput) ([]string, error)
 	MakeDir(ctx context.Context, key string) (string, error)
@@ -161,6 +163,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CopyFile(childComplexity, args["input"].([]*model.UpdateFileInput)), true
+
+	case "Mutation.downloadFiles":
+		if e.complexity.Mutation.DownloadFiles == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_downloadFiles_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DownloadFiles(childComplexity, args["keys"].([]string)), true
 
 	case "Mutation.makeDir":
 		if e.complexity.Mutation.MakeDir == nil {
@@ -375,6 +389,21 @@ func (ec *executionContext) field_Mutation_copyFile_args(ctx context.Context, ra
 		}
 	}
 	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_downloadFiles_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 []string
+	if tmp, ok := rawArgs["keys"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("keys"))
+		arg0, err = ec.unmarshalNString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["keys"] = arg0
 	return args, nil
 }
 
@@ -909,6 +938,61 @@ func (ec *executionContext) fieldContext_Mutation_uploadFiles(ctx context.Contex
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_uploadFiles_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_downloadFiles(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_downloadFiles(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DownloadFiles(rctx, fc.Args["keys"].([]string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_downloadFiles(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_downloadFiles_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -3239,6 +3323,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "uploadFiles":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_uploadFiles(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "downloadFiles":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_downloadFiles(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
