@@ -30,6 +30,7 @@ jobs:
           touch ./web/.env
           echo "NEXT_PUBLIC_GRAPHQL_URL=${{ secrets.NEXT_PUBLIC_GRAPHQL_URL }}" >> ./web/.env
           echo "NEXT_PUBLIC_STORAGE_URL=${{ secrets.NEXT_PUBLIC_STORAGE_URL }}" >> ./web/.env
+          echo "NEXT_PUBLIC_UPLOAD_URL=${{ secrets.NEXT_PUBLIC_UPLOAD_URL }}" >> ./web/.env
 
       - name: Build and push
         uses: docker/build-push-action@v2
