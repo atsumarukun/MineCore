@@ -83,7 +83,11 @@ export function PreviewFileModal({
               autoPlay
               loop
               ref={videoRef}
-              style={{ maxWidth: "75vw", maxHeight: "75vh" }}
+              style={{
+                maxWidth: "75vw",
+                maxHeight: "75vh",
+                width: file.type === "audio" ? "75vw" : "",
+              }}
             >
               <source
                 src={`${process.env.NEXT_PUBLIC_STORAGE_URL}${file.key}`}
@@ -102,26 +106,28 @@ export function PreviewFileModal({
             />
           )}
           <Button
-            h="100%"
+            h={14}
             position="absolute"
             bgColor="blackAlpha.700"
-            rounded={0}
-            opacity={0}
-            left={0}
-            top={0}
+            rounded={50}
+            opacity={0.1}
+            left={-20}
+            top="50%"
+            transform="translateY(-50%)"
             _hover={{ opacity: 1 }}
             onClick={() => onChangeFile(-1)}
           >
             <Icon as={IoIosArrowBack} boxSize={6} />
           </Button>
           <Button
-            h="100%"
+            h={14}
             position="absolute"
             bgColor="blackAlpha.700"
-            rounded={0}
-            opacity={0}
-            right={0}
-            top={0}
+            rounded={50}
+            opacity={0.1}
+            right={-20}
+            top="50%"
+            transform="translateY(-50%)"
             _hover={{ opacity: 1 }}
             onClick={() => onChangeFile(1)}
           >
