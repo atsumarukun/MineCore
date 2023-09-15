@@ -102,7 +102,7 @@ func ZipCompression(key string, dir string, writer *zip.Writer) error {
 			return err
 		}
 
-		data, err := os.ReadFile(fmt.Sprintf("/go/src/api/storage%s/%s", dir, file.Name())); if err != nil {
+		data, err := os.ReadFile(fmt.Sprintf("/go/src/api/storage%s", key)); if err != nil {
 			return err
 		}
 		_, err = f.Write(data); if err != nil {
