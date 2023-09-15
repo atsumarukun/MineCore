@@ -6,6 +6,11 @@ import (
 	"time"
 )
 
+type Download struct {
+	Name string `json:"name"`
+	Data string `json:"data"`
+}
+
 type File struct {
 	Name      string     `json:"name"`
 	Key       string     `json:"key"`

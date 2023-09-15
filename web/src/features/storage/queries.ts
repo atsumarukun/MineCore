@@ -22,17 +22,12 @@ export const GET_DIRS = gql`
   }
 `;
 
-export const UPLOAD_FILES = gql`
-  mutation UploadFiles($path: String!, $files: [Upload!]!) {
-    uploadFiles(path: $path, files: $files) {
-      name
-    }
-  }
-`;
-
 export const DOWNLOAD_FILES = gql`
   mutation DownloadFiles($keys: [String!]!) {
-    downloadFiles(keys: $keys)
+    downloadFiles(keys: $keys) {
+      name
+      data
+    }
   }
 `;
 

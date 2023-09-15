@@ -46,6 +46,11 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
+	Download struct {
+		Data func(childComplexity int) int
+		Name func(childComplexity int) int
+	}
+
 	File struct {
 		IsDir     func(childComplexity int) int
 		Key       func(childComplexity int) int
@@ -71,7 +76,7 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	Auth(ctx context.Context, password string) (string, error)
-	DownloadFiles(ctx context.Context, keys []string) (string, error)
+	DownloadFiles(ctx context.Context, keys []string) (*model.Download, error)
 	MoveFile(ctx context.Context, input []*model.UpdateFileInput) ([]string, error)
 	CopyFile(ctx context.Context, input []*model.UpdateFileInput) ([]string, error)
 	MakeDir(ctx context.Context, key string) (string, error)
@@ -95,6 +100,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e, 0, 0, nil}
 	_ = ec
 	switch typeName + "." + field {
+
+	case "Download.data":
+		if e.complexity.Download.Data == nil {
+			break
+		}
+
+		return e.complexity.Download.Data(childComplexity), true
+
+	case "Download.name":
+		if e.complexity.Download.Name == nil {
+			break
+		}
+
+		return e.complexity.Download.Name(childComplexity), true
 
 	case "File.isDir":
 		if e.complexity.File.IsDir == nil {
@@ -524,6 +543,94 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
+func (ec *executionContext) _Download_name(ctx context.Context, field graphql.CollectedField, obj *model.Download) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Download_name(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Download_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Download",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Download_data(ctx context.Context, field graphql.CollectedField, obj *model.Download) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Download_data(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Download_data(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Download",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _File_name(ctx context.Context, field graphql.CollectedField, obj *model.File) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_File_name(ctx, field)
 	if err != nil {
@@ -863,9 +970,9 @@ func (ec *executionContext) _Mutation_downloadFiles(ctx context.Context, field g
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*model.Download)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNDownload2ᚖapiᚋgraphᚋmodelᚐDownload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_downloadFiles(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -875,7 +982,13 @@ func (ec *executionContext) fieldContext_Mutation_downloadFiles(ctx context.Cont
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			switch field.Name {
+			case "name":
+				return ec.fieldContext_Download_name(ctx, field)
+			case "data":
+				return ec.fieldContext_Download_data(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Download", field.Name)
 		},
 	}
 	defer func() {
@@ -3129,6 +3242,50 @@ func (ec *executionContext) unmarshalInputUpdateFileInput(ctx context.Context, o
 
 // region    **************************** object.gotpl ****************************
 
+var downloadImplementors = []string{"Download"}
+
+func (ec *executionContext) _Download(ctx context.Context, sel ast.SelectionSet, obj *model.Download) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, downloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Download")
+		case "name":
+			out.Values[i] = ec._Download_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "data":
+			out.Values[i] = ec._Download_data(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var fileImplementors = []string{"File"}
 
 func (ec *executionContext) _File(ctx context.Context, sel ast.SelectionSet, obj *model.File) graphql.Marshaler {
@@ -3682,6 +3839,20 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNDownload2apiᚋgraphᚋmodelᚐDownload(ctx context.Context, sel ast.SelectionSet, v model.Download) graphql.Marshaler {
+	return ec._Download(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNDownload2ᚖapiᚋgraphᚋmodelᚐDownload(ctx context.Context, sel ast.SelectionSet, v *model.Download) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Download(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNFile2ᚕᚖapiᚋgraphᚋmodelᚐFileᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.File) graphql.Marshaler {

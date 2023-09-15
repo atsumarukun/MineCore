@@ -112,42 +112,42 @@ func ZipCompression(key string, dir string, writer *zip.Writer) error {
 	return nil
 }
 
-func (_ StorageService) DownloadFiles(ctx context.Context, keys []string) (string, error) {
+func (_ StorageService) DownloadFiles(ctx context.Context, keys []string) (*model.Download, error) {
 	buf := new(bytes.Buffer)
 	writer := zip.NewWriter(buf)
 
 	if len(keys) == 1 {
 		if strings.Contains(keys[0][0:strings.LastIndex(keys[0], "/")], ".") && ctx.Value("verified") == nil {
-			return "", errors.New("Token does not exist.")
+			return nil, errors.New("Token does not exist.")
 		}
 		
 		file, err := os.Stat(fmt.Sprintf("/go/src/api/storage%s", keys[0])); if err != nil {
-			return "", err
+			return nil, err
 		}
 
 		if !file.IsDir() {
-			file, err := os.ReadFile(fmt.Sprintf("/go/src/api/storage%s", keys[0])); if err != nil {
-				return "", err
+			buf, err := os.ReadFile(fmt.Sprintf("/go/src/api/storage%s", keys[0])); if err != nil {
+				return nil, err
 			}
-			return base64.StdEncoding.EncodeToString(file), nil
+			return &model.Download{file.Name(), base64.StdEncoding.EncodeToString(buf)}, nil
 		}
 	}
 
 	for _, key := range keys {
 		if strings.Contains(key[0:strings.LastIndex(key, "/")], ".") && ctx.Value("verified") == nil {
-			return "", errors.New("Token does not exist.")
+			return nil, errors.New("Token does not exist.")
 		}
 
 		err := ZipCompression(key, "", writer); if err != nil {
-			return "", err
+			return nil, err
 		}
 	}
 
 	err := writer.Close(); if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return base64.StdEncoding.EncodeToString(buf.Bytes()), nil
+	return &model.Download{"downloads.zip", base64.StdEncoding.EncodeToString(buf.Bytes())}, nil
 }
 
 func (_ StorageService) MoveFile(ctx context.Context, input []*model.UpdateFileInput) ([]string, error) {

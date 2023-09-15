@@ -12,7 +12,7 @@ import (
 )
 
 // DownloadFiles is the resolver for the downloadFiles field.
-func (r *mutationResolver) DownloadFiles(ctx context.Context, keys []string) (string, error) {
+func (r *mutationResolver) DownloadFiles(ctx context.Context, keys []string) (*model.Download, error) {
 	serv := service.StorageService{}
 	return serv.DownloadFiles(ctx, keys)
 }

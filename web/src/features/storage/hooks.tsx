@@ -22,19 +22,18 @@ export function useUpload() {
 }
 
 type DownloadProps = {
-  name: string;
   keys: string[];
 };
 
-export function useDownload({ name, keys }: DownloadProps) {
+export function useDownload({ keys }: DownloadProps) {
   return useDownloadFilesMutation({
     variables: { keys: keys },
     onCompleted(data) {
       if (data) {
-        const blob = new Blob([Buffer.from(data.downloadFiles, "base64")]);
+        const blob = new Blob([Buffer.from(data.downloadFiles.data, "base64")]);
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
-        link.download = name;
+        link.download = data.downloadFiles.name;
         link.click();
         link.remove();
       }

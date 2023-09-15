@@ -10,22 +10,13 @@ import { ApolloError } from "@apollo/client";
 import { Loading } from "@/components/parts/Loading";
 
 type Props = {
-  name: string;
   filekey: string;
-  isDir: boolean;
   setStatus: Dispatch<number>;
   onClose: () => void;
 };
 
-export function DefaultModalBody({
-  name,
-  filekey,
-  isDir,
-  setStatus,
-  onClose,
-}: Props) {
+export function DefaultModalBody({ filekey, setStatus, onClose }: Props) {
   const [download, { loading }] = useDownload({
-    name: isDir ? `${name}.zip` : name,
     keys: [filekey],
   });
   const toast = useToast();

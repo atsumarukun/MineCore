@@ -54,9 +54,7 @@ export function FileMenuModal({ file, ...props }: Props) {
           <ModalBody>
             {status === ModalStatus.default && (
               <DefaultModalBody
-                name={file.name}
                 filekey={file.key}
-                isDir={file.isDir}
                 setStatus={setStatus}
                 onClose={onClose}
               />

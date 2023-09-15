@@ -28,10 +28,6 @@ export function DefaultModalBody({ setStatus, onClose }: Props) {
   const selectedFileKeysContext = useContext(SelectedFileKeysContext);
 
   const [download, { loading }] = useDownload({
-    name:
-      selectedFileKeysContext.selectedFileKeys.length === 1
-        ? selectedFileKeysContext.selectedFileKeys[0]
-        : "downloads.zip",
     keys: selectedFileKeysContext.selectedFileKeys,
   });
 

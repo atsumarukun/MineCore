@@ -19,6 +19,12 @@ export type Scalars = {
   Upload: { input: any; output: any; }
 };
 
+export type Download = {
+  __typename?: 'Download';
+  data: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type File = {
   __typename?: 'File';
   isDir: Scalars['Boolean']['output'];
@@ -33,11 +39,10 @@ export type Mutation = {
   __typename?: 'Mutation';
   auth: Scalars['String']['output'];
   copyFile: Array<Scalars['String']['output']>;
-  downloadFiles: Scalars['String']['output'];
+  downloadFiles: Download;
   makeDir: Scalars['String']['output'];
   moveFile: Array<Scalars['String']['output']>;
   removeFiles: Array<Scalars['String']['output']>;
-  uploadFiles: Array<File>;
 };
 
 
@@ -68,12 +73,6 @@ export type MutationMoveFileArgs = {
 
 export type MutationRemoveFilesArgs = {
   keys: Array<Scalars['String']['input']>;
-};
-
-
-export type MutationUploadFilesArgs = {
-  files: Array<Scalars['Upload']['input']>;
-  path: Scalars['String']['input'];
 };
 
 export type Query = {
@@ -115,20 +114,12 @@ export type GetDirsQueryVariables = Exact<{
 
 export type GetDirsQuery = { __typename?: 'Query', files: Array<{ __typename?: 'File', name: string, key: string }> };
 
-export type UploadFilesMutationVariables = Exact<{
-  path: Scalars['String']['input'];
-  files: Array<Scalars['Upload']['input']> | Scalars['Upload']['input'];
-}>;
-
-
-export type UploadFilesMutation = { __typename?: 'Mutation', uploadFiles: Array<{ __typename?: 'File', name: string }> };
-
 export type DownloadFilesMutationVariables = Exact<{
   keys: Array<Scalars['String']['input']> | Scalars['String']['input'];
 }>;
 
 
-export type DownloadFilesMutation = { __typename?: 'Mutation', downloadFiles: string };
+export type DownloadFilesMutation = { __typename?: 'Mutation', downloadFiles: { __typename?: 'Download', name: string, data: string } };
 
 export type MoveFileMutationVariables = Exact<{
   input: Array<UpdateFileInput> | UpdateFileInput;
@@ -267,43 +258,12 @@ export function useGetDirsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetDirsQueryHookResult = ReturnType<typeof useGetDirsQuery>;
 export type GetDirsLazyQueryHookResult = ReturnType<typeof useGetDirsLazyQuery>;
 export type GetDirsQueryResult = Apollo.QueryResult<GetDirsQuery, GetDirsQueryVariables>;
-export const UploadFilesDocument = gql`
-    mutation UploadFiles($path: String!, $files: [Upload!]!) {
-  uploadFiles(path: $path, files: $files) {
-    name
-  }
-}
-    `;
-export type UploadFilesMutationFn = Apollo.MutationFunction<UploadFilesMutation, UploadFilesMutationVariables>;
-
-/**
- * __useUploadFilesMutation__
- *
- * To run a mutation, you first call `useUploadFilesMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUploadFilesMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [uploadFilesMutation, { data, loading, error }] = useUploadFilesMutation({
- *   variables: {
- *      path: // value for 'path'
- *      files: // value for 'files'
- *   },
- * });
- */
-export function useUploadFilesMutation(baseOptions?: Apollo.MutationHookOptions<UploadFilesMutation, UploadFilesMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UploadFilesMutation, UploadFilesMutationVariables>(UploadFilesDocument, options);
-      }
-export type UploadFilesMutationHookResult = ReturnType<typeof useUploadFilesMutation>;
-export type UploadFilesMutationResult = Apollo.MutationResult<UploadFilesMutation>;
-export type UploadFilesMutationOptions = Apollo.BaseMutationOptions<UploadFilesMutation, UploadFilesMutationVariables>;
 export const DownloadFilesDocument = gql`
     mutation DownloadFiles($keys: [String!]!) {
-  downloadFiles(keys: $keys)
+  downloadFiles(keys: $keys) {
+    name
+    data
+  }
 }
     `;
 export type DownloadFilesMutationFn = Apollo.MutationFunction<DownloadFilesMutation, DownloadFilesMutationVariables>;
