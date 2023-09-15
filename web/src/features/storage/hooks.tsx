@@ -7,7 +7,7 @@ type DownloadProps = {
 };
 
 export function useDownload({ name, keys }: DownloadProps) {
-  const [download] = useDownloadFilesMutation({
+  return useDownloadFilesMutation({
     variables: { keys: keys },
     onCompleted(data) {
       if (data) {
@@ -20,8 +20,6 @@ export function useDownload({ name, keys }: DownloadProps) {
       }
     },
   });
-
-  return download;
 }
 
 export function useGetPath() {

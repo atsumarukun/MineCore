@@ -13,6 +13,7 @@ import { FiDownload, FiTrash } from "react-icons/fi";
 import { IoMdCopy } from "react-icons/io";
 import { useDownload } from "../../hooks";
 import { ApolloError } from "@apollo/client";
+import { Loading } from "@/components/parts/Loading";
 
 type Props = {
   setStatus: Dispatch<number>;
@@ -26,7 +27,7 @@ export function DefaultModalBody({ setStatus, onClose }: Props) {
   const selectModeContext = useContext(SelectModeContext);
   const selectedFileKeysContext = useContext(SelectedFileKeysContext);
 
-  const download = useDownload({
+  const [download, { loading }] = useDownload({
     name: "downloads.zip",
     keys: selectedFileKeysContext.selectedFileKeys,
   });
@@ -71,6 +72,7 @@ export function DefaultModalBody({ setStatus, onClose }: Props) {
 
   return (
     <>
+      {loading && <Loading />}
       {selectModeContext.selectMode ? (
         <VStack w="100%">
           <Button

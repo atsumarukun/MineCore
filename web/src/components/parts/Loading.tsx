@@ -9,6 +9,7 @@ export function Loading() {
       position="absolute"
       top={0}
       left={0}
+      zIndex={5}
     >
       <Spinner boxSize={12} />
     </Center>

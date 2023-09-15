@@ -7,6 +7,7 @@ import { LuFileOutput } from "react-icons/lu";
 import { IoMdCopy } from "react-icons/io";
 import { useDownload } from "../../hooks";
 import { ApolloError } from "@apollo/client";
+import { Loading } from "@/components/parts/Loading";
 
 type Props = {
   name: string;
@@ -23,7 +24,7 @@ export function DefaultModalBody({
   setStatus,
   onClose,
 }: Props) {
-  const download = useDownload({
+  const [download, { loading }] = useDownload({
     name: isDir ? `${name}.zip` : name,
     keys: [filekey],
   });
@@ -51,44 +52,47 @@ export function DefaultModalBody({
   };
 
   return (
-    <VStack w="100%">
-      <Button
-        w="100%"
-        justifyContent="left"
-        onClick={() => setStatus(ModalStatus.rename)}
-      >
-        <Icon as={BsPencil} boxSize={6} mr={6} />
-        名前変更
-      </Button>
-      <Button
-        w="100%"
-        justifyContent="left"
-        onClick={() => setStatus(ModalStatus.move)}
-      >
-        <Icon as={LuFileOutput} boxSize={6} mr={6} />
-        移動
-      </Button>
-      <Button
-        w="100%"
-        justifyContent="left"
-        onClick={() => setStatus(ModalStatus.copy)}
-      >
-        <Icon as={IoMdCopy} boxSize={6} mr={6} />
-        コピー
-      </Button>
-      <Button w="100%" justifyContent="left" onClick={onDownload}>
-        <Icon as={FiDownload} boxSize={6} mr={6} />
-        ダウンロード
-      </Button>
-      <Button
-        w="100%"
-        justifyContent="left"
-        color="red.500"
-        onClick={() => setStatus(ModalStatus.remove)}
-      >
-        <Icon as={FiTrash} boxSize={6} mr={6} />
-        削除
-      </Button>
-    </VStack>
+    <>
+      {loading && <Loading />}
+      <VStack w="100%">
+        <Button
+          w="100%"
+          justifyContent="left"
+          onClick={() => setStatus(ModalStatus.rename)}
+        >
+          <Icon as={BsPencil} boxSize={6} mr={6} />
+          名前変更
+        </Button>
+        <Button
+          w="100%"
+          justifyContent="left"
+          onClick={() => setStatus(ModalStatus.move)}
+        >
+          <Icon as={LuFileOutput} boxSize={6} mr={6} />
+          移動
+        </Button>
+        <Button
+          w="100%"
+          justifyContent="left"
+          onClick={() => setStatus(ModalStatus.copy)}
+        >
+          <Icon as={IoMdCopy} boxSize={6} mr={6} />
+          コピー
+        </Button>
+        <Button w="100%" justifyContent="left" onClick={onDownload}>
+          <Icon as={FiDownload} boxSize={6} mr={6} />
+          ダウンロード
+        </Button>
+        <Button
+          w="100%"
+          justifyContent="left"
+          color="red.500"
+          onClick={() => setStatus(ModalStatus.remove)}
+        >
+          <Icon as={FiTrash} boxSize={6} mr={6} />
+          削除
+        </Button>
+      </VStack>
+    </>
   );
 }
