@@ -26,7 +26,7 @@ export function IndexPage() {
 
   return (
     <VStack mt="20vh" spacing={0}>
-      <Text fontSize={{ base: "5xl", md: "7xl" }}>{time.format("HH:mm")}</Text>
+      {/* <Text fontSize={{ base: "5xl", md: "7xl" }}>{time.format("HH:mm")}</Text> */}
       <Text fontSize={{ base: "lg", md: "xl" }}>
         {time.format("MM月DD日 dddd")}
       </Text>
