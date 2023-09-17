@@ -133,7 +133,11 @@ export function FileListViewItem({ file, onClick }: Props) {
                     textAlign="left"
                     ml={12}
                     display={{ base: "none", xl: "block" }}
-                  >{`${new Date(file.updated_at).toLocaleDateString()}`}</Text>
+                  >
+                    {file.name === "../"
+                      ? " - - - - - - - "
+                      : `${new Date(file.updated_at).toLocaleDateString()}`}
+                  </Text>
                 </HStack>
               </HStack>
             </Box>
