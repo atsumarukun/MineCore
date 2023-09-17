@@ -19,7 +19,7 @@ export function IndexPage() {
 
   setInterval(() => {
     setTime(moment().tz("Asia/Tokyo"));
-  }, 100);
+  }, 1000);
 
   return (
     <VStack mt="20vh" spacing={0}>
