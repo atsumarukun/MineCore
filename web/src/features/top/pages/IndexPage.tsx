@@ -1,6 +1,6 @@
 import { Text, VStack } from "@chakra-ui/react";
 import moment from "moment-timezone";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function IndexPage() {
   moment.updateLocale("ja", {
@@ -17,9 +17,12 @@ export function IndexPage() {
   });
   const [time, setTime] = useState(moment().tz("Asia/Tokyo"));
 
-  setInterval(() => {
-    setTime(moment().tz("Asia/Tokyo"));
-  }, 1000);
+  useEffect(() => {
+    const id = setInterval(() => {
+      setTime(moment().tz("Asia/Tokyo"));
+    }, 1000);
+    return () => clearInterval(id);
+  }, [time]);
 
   return (
     <VStack mt="20vh" spacing={0}>
