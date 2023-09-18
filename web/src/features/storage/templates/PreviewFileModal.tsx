@@ -123,7 +123,7 @@ export function PreviewFileModal({
             bgColor="blackAlpha.700"
             rounded={50}
             opacity={0.1}
-            left={-20}
+            left={-7}
             top="50%"
             transform="translateY(-50%)"
             _hover={{ opacity: 1 }}
@@ -137,7 +137,7 @@ export function PreviewFileModal({
             bgColor="blackAlpha.700"
             rounded={50}
             opacity={0.1}
-            right={-20}
+            right={-7}
             top="50%"
             transform="translateY(-50%)"
             _hover={{ opacity: 1 }}
