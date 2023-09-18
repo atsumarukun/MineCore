@@ -97,7 +97,8 @@ export function PreviewFileModal({
               />
             </video>
           )}
-          {file.type === "text" && (
+          {(file.type === "text" ||
+            file.name.substring(file.name.lastIndexOf(".") + 1) === "pdf") && (
             <iframe
               src={`${process.env.NEXT_PUBLIC_STORAGE_URL}${file.key}`}
               style={{
@@ -111,7 +112,8 @@ export function PreviewFileModal({
           {file.type !== "image" &&
             file.type !== "video" &&
             file.type !== "audio" &&
-            file.type !== "text" && (
+            file.type !== "text" &&
+            file.name.substring(file.name.lastIndexOf(".") + 1) !== "pdf" && (
               <VStack m={12} spacing={8}>
                 <Icon as={MdOutlineHideImage} boxSize={32} />
                 <Text>プレビュー非対応のファイルです</Text>
