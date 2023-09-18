@@ -43,6 +43,7 @@ export type Mutation = {
   makeDir: Scalars['String']['output'];
   moveFile: Array<Scalars['String']['output']>;
   removeFiles: Array<Scalars['String']['output']>;
+  runCommand: Scalars['String']['output'];
 };
 
 
@@ -75,6 +76,11 @@ export type MutationRemoveFilesArgs = {
   keys: Array<Scalars['String']['input']>;
 };
 
+
+export type MutationRunCommandArgs = {
+  command: Scalars['String']['input'];
+};
+
 export type Query = {
   __typename?: 'Query';
   files: Array<File>;
@@ -91,13 +97,6 @@ export type UpdateFileInput = {
   destination: Scalars['String']['input'];
   key: Scalars['String']['input'];
 };
-
-export type AuthMutationVariables = Exact<{
-  password: Scalars['String']['input'];
-}>;
-
-
-export type AuthMutation = { __typename?: 'Mutation', auth: string };
 
 export type GetFilesQueryVariables = Exact<{
   path: Scalars['String']['input'];
@@ -149,38 +148,21 @@ export type RemoveFilesMutationVariables = Exact<{
 
 export type RemoveFilesMutation = { __typename?: 'Mutation', removeFiles: Array<string> };
 
+export type AuthMutationVariables = Exact<{
+  password: Scalars['String']['input'];
+}>;
 
-export const AuthDocument = gql`
-    mutation Auth($password: String!) {
-  auth(password: $password)
-}
-    `;
-export type AuthMutationFn = Apollo.MutationFunction<AuthMutation, AuthMutationVariables>;
 
-/**
- * __useAuthMutation__
- *
- * To run a mutation, you first call `useAuthMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAuthMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [authMutation, { data, loading, error }] = useAuthMutation({
- *   variables: {
- *      password: // value for 'password'
- *   },
- * });
- */
-export function useAuthMutation(baseOptions?: Apollo.MutationHookOptions<AuthMutation, AuthMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<AuthMutation, AuthMutationVariables>(AuthDocument, options);
-      }
-export type AuthMutationHookResult = ReturnType<typeof useAuthMutation>;
-export type AuthMutationResult = Apollo.MutationResult<AuthMutation>;
-export type AuthMutationOptions = Apollo.BaseMutationOptions<AuthMutation, AuthMutationVariables>;
+export type AuthMutation = { __typename?: 'Mutation', auth: string };
+
+export type RunCommandMutationVariables = Exact<{
+  command: Scalars['String']['input'];
+}>;
+
+
+export type RunCommandMutation = { __typename?: 'Mutation', runCommand: string };
+
+
 export const GetFilesDocument = gql`
     query GetFiles($path: String!, $name: String) {
   files(path: $path, name: $name) {
@@ -416,3 +398,65 @@ export function useRemoveFilesMutation(baseOptions?: Apollo.MutationHookOptions<
 export type RemoveFilesMutationHookResult = ReturnType<typeof useRemoveFilesMutation>;
 export type RemoveFilesMutationResult = Apollo.MutationResult<RemoveFilesMutation>;
 export type RemoveFilesMutationOptions = Apollo.BaseMutationOptions<RemoveFilesMutation, RemoveFilesMutationVariables>;
+export const AuthDocument = gql`
+    mutation Auth($password: String!) {
+  auth(password: $password)
+}
+    `;
+export type AuthMutationFn = Apollo.MutationFunction<AuthMutation, AuthMutationVariables>;
+
+/**
+ * __useAuthMutation__
+ *
+ * To run a mutation, you first call `useAuthMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAuthMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [authMutation, { data, loading, error }] = useAuthMutation({
+ *   variables: {
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useAuthMutation(baseOptions?: Apollo.MutationHookOptions<AuthMutation, AuthMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AuthMutation, AuthMutationVariables>(AuthDocument, options);
+      }
+export type AuthMutationHookResult = ReturnType<typeof useAuthMutation>;
+export type AuthMutationResult = Apollo.MutationResult<AuthMutation>;
+export type AuthMutationOptions = Apollo.BaseMutationOptions<AuthMutation, AuthMutationVariables>;
+export const RunCommandDocument = gql`
+    mutation RunCommand($command: String!) {
+  runCommand(command: $command)
+}
+    `;
+export type RunCommandMutationFn = Apollo.MutationFunction<RunCommandMutation, RunCommandMutationVariables>;
+
+/**
+ * __useRunCommandMutation__
+ *
+ * To run a mutation, you first call `useRunCommandMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRunCommandMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [runCommandMutation, { data, loading, error }] = useRunCommandMutation({
+ *   variables: {
+ *      command: // value for 'command'
+ *   },
+ * });
+ */
+export function useRunCommandMutation(baseOptions?: Apollo.MutationHookOptions<RunCommandMutation, RunCommandMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RunCommandMutation, RunCommandMutationVariables>(RunCommandDocument, options);
+      }
+export type RunCommandMutationHookResult = ReturnType<typeof useRunCommandMutation>;
+export type RunCommandMutationResult = Apollo.MutationResult<RunCommandMutation>;
+export type RunCommandMutationOptions = Apollo.BaseMutationOptions<RunCommandMutation, RunCommandMutationVariables>;
