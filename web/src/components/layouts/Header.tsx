@@ -14,7 +14,7 @@ export function Header() {
   });
 
   const onShutdown = async () => {
-    console.log(await shutdown());
+    await shutdown();
   };
 
   return (
