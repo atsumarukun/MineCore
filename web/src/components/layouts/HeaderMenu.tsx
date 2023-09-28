@@ -14,9 +14,18 @@ import { FiMenu } from "react-icons/fi";
 import { FaRegFolderOpen } from "react-icons/fa";
 import Link from "next/link";
 import { ButtonLink } from "../parts/ButtonLink";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export function HeaderMenu() {
+  const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useEffect(() => {
+    if (isOpen) {
+      onClose();
+    }
+  }, [router.pathname]);
 
   return (
     <>
