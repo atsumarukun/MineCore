@@ -1,0 +1,15 @@
+enum Status {
+  RUNNING
+  EXITED
+  PARTIAL
+}
+
+type Service {
+  name: String!
+  path: String!
+  status: Status!
+}
+
+extend type Query {
+  services: [Service!]!
+}
