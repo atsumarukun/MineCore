@@ -84,6 +84,7 @@ export type MutationRunCommandArgs = {
 export type Query = {
   __typename?: 'Query';
   files: Array<File>;
+  services: Array<Service>;
 };
 
 
@@ -93,10 +94,28 @@ export type QueryFilesArgs = {
   path: Scalars['String']['input'];
 };
 
+export type Service = {
+  __typename?: 'Service';
+  name: Scalars['String']['output'];
+  path: Scalars['String']['output'];
+  status: Status;
+};
+
+export enum Status {
+  Exited = 'EXITED',
+  Partial = 'PARTIAL',
+  Running = 'RUNNING'
+}
+
 export type UpdateFileInput = {
   destination: Scalars['String']['input'];
   key: Scalars['String']['input'];
 };
+
+export type GetServicesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetServicesQuery = { __typename?: 'Query', services: Array<{ __typename?: 'Service', name: string, path: string, status: Status }> };
 
 export type GetFilesQueryVariables = Exact<{
   path: Scalars['String']['input'];
@@ -163,6 +182,42 @@ export type RunCommandMutationVariables = Exact<{
 export type RunCommandMutation = { __typename?: 'Mutation', runCommand: string };
 
 
+export const GetServicesDocument = gql`
+    query GetServices {
+  services {
+    name
+    path
+    status
+  }
+}
+    `;
+
+/**
+ * __useGetServicesQuery__
+ *
+ * To run a query within a React component, call `useGetServicesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetServicesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetServicesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetServicesQuery(baseOptions?: Apollo.QueryHookOptions<GetServicesQuery, GetServicesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetServicesQuery, GetServicesQueryVariables>(GetServicesDocument, options);
+      }
+export function useGetServicesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetServicesQuery, GetServicesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetServicesQuery, GetServicesQueryVariables>(GetServicesDocument, options);
+        }
+export type GetServicesQueryHookResult = ReturnType<typeof useGetServicesQuery>;
+export type GetServicesLazyQueryHookResult = ReturnType<typeof useGetServicesLazyQuery>;
+export type GetServicesQueryResult = Apollo.QueryResult<GetServicesQuery, GetServicesQueryVariables>;
 export const GetFilesDocument = gql`
     query GetFiles($path: String!, $name: String) {
   files(path: $path, name: $name) {

@@ -1,5 +1,6 @@
 import {
   Button,
+  Divider,
   Drawer,
   DrawerBody,
   DrawerContent,
@@ -10,12 +11,14 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { FiMenu } from "react-icons/fi";
-import { FaRegFolderOpen } from "react-icons/fa";
 import Link from "next/link";
 import { ButtonLink } from "../parts/ButtonLink";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { FiMenu } from "react-icons/fi";
+import { FaRegFolderOpen } from "react-icons/fa";
+import { TbApps } from "react-icons/tb";
+import { RiSettings3Line } from "react-icons/ri";
 
 export function HeaderMenu() {
   const router = useRouter();
@@ -43,11 +46,20 @@ export function HeaderMenu() {
               MineCore
             </Text>
           </DrawerHeader>
-          <DrawerBody p={2}>
-            <VStack w="100%">
+          <DrawerBody px={6}>
+            <VStack w="100%" my={4} spacing={4}>
               <ButtonLink href="/storage" w="100%" justifyContent="left">
                 <Icon as={FaRegFolderOpen} boxSize={6} mr={6} />
                 ストレージ
+              </ButtonLink>
+              <ButtonLink href="/service" w="100%" justifyContent="left">
+                <Icon as={TbApps} boxSize={6} mr={6} />
+                サービス
+              </ButtonLink>
+              <Divider />
+              <ButtonLink href="#" w="100%" justifyContent="left">
+                <Icon as={RiSettings3Line} boxSize={6} mr={6} />
+                設定
               </ButtonLink>
             </VStack>
           </DrawerBody>

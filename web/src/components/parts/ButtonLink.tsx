@@ -9,7 +9,14 @@ type Props = {
 
 export function ButtonLink({ href, children, ...props }: Props) {
   return (
-    <Button as={Link} href={href} variant="ghost" {...props}>
+    <Button
+      as={Link}
+      href={href}
+      variant="ghost"
+      h="fit-content"
+      px={0}
+      {...props}
+    >
       {children}
     </Button>
   );
