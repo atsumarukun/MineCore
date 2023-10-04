@@ -42,8 +42,12 @@ export type Mutation = {
   downloadFiles: Download;
   makeDir: Scalars['String']['output'];
   moveFile: Array<Scalars['String']['output']>;
+  rebuildService: Scalars['Boolean']['output'];
   removeFiles: Array<Scalars['String']['output']>;
+  restartService: Scalars['Boolean']['output'];
   runCommand: Scalars['String']['output'];
+  startService: Scalars['Boolean']['output'];
+  stopService: Scalars['Boolean']['output'];
 };
 
 
@@ -72,13 +76,33 @@ export type MutationMoveFileArgs = {
 };
 
 
+export type MutationRebuildServiceArgs = {
+  path: Scalars['String']['input'];
+};
+
+
 export type MutationRemoveFilesArgs = {
   keys: Array<Scalars['String']['input']>;
 };
 
 
+export type MutationRestartServiceArgs = {
+  path: Scalars['String']['input'];
+};
+
+
 export type MutationRunCommandArgs = {
   command: Scalars['String']['input'];
+};
+
+
+export type MutationStartServiceArgs = {
+  path: Scalars['String']['input'];
+};
+
+
+export type MutationStopServiceArgs = {
+  path: Scalars['String']['input'];
 };
 
 export type Query = {
@@ -116,6 +140,34 @@ export type GetServicesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetServicesQuery = { __typename?: 'Query', services: Array<{ __typename?: 'Service', name: string, path: string, status: Status }> };
+
+export type StartServiceMutationVariables = Exact<{
+  path: Scalars['String']['input'];
+}>;
+
+
+export type StartServiceMutation = { __typename?: 'Mutation', startService: boolean };
+
+export type StopServiceMutationVariables = Exact<{
+  path: Scalars['String']['input'];
+}>;
+
+
+export type StopServiceMutation = { __typename?: 'Mutation', stopService: boolean };
+
+export type RestartServiceMutationVariables = Exact<{
+  path: Scalars['String']['input'];
+}>;
+
+
+export type RestartServiceMutation = { __typename?: 'Mutation', restartService: boolean };
+
+export type RebuildServiceMutationVariables = Exact<{
+  path: Scalars['String']['input'];
+}>;
+
+
+export type RebuildServiceMutation = { __typename?: 'Mutation', rebuildService: boolean };
 
 export type GetFilesQueryVariables = Exact<{
   path: Scalars['String']['input'];
@@ -218,6 +270,130 @@ export function useGetServicesLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetServicesQueryHookResult = ReturnType<typeof useGetServicesQuery>;
 export type GetServicesLazyQueryHookResult = ReturnType<typeof useGetServicesLazyQuery>;
 export type GetServicesQueryResult = Apollo.QueryResult<GetServicesQuery, GetServicesQueryVariables>;
+export const StartServiceDocument = gql`
+    mutation StartService($path: String!) {
+  startService(path: $path)
+}
+    `;
+export type StartServiceMutationFn = Apollo.MutationFunction<StartServiceMutation, StartServiceMutationVariables>;
+
+/**
+ * __useStartServiceMutation__
+ *
+ * To run a mutation, you first call `useStartServiceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useStartServiceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [startServiceMutation, { data, loading, error }] = useStartServiceMutation({
+ *   variables: {
+ *      path: // value for 'path'
+ *   },
+ * });
+ */
+export function useStartServiceMutation(baseOptions?: Apollo.MutationHookOptions<StartServiceMutation, StartServiceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<StartServiceMutation, StartServiceMutationVariables>(StartServiceDocument, options);
+      }
+export type StartServiceMutationHookResult = ReturnType<typeof useStartServiceMutation>;
+export type StartServiceMutationResult = Apollo.MutationResult<StartServiceMutation>;
+export type StartServiceMutationOptions = Apollo.BaseMutationOptions<StartServiceMutation, StartServiceMutationVariables>;
+export const StopServiceDocument = gql`
+    mutation StopService($path: String!) {
+  stopService(path: $path)
+}
+    `;
+export type StopServiceMutationFn = Apollo.MutationFunction<StopServiceMutation, StopServiceMutationVariables>;
+
+/**
+ * __useStopServiceMutation__
+ *
+ * To run a mutation, you first call `useStopServiceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useStopServiceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [stopServiceMutation, { data, loading, error }] = useStopServiceMutation({
+ *   variables: {
+ *      path: // value for 'path'
+ *   },
+ * });
+ */
+export function useStopServiceMutation(baseOptions?: Apollo.MutationHookOptions<StopServiceMutation, StopServiceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<StopServiceMutation, StopServiceMutationVariables>(StopServiceDocument, options);
+      }
+export type StopServiceMutationHookResult = ReturnType<typeof useStopServiceMutation>;
+export type StopServiceMutationResult = Apollo.MutationResult<StopServiceMutation>;
+export type StopServiceMutationOptions = Apollo.BaseMutationOptions<StopServiceMutation, StopServiceMutationVariables>;
+export const RestartServiceDocument = gql`
+    mutation RestartService($path: String!) {
+  restartService(path: $path)
+}
+    `;
+export type RestartServiceMutationFn = Apollo.MutationFunction<RestartServiceMutation, RestartServiceMutationVariables>;
+
+/**
+ * __useRestartServiceMutation__
+ *
+ * To run a mutation, you first call `useRestartServiceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRestartServiceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [restartServiceMutation, { data, loading, error }] = useRestartServiceMutation({
+ *   variables: {
+ *      path: // value for 'path'
+ *   },
+ * });
+ */
+export function useRestartServiceMutation(baseOptions?: Apollo.MutationHookOptions<RestartServiceMutation, RestartServiceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RestartServiceMutation, RestartServiceMutationVariables>(RestartServiceDocument, options);
+      }
+export type RestartServiceMutationHookResult = ReturnType<typeof useRestartServiceMutation>;
+export type RestartServiceMutationResult = Apollo.MutationResult<RestartServiceMutation>;
+export type RestartServiceMutationOptions = Apollo.BaseMutationOptions<RestartServiceMutation, RestartServiceMutationVariables>;
+export const RebuildServiceDocument = gql`
+    mutation RebuildService($path: String!) {
+  rebuildService(path: $path)
+}
+    `;
+export type RebuildServiceMutationFn = Apollo.MutationFunction<RebuildServiceMutation, RebuildServiceMutationVariables>;
+
+/**
+ * __useRebuildServiceMutation__
+ *
+ * To run a mutation, you first call `useRebuildServiceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRebuildServiceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [rebuildServiceMutation, { data, loading, error }] = useRebuildServiceMutation({
+ *   variables: {
+ *      path: // value for 'path'
+ *   },
+ * });
+ */
+export function useRebuildServiceMutation(baseOptions?: Apollo.MutationHookOptions<RebuildServiceMutation, RebuildServiceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RebuildServiceMutation, RebuildServiceMutationVariables>(RebuildServiceDocument, options);
+      }
+export type RebuildServiceMutationHookResult = ReturnType<typeof useRebuildServiceMutation>;
+export type RebuildServiceMutationResult = Apollo.MutationResult<RebuildServiceMutation>;
+export type RebuildServiceMutationOptions = Apollo.BaseMutationOptions<RebuildServiceMutation, RebuildServiceMutationVariables>;
 export const GetFilesDocument = gql`
     query GetFiles($path: String!, $name: String) {
   files(path: $path, name: $name) {

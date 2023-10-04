@@ -11,6 +11,30 @@ import (
 	"context"
 )
 
+// StartService is the resolver for the startService field.
+func (r *mutationResolver) StartService(ctx context.Context, path string) (bool, error) {
+	serv := service.ServiceService{}
+	return serv.StartService(path)
+}
+
+// StopService is the resolver for the stopService field.
+func (r *mutationResolver) StopService(ctx context.Context, path string) (bool, error) {
+	serv := service.ServiceService{}
+	return serv.StopService(path)
+}
+
+// RestartService is the resolver for the restartService field.
+func (r *mutationResolver) RestartService(ctx context.Context, path string) (bool, error) {
+	serv := service.ServiceService{}
+	return serv.RestartService(path)
+}
+
+// RebuildService is the resolver for the rebuildService field.
+func (r *mutationResolver) RebuildService(ctx context.Context, path string) (bool, error) {
+	serv := service.ServiceService{}
+	return serv.RebuildService(path)
+}
+
 // Services is the resolver for the services field.
 func (r *queryResolver) Services(ctx context.Context) ([]*model.Service, error) {
 	serv := service.ServiceService{}

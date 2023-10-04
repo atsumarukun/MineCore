@@ -24,7 +24,7 @@ export function ServiceListViews({ services }: Props) {
               ml={24}
               display={{ base: "none", xl: "block" }}
             >
-              サービスパス
+              構成ファイル
             </Text>
           </HStack>
           <Box boxSize={8} ml={8} />

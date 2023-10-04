@@ -1,14 +1,7 @@
 import { EllipsisText } from "@/components/parts/EllipsisText";
 import { GetServicesQuery, Status } from "@/gql/graphql";
-import {
-  BackgroundProps,
-  Button,
-  Circle,
-  HStack,
-  Icon,
-  Text,
-} from "@chakra-ui/react";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { BackgroundProps, Circle, HStack, Text } from "@chakra-ui/react";
+import { ServiceMenuModal } from "./ServiceMenuModal/ServiceMenuModal";
 
 type Props = {
   service: GetServicesQuery["services"][number];
@@ -46,9 +39,7 @@ export function ServiceListViewItem({ service }: Props) {
           </Text>
         </HStack>
       </HStack>
-      <Button ml="auto">
-        <Icon as={BsThreeDotsVertical} boxSize={4} />
-      </Button>
+      <ServiceMenuModal service={service} ml="auto" />
     </HStack>
   );
 }

@@ -3,6 +3,7 @@ package service
 import (
 	"api/graph/model"
 	"strings"
+	"fmt"
 )
 
 func (_ ServiceService) GetServices() ([]*model.Service, error) {
@@ -29,6 +30,42 @@ func (_ ServiceService) GetServices() ([]*model.Service, error) {
 		ss = append(ss, &model.Service{desc[0], desc[2], status})
 	}
 	return ss, nil
+}
+
+func (_ ServiceService) StartService(path string) (bool, error) {
+	serv := SshService{}
+	_, err := serv.RunCommand(fmt.Sprintf("cd %s && docker-compose start", path[:strings.LastIndex(path, "/")])); if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+func (_ ServiceService) StopService(path string) (bool, error) {
+	serv := SshService{}
+	_, err := serv.RunCommand(fmt.Sprintf("cd %s && docker-compose stop", path[:strings.LastIndex(path, "/")])); if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+func (_ ServiceService) RestartService(path string) (bool, error) {
+	serv := SshService{}
+	_, err := serv.RunCommand(fmt.Sprintf("cd %s && docker-compose restart", path[:strings.LastIndex(path, "/")])); if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+func (_ ServiceService) RebuildService(path string) (bool, error) {
+	serv := SshService{}
+	_, err := serv.RunCommand(fmt.Sprintf("cd %s && docker-compose down --rmi all && docker-compose up -d", path[:strings.LastIndex(path, "/")])); if err != nil {
+		return false, err
+	}
+
+	return true, nil
 }
 
 type ServiceService struct{}

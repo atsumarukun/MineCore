@@ -13,3 +13,10 @@ type Service {
 extend type Query {
   services: [Service!]!
 }
+
+extend type Mutation {
+  startService(path: String!): Boolean!
+  stopService(path: String!): Boolean!
+  restartService(path: String!): Boolean!
+  rebuildService(path: String!): Boolean!
+}
