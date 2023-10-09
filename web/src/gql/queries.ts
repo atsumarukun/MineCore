@@ -5,3 +5,9 @@ export const AUTH = gql`
     auth(password: $password)
   }
 `;
+
+export const RUN_COMMAND = gql`
+  mutation RunCommand($command: String!) {
+    runCommand(command: $command)
+  }
+`;

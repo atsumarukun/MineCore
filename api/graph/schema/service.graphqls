@@ -1,0 +1,22 @@
+enum Status {
+  RUNNING
+  EXITED
+  PARTIAL
+}
+
+type Service {
+  name: String!
+  path: String!
+  status: Status!
+}
+
+extend type Query {
+  services: [Service!]!
+}
+
+extend type Mutation {
+  startService(path: String!): Boolean!
+  stopService(path: String!): Boolean!
+  restartService(path: String!): Boolean!
+  rebuildService(path: String!): Boolean!
+}

@@ -1,0 +1,39 @@
+name: Test web
+
+on:
+  pull_request:
+    paths:
+      - web/**
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./web
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+          cache: npm
+          cache-dependency-path: ./web/package-lock.json
+
+      - name: Install Packages
+        run: npm install
+
+      - name: Generate GraphQL types
+        run: |
+          cp -r ../api/graph/schema .
+          npm run codegen
+
+      - name: Run build
+        run: npm run build

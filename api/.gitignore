@@ -6,3 +6,6 @@ storage
 
 # password file
 Password
+
+# private key file
+PrivateKey

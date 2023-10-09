@@ -9,6 +9,9 @@ import (
 
 var (
 	JwtSecretKey string
+	HostName string
+	HostPort string
+	HostUser string
 )
 
 func init() {
@@ -18,4 +21,8 @@ func init() {
 	}
 
 	JwtSecretKey = os.Getenv("JWT_SECRET_KEY")
+
+	HostName = os.Getenv("HOST_NAME")
+	HostPort = os.Getenv("HOST_PORT")
+	HostUser = os.Getenv("HOST_USER")
 }

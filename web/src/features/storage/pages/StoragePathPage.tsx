@@ -75,9 +75,9 @@ export function StoragePathPage() {
       <input {...getInputProps()} />
       <ManagementFileBar />
       {context.viewMode === ViewMode.tile ? (
-        <FileTileViews files={data?.files} />
+        <FileTileViews files={data.files} />
       ) : (
-        <FileListViews files={data?.files} />
+        <FileListViews files={data.files} />
       )}
     </Box>
   );
