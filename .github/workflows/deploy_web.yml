@@ -31,15 +31,15 @@ jobs:
 
       - name: generate .env
         run: |
-          touch ./web/.env
-          echo "NEXT_PUBLIC_GRAPHQL_URL=${{ secrets.NEXT_PUBLIC_GRAPHQL_URL }}" >> ./web/.env
-          echo "NEXT_PUBLIC_STORAGE_URL=${{ secrets.NEXT_PUBLIC_STORAGE_URL }}" >> ./web/.env
-          echo "NEXT_PUBLIC_UPLOAD_URL=${{ secrets.NEXT_PUBLIC_UPLOAD_URL }}" >> ./web/.env
+          touch .env
+          echo "NEXT_PUBLIC_GRAPHQL_URL=${{ secrets.NEXT_PUBLIC_GRAPHQL_URL }}" >> .env
+          echo "NEXT_PUBLIC_STORAGE_URL=${{ secrets.NEXT_PUBLIC_STORAGE_URL }}" >> .env
+          echo "NEXT_PUBLIC_UPLOAD_URL=${{ secrets.NEXT_PUBLIC_UPLOAD_URL }}" >> .env
 
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./web
+          context: ./
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/minecore-web:latest
