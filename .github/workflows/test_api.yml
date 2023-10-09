@@ -24,9 +24,10 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: 1.20
+          cache-dependency-path: ./api/go.sum
 
       - name: Install Packages
-        run: go get -v
+        run: go get .
 
       - name: Run build
         run: go build
