@@ -2,11 +2,10 @@ name: Test api
 
 on:
   pull_request:
-    paths:
-      - api/**
-  push:
     branches:
       - master
+    paths:
+      - api/**
 
 jobs:
   build:
