@@ -2,8 +2,6 @@ name: Test web
 
 on:
   pull_request:
-    branches:
-      - master
     paths:
       - web/**
 
