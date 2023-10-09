@@ -7,18 +7,19 @@ import { MdRestartAlt, MdOutlineBuild } from "react-icons/md";
 import { Status } from "@/gql/graphql";
 
 type Props = {
-  serviceStatus: string;
+  name: string;
+  status: string;
   setStatus: Dispatch<number>;
 };
 
-export function DefaultModalBody({ serviceStatus, setStatus }: Props) {
+export function DefaultModalBody({ name, status, setStatus }: Props) {
   return (
     <VStack w="100%">
       <Button
         w="100%"
         justifyContent="left"
         onClick={() => setStatus(ModalStatus.start)}
-        isDisabled={serviceStatus === Status.Running}
+        isDisabled={status === Status.Running}
       >
         <Icon as={VscDebugStart} boxSize={6} mr={6} />
         起動
@@ -27,7 +28,7 @@ export function DefaultModalBody({ serviceStatus, setStatus }: Props) {
         w="100%"
         justifyContent="left"
         onClick={() => setStatus(ModalStatus.stop)}
-        isDisabled={serviceStatus === Status.Exited}
+        isDisabled={name === "minecore"}
       >
         <Icon as={LiaStopCircle} boxSize={6} mr={6} />
         停止
@@ -36,7 +37,7 @@ export function DefaultModalBody({ serviceStatus, setStatus }: Props) {
         w="100%"
         justifyContent="left"
         onClick={() => setStatus(ModalStatus.restart)}
-        isDisabled={serviceStatus === Status.Exited}
+        isDisabled={status === Status.Exited}
       >
         <Icon as={MdRestartAlt} boxSize={6} mr={6} />
         再起動

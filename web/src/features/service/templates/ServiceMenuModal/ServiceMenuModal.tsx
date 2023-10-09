@@ -48,8 +48,9 @@ export function ServiceMenuModal({ service, ...props }: Props) {
           <ModalBody>
             {status === ModalStatus.default && (
               <DefaultModalBody
+                name={service.name}
+                status={service.status}
                 setStatus={setStatus}
-                serviceStatus={service.status}
               />
             )}
             {status === ModalStatus.start && (
