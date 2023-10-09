@@ -8,7 +8,6 @@ import (
 )
 
 func (_ SshService) RunCommand(command string) (string, error) {
-	fmt.Printf("%s, %s, %s", conf.HostName, conf.HostPort, conf.HostUser)
 	buf, err := ioutil.ReadFile("/go/src/api/PrivateKey"); if err != nil {
 		return "", err
 	}
