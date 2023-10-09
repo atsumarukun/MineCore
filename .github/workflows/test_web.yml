@@ -32,7 +32,7 @@ jobs:
 
       - name: Generate GraphQL types
         run: |
-          cp -r ../api/schema .
+          cp -r ../api/graph/schema .
           npm run codegen
 
       - name: Run build
