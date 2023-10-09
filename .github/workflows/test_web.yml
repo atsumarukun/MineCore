@@ -28,12 +28,12 @@ jobs:
           cache-dependency-path: ./web/package-lock.json
 
       - name: Install Packages
-        run: |
-          cp -r ../api/schema
-          npm install
+        run: npm install
 
       - name: Generate GraphQL types
-        run: npm run codegen
+        run: |
+          cp -r ../api/schema .
+          npm run codegen
 
       - name: Run build
         run: npm run build
