@@ -5,4 +5,5 @@ RUN go build
 
 FROM golang:1.20-alpine as exec
 COPY --from=build /go/src/api/api /go/src/api/api
+COPY ./.env /go/src/api/.env
 WORKDIR /go/src/api
