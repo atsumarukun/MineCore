@@ -12,10 +12,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: ./api
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -30,14 +26,13 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.ACCESS_TOKEN }}
 
-      - name: generate .env
+      - name: generate ./api/.env
         run: |
-          touch .env
-          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
-          echo "HOST_NAME=${{ secrets.HOST_NAME }}" >> .env
-          echo "HOST_PORT=${{ secrets.HOST_PORT }}" >> .env
-          echo "HOST_USER=${{ secrets.HOST_USER }}" >> .env
-          pwd
+          touch ./api/.env
+          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> ./api/.env
+          echo "HOST_NAME=${{ secrets.HOST_NAME }}" >> ./api/.env
+          echo "HOST_PORT=${{ secrets.HOST_PORT }}" >> ./api/.env
+          echo "HOST_USER=${{ secrets.HOST_USER }}" >> ./api/.env
 
       - name: Build and push
         uses: docker/build-push-action@v2

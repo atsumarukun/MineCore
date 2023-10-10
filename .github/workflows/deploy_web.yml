@@ -6,14 +6,11 @@ on:
       - master
     paths:
       - web/**
+      - .github/workflows/deploy_web.yml
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: ./web
 
     steps:
       - name: Checkout
@@ -29,12 +26,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.ACCESS_TOKEN }}
 
-      - name: generate .env
+      - name: generate ./web/.env
         run: |
-          touch .env
-          echo "NEXT_PUBLIC_GRAPHQL_URL=${{ secrets.NEXT_PUBLIC_GRAPHQL_URL }}" >> .env
-          echo "NEXT_PUBLIC_STORAGE_URL=${{ secrets.NEXT_PUBLIC_STORAGE_URL }}" >> .env
-          echo "NEXT_PUBLIC_UPLOAD_URL=${{ secrets.NEXT_PUBLIC_UPLOAD_URL }}" >> .env
+          touch ./web/.env
+          echo "NEXT_PUBLIC_GRAPHQL_URL=${{ secrets.NEXT_PUBLIC_GRAPHQL_URL }}" >> ./web/.env
+          echo "NEXT_PUBLIC_STORAGE_URL=${{ secrets.NEXT_PUBLIC_STORAGE_URL }}" >> ./web/.env
+          echo "NEXT_PUBLIC_UPLOAD_URL=${{ secrets.NEXT_PUBLIC_UPLOAD_URL }}" >> ./web/.env
 
       - name: Build and push
         uses: docker/build-push-action@v2
