@@ -25,9 +25,4 @@ func init() {
 	HostName = os.Getenv("HOST_NAME")
 	HostPort = os.Getenv("HOST_PORT")
 	HostUser = os.Getenv("HOST_USER")
-
-	log.Println(JwtSecretKey)
-	log.Println(HostName)
-	log.Println(HostPort)
-	log.Println(HostUser)
 }
