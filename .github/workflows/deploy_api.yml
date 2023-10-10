@@ -37,6 +37,7 @@ jobs:
           echo "HOST_NAME=${{ secrets.HOST_NAME }}" >> .env
           echo "HOST_PORT=${{ secrets.HOST_PORT }}" >> .env
           echo "HOST_USER=${{ secrets.HOST_USER }}" >> .env
+          pwd
 
       - name: Build and push
         uses: docker/build-push-action@v2
