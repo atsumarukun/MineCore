@@ -1,10 +1,9 @@
-import { useMoveFileMutation } from "@/gql/graphql";
+import { GetFilesDocument, useMoveFileMutation } from "@/gql/graphql";
 import { ApolloError } from "@apollo/client";
 import { Button, HStack, useToast } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { DirList } from "../DirList";
 import { useGetPath } from "../../hooks";
-import { RefetchContext } from "@/providers/RefetchProvider";
 import { SelectedFileKeysContext } from "../../provides/SelectedFileKeysProvider";
 
 type Props = {
@@ -13,14 +12,14 @@ type Props = {
 
 export function MoveModalBody({ onClose }: Props) {
   const path = useGetPath();
-  const refetchContext = useContext(RefetchContext);
   const selectedFileKeysContext = useContext(SelectedFileKeysContext);
 
   const [key, setKey] = useState(path);
   const [move] = useMoveFileMutation({
     onCompleted() {
-      refetchContext.fn?.refetch();
+      onClose();
     },
+    refetchQueries: [GetFilesDocument],
   });
   const toast = useToast();
 
@@ -41,7 +40,6 @@ export function MoveModalBody({ onClose }: Props) {
         status: "success",
         duration: 5000,
       });
-      onClose();
     } catch (e) {
       if (e instanceof ApolloError) {
         toast({

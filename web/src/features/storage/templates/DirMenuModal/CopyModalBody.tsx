@@ -2,9 +2,8 @@ import { ApolloError } from "@apollo/client";
 import { Button, HStack, useToast } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { DirList } from "../DirList";
-import { useCopyFileMutation } from "@/gql/graphql";
+import { GetFilesDocument, useCopyFileMutation } from "@/gql/graphql";
 import { useGetPath } from "../../hooks";
-import { RefetchContext } from "@/providers/RefetchProvider";
 import { SelectedFileKeysContext } from "../../provides/SelectedFileKeysProvider";
 
 type Props = {
@@ -13,14 +12,14 @@ type Props = {
 
 export function CopyModalBody({ onClose }: Props) {
   const path = useGetPath();
-  const refetchContext = useContext(RefetchContext);
   const selectedFileKeysContext = useContext(SelectedFileKeysContext);
 
   const [key, setKey] = useState(path);
   const [copy] = useCopyFileMutation({
     onCompleted() {
-      refetchContext.fn?.refetch();
+      onClose();
     },
+    refetchQueries: [GetFilesDocument],
   });
   const toast = useToast();
 
@@ -41,7 +40,6 @@ export function CopyModalBody({ onClose }: Props) {
         status: "success",
         duration: 5000,
       });
-      onClose();
     } catch (e) {
       if (e instanceof ApolloError) {
         toast({

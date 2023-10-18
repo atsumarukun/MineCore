@@ -7,24 +7,24 @@ import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
 import { parseCookies } from "nookies";
 
-export default function App({ Component, pageProps }: AppProps) {
-  const authLink = setContext((_, { headers }) => {
-    const token = parseCookies().token;
-    return {
-      headers: {
-        ...headers,
-        authorization: token ? `Bearer ${token}` : undefined,
-      },
-    };
-  });
-  const httpLink = createUploadLink({
-    uri: process.env.NEXT_PUBLIC_GRAPHQL_URL,
-  });
-  const client = new ApolloClient({
-    link: authLink.concat(httpLink),
-    cache: new InMemoryCache(),
-  });
+const authLink = setContext((_, { headers }) => {
+  const token = parseCookies().token;
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : undefined,
+    },
+  };
+});
+const httpLink = createUploadLink({
+  uri: process.env.NEXT_PUBLIC_GRAPHQL_URL,
+});
+export const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache(),
+});
 
+export default function App({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
       <ChakraProvider theme={theme}>

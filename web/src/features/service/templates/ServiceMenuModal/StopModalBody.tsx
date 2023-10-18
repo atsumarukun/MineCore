@@ -1,8 +1,6 @@
-import { useStopServiceMutation } from "@/gql/graphql";
-import { RefetchContext } from "@/providers/RefetchProvider";
+import { GetServicesDocument, useStopServiceMutation } from "@/gql/graphql";
 import { ApolloError } from "@apollo/client";
 import { Button, HStack, Text, useToast } from "@chakra-ui/react";
-import { useContext } from "react";
 
 type Props = {
   path: string;
@@ -10,7 +8,6 @@ type Props = {
 };
 
 export function StopModalBody({ path, onClose }: Props) {
-  const refetchContext = useContext(RefetchContext);
   const toast = useToast();
 
   const [stop] = useStopServiceMutation({
@@ -18,8 +15,9 @@ export function StopModalBody({ path, onClose }: Props) {
       path: path,
     },
     onCompleted() {
-      refetchContext.fn?.refetch();
+      onClose();
     },
+    refetchQueries: [GetServicesDocument],
   });
 
   const onStop = async () => {
@@ -30,7 +28,6 @@ export function StopModalBody({ path, onClose }: Props) {
         status: "success",
         duration: 5000,
       });
-      onClose();
     } catch (e) {
       if (e instanceof ApolloError) {
         toast({
