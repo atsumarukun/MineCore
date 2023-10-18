@@ -1,4 +1,4 @@
-import { useRebuildServiceMutation } from "@/gql/graphql";
+import { GetServicesDocument, useRebuildServiceMutation } from "@/gql/graphql";
 import { ApolloError } from "@apollo/client";
 import { Button, HStack, Text, useToast } from "@chakra-ui/react";
 
@@ -17,7 +17,7 @@ export function RebuildModalBody({ path, onClose }: Props) {
     onCompleted() {
       onClose();
     },
-    refetchQueries: ["GetServices"],
+    refetchQueries: [GetServicesDocument],
   });
 
   const onRebuild = async () => {

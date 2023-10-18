@@ -1,4 +1,4 @@
-import { useStopServiceMutation } from "@/gql/graphql";
+import { GetServicesDocument, useStopServiceMutation } from "@/gql/graphql";
 import { ApolloError } from "@apollo/client";
 import { Button, HStack, Text, useToast } from "@chakra-ui/react";
 
@@ -17,7 +17,7 @@ export function StopModalBody({ path, onClose }: Props) {
     onCompleted() {
       onClose();
     },
-    refetchQueries: ["GetServices"],
+    refetchQueries: [GetServicesDocument],
   });
 
   const onStop = async () => {

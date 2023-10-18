@@ -1,4 +1,4 @@
-import { useRestartServiceMutation } from "@/gql/graphql";
+import { GetServicesDocument, useRestartServiceMutation } from "@/gql/graphql";
 import { ApolloError } from "@apollo/client";
 import { Button, HStack, Text, useToast } from "@chakra-ui/react";
 
@@ -17,7 +17,7 @@ export function RestartModalBody({ path, onClose }: Props) {
     onCompleted() {
       onClose();
     },
-    refetchQueries: ["GetServices"],
+    refetchQueries: [GetServicesDocument],
   });
 
   const onRestart = async () => {
