@@ -28,7 +28,7 @@ export function DefaultModalBody({ name, status, setStatus }: Props) {
         w="100%"
         justifyContent="left"
         onClick={() => setStatus(ModalStatus.stop)}
-        isDisabled={name === "minecore"}
+        isDisabled={status === Status.Exited || name === "minecore"}
       >
         <Icon as={LiaStopCircle} boxSize={6} mr={6} />
         停止
