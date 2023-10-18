@@ -1,10 +1,10 @@
 import { Button, Circle, Icon, Text, VStack, useToast } from "@chakra-ui/react";
-import { useCallback, useContext } from "react";
+import { useCallback } from "react";
 import { MdFileUpload } from "react-icons/md";
 import { useGetPath, useUpload } from "../../hooks";
 import { ApolloError } from "@apollo/client";
 import { useDropzone } from "react-dropzone";
-import { RefetchContext } from "@/providers/RefetchProvider";
+import { GetFilesDocument } from "@/gql/graphql";
 
 type Props = {
   onClose: () => void;
@@ -13,7 +13,6 @@ type Props = {
 export function UploadModalBody({ onClose }: Props) {
   const path = useGetPath();
   const toast = useToast();
-  const refetchContext = useContext(RefetchContext);
 
   const upload = useUpload();
 
@@ -24,15 +23,15 @@ export function UploadModalBody({ onClose }: Props) {
           key: path,
           files: files,
           onCompleted() {
-            refetchContext.fn?.refetch();
+            onClose();
           },
+          refetchQueries: [GetFilesDocument],
         });
         toast({
           title: "アップロードしました.",
           status: "success",
           duration: 5000,
         });
-        onClose();
       } catch (e) {
         if (e instanceof ApolloError) {
           toast({

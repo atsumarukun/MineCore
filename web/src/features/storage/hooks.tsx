@@ -1,14 +1,17 @@
 import { useDownloadFilesMutation } from "@/gql/graphql";
+import { client } from "@/pages/_app";
+import { DocumentNode } from "graphql";
 import { useRouter } from "next/router";
 
 type UploadProps = {
   key: string;
   files: File[];
   onCompleted?: () => void;
+  refetchQueries?: DocumentNode[];
 };
 
 export function useUpload() {
-  return async ({ files, key, onCompleted }: UploadProps) => {
+  return async ({ files, key, onCompleted, refetchQueries }: UploadProps) => {
     const formData = new FormData();
     files.forEach((file) => {
       formData.append("files", file);
@@ -18,6 +21,7 @@ export function useUpload() {
       body: formData,
     });
     onCompleted?.();
+    client.refetchQueries({ include: refetchQueries });
   };
 }
 

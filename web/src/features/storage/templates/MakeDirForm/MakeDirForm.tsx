@@ -10,11 +10,10 @@ import {
 import { MakeDirFormSchema, makeDirFormSchema } from "./schema";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMakeDirMutation } from "@/gql/graphql";
+import { GetFilesDocument, useMakeDirMutation } from "@/gql/graphql";
 import { ApolloError } from "@apollo/client";
 import { useGetPath } from "../../hooks";
-import { useContext } from "react";
-import { RefetchContext } from "@/providers/RefetchProvider";
+
 type Props = {
   onClose: () => void;
 };
@@ -22,12 +21,12 @@ type Props = {
 export function MakeDirForm({ onClose }: Props) {
   const path = useGetPath();
   const toast = useToast();
-  const refetchContext = useContext(RefetchContext);
 
   const [make] = useMakeDirMutation({
     onCompleted() {
-      refetchContext.fn?.refetch();
+      onClose();
     },
+    refetchQueries: [GetFilesDocument],
   });
   const {
     register,
@@ -49,7 +48,6 @@ export function MakeDirForm({ onClose }: Props) {
         status: "success",
         duration: 5000,
       });
-      onClose();
     } catch (e) {
       if (e instanceof ApolloError) {
         toast({

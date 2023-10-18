@@ -1,8 +1,8 @@
-import { useGetFilesQuery } from "@/gql/graphql";
+import { GetFilesDocument, useGetFilesQuery } from "@/gql/graphql";
 import { Box, useToast } from "@chakra-ui/react";
 import Error from "next/error";
 import { FileTileViews } from "../templates/FileTileViews";
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useContext } from "react";
 import { useDropzone } from "react-dropzone";
 import { ApolloError } from "@apollo/client";
 import { Loading } from "@/components/parts/Loading";
@@ -10,16 +10,14 @@ import { ManagementFileBar } from "../templates/ManagementFileBar";
 import { useGetPath, useGetQueryParam, useUpload } from "../hooks";
 import { ViewMode, ViewModeContext } from "../provides/ViewModeProvider";
 import { FileListViews } from "../templates/FileListViews";
-import { RefetchContext } from "@/providers/RefetchProvider";
 
 export function StoragePathPage() {
   const path = useGetPath();
   const name = useGetQueryParam("name");
   const context = useContext(ViewModeContext);
-  const refetchContext = useContext(RefetchContext);
   const toast = useToast();
 
-  const { loading, error, data, refetch } = useGetFilesQuery({
+  const { loading, error, data } = useGetFilesQuery({
     variables: {
       path: path,
       name: name,
@@ -33,9 +31,7 @@ export function StoragePathPage() {
         await upload({
           key: path,
           files: files,
-          onCompleted() {
-            refetch();
-          },
+          refetchQueries: [GetFilesDocument],
         });
         toast({
           title: "アップロードしました.",
@@ -61,10 +57,6 @@ export function StoragePathPage() {
     multiple: true,
     noClick: true,
   });
-
-  useEffect(() => {
-    refetchContext.setFn({ refetch: refetch });
-  }, [refetch]);
 
   if (loading) return <Loading />;
   if (!data || error) return <Error statusCode={500} />;

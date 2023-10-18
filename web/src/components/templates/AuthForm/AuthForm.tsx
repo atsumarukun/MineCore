@@ -20,7 +20,15 @@ type Props = {
 };
 
 export function AuthForm({ onClose }: Props) {
-  const [auth] = useAuthMutation();
+  const toast = useToast();
+  const router = useRouter();
+
+  const [auth] = useAuthMutation({
+    onCompleted: () => {
+      onClose();
+      router.reload();
+    },
+  });
   const {
     register,
     handleSubmit,
@@ -28,8 +36,6 @@ export function AuthForm({ onClose }: Props) {
   } = useForm<AuthFormSchema>({
     resolver: zodResolver(authFormSchema),
   });
-  const toast = useToast();
-  const router = useRouter();
 
   const onAuth: SubmitHandler<AuthFormSchema> = async (data) => {
     try {
@@ -43,8 +49,6 @@ export function AuthForm({ onClose }: Props) {
         maxAge: 60 * 60,
         path: "/",
       });
-      onClose();
-      router.reload();
     } catch (e) {
       if (e instanceof ApolloError || e instanceof Error) {
         toast({

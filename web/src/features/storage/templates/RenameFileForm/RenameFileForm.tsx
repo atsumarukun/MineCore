@@ -10,11 +10,9 @@ import {
 import { SubmitHandler, useForm } from "react-hook-form";
 import { RenameFileFormSchema, renameFileFormSchema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMoveFileMutation } from "@/gql/graphql";
+import { GetFilesDocument, useMoveFileMutation } from "@/gql/graphql";
 import { ApolloError } from "@apollo/client";
 import { useGetPath } from "../../hooks";
-import { useContext } from "react";
-import { RefetchContext } from "@/providers/RefetchProvider";
 
 type Props = {
   name: string;
@@ -23,12 +21,12 @@ type Props = {
 
 export function RenameFileForm({ name, onClose }: Props) {
   const path = useGetPath();
-  const refetchContext = useContext(RefetchContext);
 
   const [rename] = useMoveFileMutation({
     onCompleted() {
-      refetchContext.fn?.refetch();
+      onClose();
     },
+    refetchQueries: [GetFilesDocument],
   });
   const {
     register,
@@ -58,7 +56,6 @@ export function RenameFileForm({ name, onClose }: Props) {
         status: "success",
         duration: 5000,
       });
-      onClose();
     } catch (e) {
       if (e instanceof ApolloError) {
         toast({

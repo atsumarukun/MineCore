@@ -1,5 +1,4 @@
-import { useRemoveFilesMutation } from "@/gql/graphql";
-import { RefetchContext } from "@/providers/RefetchProvider";
+import { GetFilesDocument, useRemoveFilesMutation } from "@/gql/graphql";
 import { ApolloError } from "@apollo/client";
 import { Button, HStack, Text, useToast } from "@chakra-ui/react";
 import { useContext } from "react";
@@ -10,13 +9,13 @@ type Props = {
 };
 
 export function RemoveModalBody({ onClose }: Props) {
-  const refetchContext = useContext(RefetchContext);
   const selectedFileKeysContext = useContext(SelectedFileKeysContext);
 
   const [remove] = useRemoveFilesMutation({
     onCompleted() {
-      refetchContext.fn?.refetch();
+      onClose();
     },
+    refetchQueries: [GetFilesDocument],
   });
   const toast = useToast();
 
@@ -32,7 +31,6 @@ export function RemoveModalBody({ onClose }: Props) {
         status: "success",
         duration: 5000,
       });
-      onClose();
     } catch (e) {
       if (e instanceof ApolloError) {
         toast({
