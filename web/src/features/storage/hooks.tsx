@@ -8,24 +8,43 @@ import { DocumentNode } from "graphql";
 import { useRouter } from "next/router";
 
 type UploadProps = {
-  key: string;
-  files: File[];
   onCompleted?: () => void;
+  onError?: (e: Error) => void;
   refetchQueries?: DocumentNode[];
 };
 
-export function useUpload() {
-  return async ({ files, key, onCompleted, refetchQueries }: UploadProps) => {
-    const formData = new FormData();
-    files.forEach((file) => {
-      formData.append("files", file);
-    });
-    await fetch(`${process.env.NEXT_PUBLIC_UPLOAD_URL}?key=${key}`, {
-      method: "POST",
-      body: formData,
-    });
-    onCompleted?.();
-    client.refetchQueries({ include: refetchQueries });
+type UploadFilesVariablesProps = {
+  variables: {
+    key: string;
+    files: File[];
+  };
+};
+
+export function useUpload({
+  onCompleted,
+  onError,
+  refetchQueries,
+}: UploadProps) {
+  return async ({ variables }: UploadFilesVariablesProps) => {
+    try {
+      const formData = new FormData();
+      variables.files.forEach((file) => {
+        formData.append("files", file);
+      });
+      await fetch(
+        `${process.env.NEXT_PUBLIC_UPLOAD_URL}?key=${variables.key}`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      onCompleted?.();
+      client.refetchQueries({ include: refetchQueries });
+    } catch (e) {
+      if (e instanceof Error) {
+        onError?.(e);
+      }
+    }
   };
 }
 

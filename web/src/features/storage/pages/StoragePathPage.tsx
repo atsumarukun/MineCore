@@ -4,7 +4,6 @@ import Error from "next/error";
 import { FileTileViews } from "../templates/FileTileViews";
 import { useCallback, useContext } from "react";
 import { useDropzone } from "react-dropzone";
-import { ApolloError } from "@apollo/client";
 import { Loading } from "@/components/parts/Loading";
 import { ManagementFileBar } from "../templates/ManagementFileBar";
 import { useGetPath, useGetQueryParam, useUpload } from "../hooks";
@@ -23,31 +22,33 @@ export function StoragePathPage() {
       name: name,
     },
   });
-  const upload = useUpload();
+  const upload = useUpload({
+    onCompleted() {
+      toast({
+        title: "アップロードしました.",
+        status: "success",
+        duration: 5000,
+      });
+    },
+    onError(e) {
+      toast({
+        title: "エラーが発生しました.",
+        description: e.message,
+        status: "error",
+        duration: 5000,
+      });
+    },
+    refetchQueries: [GetFilesDocument],
+  });
 
   const onDrop = useCallback(
     async (files: File[]) => {
-      try {
-        await upload({
+      await upload({
+        variables: {
           key: path,
           files: files,
-          refetchQueries: [GetFilesDocument],
-        });
-        toast({
-          title: "アップロードしました.",
-          status: "success",
-          duration: 5000,
-        });
-      } catch (e) {
-        if (e instanceof ApolloError) {
-          toast({
-            title: "エラーが発生しました.",
-            description: e.message,
-            status: "error",
-            duration: 5000,
-          });
-        }
-      }
+        },
+      });
     },
     [path, data]
   );
