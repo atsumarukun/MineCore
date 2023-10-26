@@ -1,4 +1,3 @@
-import { ApolloError } from "@apollo/client";
 import { Button, HStack, useToast } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { DirList } from "../DirList";
@@ -13,43 +12,39 @@ type Props = {
 export function CopyModalBody({ onClose }: Props) {
   const path = useGetPath();
   const selectedFileKeysContext = useContext(SelectedFileKeysContext);
+  const toast = useToast();
 
   const [key, setKey] = useState(path);
   const [copy] = useCopyFileMutation({
-    onCompleted() {
-      onClose();
+    variables: {
+      input: selectedFileKeysContext.selectedFileKeys.map((v) => {
+        return {
+          key: v,
+          destination: `${key}/${v.substring(v.lastIndexOf("/") + 1)}`,
+        };
+      }),
     },
-    refetchQueries: [GetFilesDocument],
-  });
-  const toast = useToast();
-
-  const onCopy = async () => {
-    try {
-      await copy({
-        variables: {
-          input: selectedFileKeysContext.selectedFileKeys.map((v) => {
-            return {
-              key: v,
-              destination: `${key}/${v.substring(v.lastIndexOf("/") + 1)}`,
-            };
-          }),
-        },
-      });
+    onCompleted() {
       toast({
         title: "コピーしました.",
         status: "success",
         duration: 5000,
       });
-    } catch (e) {
-      if (e instanceof ApolloError) {
-        toast({
-          title: "エラーが発生しました.",
-          description: e.message,
-          status: "error",
-          duration: 5000,
-        });
-      }
-    }
+      onClose();
+    },
+    onError(e) {
+      toast({
+        title: "エラーが発生しました.",
+        description: e.message,
+        status: "error",
+        duration: 5000,
+      });
+    },
+    refetchQueries: [GetFilesDocument],
+  });
+
+  const onCopy = async () => {
+    await copy();
   };
 
   return (

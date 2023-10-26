@@ -1,5 +1,4 @@
 import { GetFilesDocument, useMoveFileMutation } from "@/gql/graphql";
-import { ApolloError } from "@apollo/client";
 import { Button, HStack, useToast } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { DirList } from "../DirList";
@@ -13,43 +12,39 @@ type Props = {
 export function MoveModalBody({ onClose }: Props) {
   const path = useGetPath();
   const selectedFileKeysContext = useContext(SelectedFileKeysContext);
+  const toast = useToast();
 
   const [key, setKey] = useState(path);
   const [move] = useMoveFileMutation({
-    onCompleted() {
-      onClose();
+    variables: {
+      input: selectedFileKeysContext.selectedFileKeys.map((v) => {
+        return {
+          key: v,
+          destination: `${key}/${v.substring(v.lastIndexOf("/") + 1)}`,
+        };
+      }),
     },
-    refetchQueries: [GetFilesDocument],
-  });
-  const toast = useToast();
-
-  const onMove = async () => {
-    try {
-      await move({
-        variables: {
-          input: selectedFileKeysContext.selectedFileKeys.map((v) => {
-            return {
-              key: v,
-              destination: `${key}/${v.substring(v.lastIndexOf("/") + 1)}`,
-            };
-          }),
-        },
-      });
+    onCompleted() {
       toast({
         title: "移動しました.",
         status: "success",
         duration: 5000,
       });
-    } catch (e) {
-      if (e instanceof ApolloError) {
-        toast({
-          title: "エラーが発生しました.",
-          description: e.message,
-          status: "error",
-          duration: 5000,
-        });
-      }
-    }
+      onClose();
+    },
+    onError(e) {
+      toast({
+        title: "エラーが発生しました.",
+        description: e.message,
+        status: "error",
+        duration: 5000,
+      });
+    },
+    refetchQueries: [GetFilesDocument],
+  });
+
+  const onMove = async () => {
+    await move();
   };
 
   return (
