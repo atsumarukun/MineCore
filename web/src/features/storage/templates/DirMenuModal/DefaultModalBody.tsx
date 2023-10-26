@@ -12,7 +12,6 @@ import { SelectedFileKeysContext } from "../../provides/SelectedFileKeysProvider
 import { FiDownload, FiTrash } from "react-icons/fi";
 import { IoMdCopy } from "react-icons/io";
 import { useDownload } from "../../hooks";
-import { ApolloError } from "@apollo/client";
 import { Loading } from "@/components/parts/Loading";
 
 type Props = {
@@ -28,7 +27,26 @@ export function DefaultModalBody({ setStatus, onClose }: Props) {
   const selectedFileKeysContext = useContext(SelectedFileKeysContext);
 
   const [download, { loading }] = useDownload({
-    keys: selectedFileKeysContext.selectedFileKeys,
+    variables: {
+      keys: selectedFileKeysContext.selectedFileKeys,
+    },
+    onCompleted() {
+      toast({
+        title: "ダウンロードしました.",
+        status: "success",
+        duration: 5000,
+      });
+      onSetSelectMode();
+      onClose();
+    },
+    onError(e) {
+      toast({
+        title: "エラーが発生しました.",
+        description: e.message,
+        status: "error",
+        duration: 5000,
+      });
+    },
   });
 
   const onSetSelectMode = () => {
@@ -42,25 +60,7 @@ export function DefaultModalBody({ setStatus, onClose }: Props) {
   };
 
   const onDownload = async () => {
-    try {
-      await download();
-      toast({
-        title: "ダウンロードしました.",
-        status: "success",
-        duration: 5000,
-      });
-      onSetSelectMode();
-      onClose();
-    } catch (e) {
-      if (e instanceof ApolloError) {
-        toast({
-          title: "エラーが発生しました.",
-          description: e.message,
-          status: "error",
-          duration: 5000,
-        });
-      }
-    }
+    await download();
   };
 
   const onDestroyToken = () => {

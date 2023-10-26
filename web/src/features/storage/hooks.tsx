@@ -1,5 +1,9 @@
-import { useDownloadFilesMutation } from "@/gql/graphql";
+import {
+  DownloadFilesMutationVariables,
+  useDownloadFilesMutation,
+} from "@/gql/graphql";
 import { client } from "@/pages/_app";
+import { BaseMutationOptions } from "@apollo/client";
 import { DocumentNode } from "graphql";
 import { useRouter } from "next/router";
 
@@ -26,12 +30,18 @@ export function useUpload() {
 }
 
 type DownloadProps = {
-  keys: string[];
+  variables: DownloadFilesMutationVariables;
+  onCompleted?: BaseMutationOptions["onCompleted"];
+  onError?: BaseMutationOptions["onError"];
 };
 
-export function useDownload({ keys }: DownloadProps) {
+export function useDownload({
+  variables,
+  onCompleted,
+  onError,
+}: DownloadProps) {
   return useDownloadFilesMutation({
-    variables: { keys: keys },
+    variables: variables,
     onCompleted(data) {
       if (data) {
         const blob = new Blob([Buffer.from(data.downloadFiles.data, "base64")]);
@@ -41,6 +51,10 @@ export function useDownload({ keys }: DownloadProps) {
         link.click();
         link.remove();
       }
+      onCompleted?.(data);
+    },
+    onError(e) {
+      onError?.(e);
     },
   });
 }
