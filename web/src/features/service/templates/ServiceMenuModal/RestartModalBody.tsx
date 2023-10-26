@@ -1,5 +1,4 @@
 import { GetServicesDocument, useRestartServiceMutation } from "@/gql/graphql";
-import { ApolloError } from "@apollo/client";
 import { Button, HStack, Text, useToast } from "@chakra-ui/react";
 
 type Props = {
@@ -15,29 +14,26 @@ export function RestartModalBody({ path, onClose }: Props) {
       path: path,
     },
     onCompleted() {
-      onClose();
-    },
-    refetchQueries: [GetServicesDocument],
-  });
-
-  const onRestart = async () => {
-    try {
-      await restart();
       toast({
         title: "再起動しました.",
         status: "success",
         duration: 5000,
       });
-    } catch (e) {
-      if (e instanceof ApolloError) {
-        toast({
-          title: "エラーが発生しました.",
-          description: e.message,
-          status: "error",
-          duration: 5000,
-        });
-      }
-    }
+      onClose();
+    },
+    onError(e) {
+      toast({
+        title: "エラーが発生しました.",
+        description: e.message,
+        status: "error",
+        duration: 5000,
+      });
+    },
+    refetchQueries: [GetServicesDocument],
+  });
+
+  const onRestart = async () => {
+    await restart();
   };
 
   return (

@@ -6,7 +6,6 @@ import { BsPencil } from "react-icons/bs";
 import { LuFileOutput } from "react-icons/lu";
 import { IoMdCopy } from "react-icons/io";
 import { useDownload } from "../../hooks";
-import { ApolloError } from "@apollo/client";
 import { Loading } from "@/components/parts/Loading";
 
 type Props = {
@@ -17,29 +16,30 @@ type Props = {
 
 export function DefaultModalBody({ filekey, setStatus, onClose }: Props) {
   const [download, { loading }] = useDownload({
-    keys: [filekey],
-  });
-  const toast = useToast();
-
-  const onDownload = async () => {
-    try {
-      await download();
+    variables: {
+      keys: [filekey],
+    },
+    onCompleted() {
       toast({
         title: "ダウンロードしました.",
         status: "success",
         duration: 5000,
       });
       onClose();
-    } catch (e) {
-      if (e instanceof ApolloError) {
-        toast({
-          title: "エラーが発生しました.",
-          description: e.message,
-          status: "error",
-          duration: 5000,
-        });
-      }
-    }
+    },
+    onError(e) {
+      toast({
+        title: "エラーが発生しました.",
+        description: e.message,
+        status: "error",
+        duration: 5000,
+      });
+    },
+  });
+  const toast = useToast();
+
+  const onDownload = async () => {
+    await download();
   };
 
   return (

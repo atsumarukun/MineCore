@@ -1,5 +1,4 @@
 import { GetServicesDocument, useStopServiceMutation } from "@/gql/graphql";
-import { ApolloError } from "@apollo/client";
 import { Button, HStack, Text, useToast } from "@chakra-ui/react";
 
 type Props = {
@@ -15,29 +14,26 @@ export function StopModalBody({ path, onClose }: Props) {
       path: path,
     },
     onCompleted() {
-      onClose();
-    },
-    refetchQueries: [GetServicesDocument],
-  });
-
-  const onStop = async () => {
-    try {
-      await stop();
       toast({
         title: "停止しました.",
         status: "success",
         duration: 5000,
       });
-    } catch (e) {
-      if (e instanceof ApolloError) {
-        toast({
-          title: "エラーが発生しました.",
-          description: e.message,
-          status: "error",
-          duration: 5000,
-        });
-      }
-    }
+      onClose();
+    },
+    onError(e) {
+      toast({
+        title: "エラーが発生しました.",
+        description: e.message,
+        status: "error",
+        duration: 5000,
+      });
+    },
+    refetchQueries: [GetServicesDocument],
+  });
+
+  const onStop = async () => {
+    await stop();
   };
 
   return (

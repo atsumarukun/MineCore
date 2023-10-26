@@ -11,7 +11,6 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { RenameFileFormSchema, renameFileFormSchema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GetFilesDocument, useMoveFileMutation } from "@/gql/graphql";
-import { ApolloError } from "@apollo/client";
 import { useGetPath } from "../../hooks";
 
 type Props = {
@@ -24,7 +23,20 @@ export function RenameFileForm({ name, onClose }: Props) {
 
   const [rename] = useMoveFileMutation({
     onCompleted() {
+      toast({
+        title: "更新しました.",
+        status: "success",
+        duration: 5000,
+      });
       onClose();
+    },
+    onError(e) {
+      toast({
+        title: "エラーが発生しました.",
+        description: e.message,
+        status: "error",
+        duration: 5000,
+      });
     },
     refetchQueries: [GetFilesDocument],
   });
@@ -38,34 +50,18 @@ export function RenameFileForm({ name, onClose }: Props) {
   const toast = useToast();
 
   const onRename: SubmitHandler<RenameFileFormSchema> = async (data) => {
-    try {
-      await rename({
-        variables: {
-          input: [
-            {
-              key: `${path}/${name}`,
-              destination: `${path}/${data.name}${
-                name.includes(".") ? name.substring(name.lastIndexOf(".")) : ""
-              }`,
-            },
-          ],
-        },
-      });
-      toast({
-        title: "更新しました.",
-        status: "success",
-        duration: 5000,
-      });
-    } catch (e) {
-      if (e instanceof ApolloError) {
-        toast({
-          title: "エラーが発生しました.",
-          description: e.message,
-          status: "error",
-          duration: 5000,
-        });
-      }
-    }
+    await rename({
+      variables: {
+        input: [
+          {
+            key: `${path}/${name}`,
+            destination: `${path}/${data.name}${
+              name.includes(".") ? name.substring(name.lastIndexOf(".")) : ""
+            }`,
+          },
+        ],
+      },
+    });
   };
 
   return (
