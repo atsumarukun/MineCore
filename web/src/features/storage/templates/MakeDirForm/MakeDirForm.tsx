@@ -11,7 +11,6 @@ import { MakeDirFormSchema, makeDirFormSchema } from "./schema";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GetFilesDocument, useMakeDirMutation } from "@/gql/graphql";
-import { ApolloError } from "@apollo/client";
 import { useGetPath } from "../../hooks";
 
 type Props = {
@@ -24,7 +23,20 @@ export function MakeDirForm({ onClose }: Props) {
 
   const [make] = useMakeDirMutation({
     onCompleted() {
+      toast({
+        title: "作成しました.",
+        status: "success",
+        duration: 5000,
+      });
       onClose();
+    },
+    onError(e) {
+      toast({
+        title: "エラーが発生しました.",
+        description: e.message,
+        status: "error",
+        duration: 5000,
+      });
     },
     refetchQueries: [GetFilesDocument],
   });
@@ -37,27 +49,11 @@ export function MakeDirForm({ onClose }: Props) {
   });
 
   const onMake: SubmitHandler<MakeDirFormSchema> = async (data) => {
-    try {
-      await make({
-        variables: {
-          key: `${path}/${data.name}`,
-        },
-      });
-      toast({
-        title: "作成しました.",
-        status: "success",
-        duration: 5000,
-      });
-    } catch (e) {
-      if (e instanceof ApolloError) {
-        toast({
-          title: "エラーが発生しました.",
-          description: e.message,
-          status: "error",
-          duration: 5000,
-        });
-      }
-    }
+    await make({
+      variables: {
+        key: `${path}/${data.name}`,
+      },
+    });
   };
 
   return (

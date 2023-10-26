@@ -1,5 +1,4 @@
 import { GetFilesDocument, useRemoveFilesMutation } from "@/gql/graphql";
-import { ApolloError } from "@apollo/client";
 import { Button, HStack, Text, useToast } from "@chakra-ui/react";
 import { useContext } from "react";
 import { SelectedFileKeysContext } from "../../provides/SelectedFileKeysProvider";
@@ -10,37 +9,33 @@ type Props = {
 
 export function RemoveModalBody({ onClose }: Props) {
   const selectedFileKeysContext = useContext(SelectedFileKeysContext);
-
-  const [remove] = useRemoveFilesMutation({
-    onCompleted() {
-      onClose();
-    },
-    refetchQueries: [GetFilesDocument],
-  });
   const toast = useToast();
 
-  const onRemove = async () => {
-    try {
-      await remove({
-        variables: {
-          keys: selectedFileKeysContext.selectedFileKeys,
-        },
-      });
+  const [remove] = useRemoveFilesMutation({
+    variables: {
+      keys: selectedFileKeysContext.selectedFileKeys,
+    },
+    onCompleted() {
       toast({
         title: "削除しました.",
         status: "success",
         duration: 5000,
       });
-    } catch (e) {
-      if (e instanceof ApolloError) {
-        toast({
-          title: "エラーが発生しました.",
-          description: e.message,
-          status: "error",
-          duration: 5000,
-        });
-      }
-    }
+      onClose();
+    },
+    onError(e) {
+      toast({
+        title: "エラーが発生しました.",
+        description: e.message,
+        status: "error",
+        duration: 5000,
+      });
+    },
+    refetchQueries: [GetFilesDocument],
+  });
+
+  const onRemove = async () => {
+    await remove();
   };
 
   return (
