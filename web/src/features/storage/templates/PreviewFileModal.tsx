@@ -42,9 +42,9 @@ export function PreviewFileModal({
 
   const handleSwipe = useSwipeable({
     onSwiped: (e) => {
-      if (e.dir === "Left") {
+      if (e.dir === "Right") {
         onChangeFile(-1);
-      } else if (e.dir === "Right") {
+      } else if (e.dir === "Left") {
         onChangeFile(1);
       }
     },
