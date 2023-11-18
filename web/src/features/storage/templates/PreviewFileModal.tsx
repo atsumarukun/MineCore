@@ -18,6 +18,7 @@ import Link from "next/link";
 import { KeyboardEvent, useEffect, useRef } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { MdOutlineHideImage } from "react-icons/md";
+import { useSwipeable } from "react-swipeable";
 
 type Props = {
   file?: GetFilesQuery["files"][number];
@@ -38,6 +39,16 @@ export function PreviewFileModal({
   useEffect(() => {
     videoRef.current?.load();
   }, [file]);
+
+  const handleSwipe = useSwipeable({
+    onSwiped: (e) => {
+      if (e.dir === "Left") {
+        onChangeFile(-1);
+      } else if (e.dir === "Right") {
+        onChangeFile(1);
+      }
+    },
+  });
 
   if (!file) {
     if (isOpen) {
@@ -62,7 +73,11 @@ export function PreviewFileModal({
   return (
     <Modal isCentered isOpen={isOpen} onClose={onClose} size="auto">
       <ModalOverlay />
-      <ModalContent w="fit-content" onKeyDown={onChangeFileKeyDown}>
+      <ModalContent
+        w="fit-content"
+        onKeyDown={onChangeFileKeyDown}
+        {...handleSwipe}
+      >
         <ModalHeader
           py={2}
           px={3}
