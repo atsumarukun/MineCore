@@ -15,7 +15,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { KeyboardEvent, useEffect, useRef } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { MdOutlineHideImage } from "react-icons/md";
 
@@ -51,10 +51,18 @@ export function PreviewFileModal({
     return <></>;
   }
 
+  const onChangeFileKeyDown = (e: KeyboardEvent<HTMLElement>) => {
+    if (e.keyCode === 37) {
+      onChangeFile(-1);
+    } else if (e.keyCode === 39) {
+      onChangeFile(1);
+    }
+  };
+
   return (
     <Modal isCentered isOpen={isOpen} onClose={onClose} size="auto">
       <ModalOverlay />
-      <ModalContent w="fit-content">
+      <ModalContent w="fit-content" onKeyDown={onChangeFileKeyDown}>
         <ModalHeader
           py={2}
           px={3}
